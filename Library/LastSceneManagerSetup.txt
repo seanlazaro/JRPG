@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Learning JRPG.unity
-  isLoaded: 1
-  isActive: 1
