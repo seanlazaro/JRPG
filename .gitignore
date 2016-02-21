@@ -1,3 +1,16 @@
+# Unity
+JRPGUnityProject/Library/
+JRPGUnityProject/Temp/
+JRPGUnityProject/obj/
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.userprefs
+*.DS_store
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
