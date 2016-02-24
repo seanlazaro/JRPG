@@ -2,9 +2,11 @@
 JRPGUnityProject/Library/
 JRPGUnityProject/Temp/
 JRPGUnityProject/obj/
+JRPGUnityProject/Output/
 *.csproj
 *.unityproj
 *.sln
+*.suo
 *.user
 *.userprefs
 *.DS_store
