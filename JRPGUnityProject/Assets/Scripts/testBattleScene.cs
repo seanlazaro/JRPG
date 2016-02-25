@@ -2,11 +2,9 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class ChangeScene : MonoBehaviour {
+public class testBattleScene : MonoBehaviour {
 
-    public string sceneToLoad;
-    public string sceneLoadTile;
-    public Vector2 directionToFace;
+    public GameObject[] testEnemies;
 
     // Use this for initialization
     void Start () {
@@ -22,9 +20,8 @@ public class ChangeScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            GameStateController.playerSpawnPoint = sceneLoadTile;
-            GameStateController.playerSpawnDirection = directionToFace;
-            SceneManager.LoadScene(sceneToLoad);
+            GameStateController.possibleEnemies = testEnemies;
+            SceneManager.LoadScene("Battle");
         }
     }
 }

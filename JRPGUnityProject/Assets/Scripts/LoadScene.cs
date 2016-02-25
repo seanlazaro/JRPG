@@ -7,13 +7,13 @@ public class LoadScene : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if (sceneLoadTileName == PlayerStateController.spawnPoint)
+        if (sceneLoadTileName == GameStateController.playerSpawnPoint)
         {
             GameObject player = GameObject.FindWithTag("Player");
             player.transform.position = transform.position;
             PlayerMovementController pmc = 
                 (PlayerMovementController) player.GetComponent("PlayerMovementController");
-            pmc.LastMove = PlayerStateController.spawnDirection;
+            pmc.LastMove = GameStateController.playerSpawnDirection;
         }
     }
 
