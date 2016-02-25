@@ -6,7 +6,7 @@ public class LoadScene : MonoBehaviour {
     public string sceneLoadTileName;
 
     // Use this for initialization
-    void Start () {
+	IEnumerator Start () {
         if (sceneLoadTileName == GameStateController.playerSpawnPoint)
         {
             GameObject player = GameObject.FindWithTag("Player");
@@ -14,6 +14,8 @@ public class LoadScene : MonoBehaviour {
             PlayerMovementController pmc = 
                 (PlayerMovementController) player.GetComponent("PlayerMovementController");
             pmc.LastMove = GameStateController.playerSpawnDirection;
+			float fadeTime = GameObject.Find ("Player").GetComponent<Fading>().BeginFade(1);
+			yield return new WaitForSeconds (fadeTime);
         }
     }
 
