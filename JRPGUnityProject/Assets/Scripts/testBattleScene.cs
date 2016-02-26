@@ -20,7 +20,7 @@ public class testBattleScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-			float fadeTime = GameObject.Find ("Player").GetComponent<Fading>().BeginFade(1);
+			float fadeTime = GameObject.Find ("Player").GetComponent<Fadescene>().BeginFade(1);
 			yield return new WaitForSeconds (fadeTime);
             GameStateController.possibleEnemies = testEnemies;
             SceneManager.LoadScene("Battle");
