@@ -20,7 +20,7 @@ public class testBattleScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            GameStateController.possibleEnemies = testEnemies;
+            GameStateManager.possibleEnemies = testEnemies;
             SceneManager.LoadScene("Battle");
         }
     }

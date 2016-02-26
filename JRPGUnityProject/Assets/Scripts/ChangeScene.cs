@@ -22,8 +22,8 @@ public class ChangeScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            GameStateController.playerSpawnPoint = sceneLoadTile;
-            GameStateController.playerSpawnDirection = directionToFace;
+            GameStateManager.playerSpawnPoint = sceneLoadTile;
+            GameStateManager.playerSpawnDirection = directionToFace;
             SceneManager.LoadScene(sceneToLoad);
         }
     }

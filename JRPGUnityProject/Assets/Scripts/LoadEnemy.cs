@@ -7,7 +7,7 @@ public class LoadEnemy : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        enemies = GameStateController.possibleEnemies;
+        enemies = GameStateManager.possibleEnemies;
 
         System.Random r = new System.Random();
         int i = r.Next(enemies.Length);
