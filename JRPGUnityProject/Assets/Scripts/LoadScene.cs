@@ -9,13 +9,13 @@ public class LoadScene : MonoBehaviour {
 	IEnumerator Start () {
         if (sceneLoadTileName == GameStateController.playerSpawnPoint)
         {
+			float fadeTime = GameObject.Find ("Player").GetComponent<Fading>().BeginFade(1);
+			yield return new WaitForSeconds (fadeTime);
             GameObject player = GameObject.FindWithTag("Player");
             player.transform.position = transform.position;
             PlayerMovementController pmc = 
                 (PlayerMovementController) player.GetComponent("PlayerMovementController");
             pmc.LastMove = GameStateController.playerSpawnDirection;
-			float fadeTime = GameObject.Find ("Player").GetComponent<Fading>().BeginFade(1);
-			yield return new WaitForSeconds (fadeTime);
         }
     }
 
