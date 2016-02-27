@@ -22,7 +22,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     public void LoadScene(string sceneToLoad, string destinationTile)
     {
-        TransitionFxManager.Fade(0.5f, true);
+        TransitionFxManager.Fade(2f, true);
 
         this.destinationTile = destinationTile;
 
@@ -38,6 +38,6 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
             (PlayerMovementController)player.GetComponent("PlayerMovementController");
         pmc.OnSpawnPlayer(directionToFace);
 
-        TransitionFxManager.Fade(0.5f, false);
+        TransitionFxManager.Fade(2f, false);
     }
 }
