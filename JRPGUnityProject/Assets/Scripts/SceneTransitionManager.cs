@@ -7,6 +7,9 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     // Prevent use of constructor
     protected SceneTransitionManager() { }
     
+    const float fadeTime = 5f;
+    const float battleFadeTime = 5f;
+    
     string destinationTile;
     public string DestinationTile
     {
@@ -22,8 +25,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     IEnumerator LoadSceneCoroutine(string sceneToLoad, string destinationTile)
     {
-        TransitionFxManager.Fade(0.75f, true);
-        yield return new WaitForSeconds(0.75f);
+        TransitionFxManager.Fade(fadeTime, true);
+        yield return new WaitForSeconds(fadeTime);
 
         this.destinationTile = destinationTile;
 
@@ -44,8 +47,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
             (PlayerMovementController)player.GetComponent("PlayerMovementController");
         pmc.OnSpawnPlayer(directionToFace);
 
-        TransitionFxManager.Fade(0.75f, false);
-        yield return null;
+        TransitionFxManager.Fade(fadeTime, false);
+        yield return new WaitForSeconds(fadeTime);
     }
 
     public void LoadBattleScene(GameObject[] possibleEnemies)
@@ -55,8 +58,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     IEnumerator LoadBattleSceneCoroutine(GameObject[] possibleEnemies)
     {
-        TransitionFxManager.Fade(0.4f, true);
-        yield return new WaitForSeconds(0.4f);
+        TransitionFxManager.Fade(battleFadeTime, true);
+        yield return new WaitForSeconds(battleFadeTime);
 
         this.possibleEnemies = possibleEnemies;
 
@@ -70,13 +73,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     IEnumerator SpawnEnemyInBattleCoroutine(Vector2 spawnPosition)
     {
-        TransitionFxManager.Fade(0.4f, false);
-        yield return new WaitForSeconds(0.4f);
-
         System.Random r = new System.Random();
         int i = r.Next(possibleEnemies.Length);
 
         GameObject enemy = Instantiate(possibleEnemies[i]);
         enemy.transform.position = spawnPosition;
+
+        TransitionFxManager.Fade(battleFadeTime, false);
+        yield return new WaitForSeconds(battleFadeTime);
     }
 }

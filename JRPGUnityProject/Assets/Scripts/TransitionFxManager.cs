@@ -10,6 +10,7 @@ public class TransitionFxManager : Singleton<TransitionFxManager> {
     GUITexture fadeTexture;
     float fadeLerpVar;
     float fadeTime;
+    Color fadeStartColor;
     Color fadeNewColor;
 
     public static void Fade(float fadeTime, bool fadeOut) 
@@ -26,12 +27,13 @@ public class TransitionFxManager : Singleton<TransitionFxManager> {
         Instance.fadeTime = fadeTime;
         if (fadeOut)
         {
-            Instance.fadeTexture.color = Color.clear;
+
+            Instance.fadeStartColor = Color.clear;
             Instance.fadeNewColor = Color.black;
         }
         else
         {
-            Instance.fadeTexture.color = Color.black;
+            Instance.fadeStartColor = Color.black;
             Instance.fadeNewColor = Color.clear;
         }
     }
@@ -41,7 +43,7 @@ public class TransitionFxManager : Singleton<TransitionFxManager> {
         if (fading)
         {
             fadeLerpVar += Time.deltaTime / Instance.fadeTime;
-            Instance.fadeTexture.color = Color.Lerp(Instance.fadeTexture.color, fadeNewColor, fadeLerpVar);
+            Instance.fadeTexture.color = Color.Lerp(fadeStartColor, fadeNewColor, fadeLerpVar);
             if (fadeLerpVar > 1f) fading = false;
         }
     }

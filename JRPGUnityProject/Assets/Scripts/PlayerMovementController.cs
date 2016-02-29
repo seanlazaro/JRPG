@@ -15,7 +15,6 @@ public class PlayerMovementController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        moveSpeed = 5f;
         anim = GetComponent<Animator> ();
         playerRigidBody = GetComponent<Rigidbody2D> ();
     }
@@ -30,6 +29,7 @@ public class PlayerMovementController : MonoBehaviour {
         if (xInput > 0.5f || xInput < -0.5f) // Moving horizontally
         {
             playerRigidBody.velocity = new Vector2(xInput * moveSpeed, playerRigidBody.velocity.y);
+            //anim.gameObject.transform.Translate(new Vector3(xInput * moveSpeed * Time.deltaTime, 0f));
             playerMoving = true;
             lastMove = new Vector2(xInput, 0f);
         }
@@ -40,7 +40,8 @@ public class PlayerMovementController : MonoBehaviour {
 
         if (yInput > 0.5f || yInput < -0.5f) // Moving vertically
         {
-            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, yInput * moveSpeed); 
+            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, yInput * moveSpeed);
+            //anim.gameObject.transform.Translate(new Vector3(0f, yInput * moveSpeed * Time.deltaTime));
             playerMoving = true;
             lastMove = new Vector2(0f, yInput);
         }
