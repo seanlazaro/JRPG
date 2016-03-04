@@ -5,7 +5,7 @@ public class SpawnEnemyInBattle : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        SceneTransitionManager.Instance.SpawnEnemyInBattle(transform.position);
+        StartCoroutine(SceneTransitionManager.Instance.SpawnEnemyInBattle(transform.position));
     }
     
     // Update is called once per frame

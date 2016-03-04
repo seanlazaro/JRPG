@@ -10,7 +10,7 @@ public class SpawnPlayer : MonoBehaviour {
     void Start () {
         if (spawnPlayerTileName == SceneTransitionManager.Instance.DestinationTile)
         {
-            SceneTransitionManager.Instance.SpawnPlayer(transform.position, directionToFace);
+            StartCoroutine(SceneTransitionManager.Instance.SpawnPlayer(transform.position, directionToFace));
         }
     }
 

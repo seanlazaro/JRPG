@@ -10,7 +10,7 @@ public class testBattleScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            SceneTransitionManager.Instance.LoadBattleScene(testEnemies);
+            StartCoroutine(SceneTransitionManager.Instance.LoadBattleScene(testEnemies));
         }
     }
 }

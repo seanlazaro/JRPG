@@ -7,8 +7,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     // Prevent use of constructor
     protected SceneTransitionManager() { }
     
-    const float fadeTime = 5f;
-    const float battleFadeTime = 5f;
+    const float fadeTime = 1f;
+    const float battleFadeTime = 1f;
     
     string destinationTile;
     public string DestinationTile
@@ -18,14 +18,9 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     GameObject[] possibleEnemies;
 
-    public void LoadScene(string sceneToLoad, string destinationTile)
+    public IEnumerator LoadScene(string sceneToLoad, string destinationTile)
     {
-        StartCoroutine(LoadSceneCoroutine(sceneToLoad, destinationTile));
-    }
-
-    IEnumerator LoadSceneCoroutine(string sceneToLoad, string destinationTile)
-    {
-        TransitionFxManager.Fade(fadeTime, true);
+        StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
         yield return new WaitForSeconds(fadeTime);
 
         this.destinationTile = destinationTile;
@@ -33,12 +28,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         SceneManager.LoadScene(sceneToLoad);
     }
 
-    public void SpawnPlayer(Vector3 spawnPosition, Vector2 directionToFace)
-    {
-        StartCoroutine(SpawnPlayerCoroutine(spawnPosition, directionToFace));
-    }
-
-    IEnumerator SpawnPlayerCoroutine(Vector3 spawnPosition, Vector2 directionToFace)
+    public IEnumerator SpawnPlayer(Vector3 spawnPosition, Vector2 directionToFace)
     {
         GameObject player = GameObject.FindWithTag("Player");
         player.transform.position = spawnPosition;
@@ -47,18 +37,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
             (PlayerMovementController)player.GetComponent("PlayerMovementController");
         pmc.OnSpawnPlayer(directionToFace);
 
-        TransitionFxManager.Fade(fadeTime, false);
-        yield return new WaitForSeconds(fadeTime);
+        StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, false));
+        yield return null;
     }
 
-    public void LoadBattleScene(GameObject[] possibleEnemies)
+    public IEnumerator LoadBattleScene(GameObject[] possibleEnemies)
     {
-        StartCoroutine(LoadBattleSceneCoroutine(possibleEnemies));
-    }
-
-    IEnumerator LoadBattleSceneCoroutine(GameObject[] possibleEnemies)
-    {
-        TransitionFxManager.Fade(battleFadeTime, true);
+        StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, true));
         yield return new WaitForSeconds(battleFadeTime);
 
         this.possibleEnemies = possibleEnemies;
@@ -66,12 +51,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         SceneManager.LoadScene("Battle");
     }
 
-    public void SpawnEnemyInBattle(Vector2 spawnPosition)
-    {
-        StartCoroutine(SpawnEnemyInBattleCoroutine(spawnPosition));
-    }
-
-    IEnumerator SpawnEnemyInBattleCoroutine(Vector2 spawnPosition)
+    public IEnumerator SpawnEnemyInBattle(Vector2 spawnPosition)
     {
         System.Random r = new System.Random();
         int i = r.Next(possibleEnemies.Length);
@@ -79,7 +59,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         GameObject enemy = Instantiate(possibleEnemies[i]);
         enemy.transform.position = spawnPosition;
 
-        TransitionFxManager.Fade(battleFadeTime, false);
-        yield return new WaitForSeconds(battleFadeTime);
+        StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, false));
+        yield return null;
     }
 }
