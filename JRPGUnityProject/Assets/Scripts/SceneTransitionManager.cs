@@ -27,8 +27,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     public IEnumerator LoadScene(string sceneToLoad, string destinationTile)
     {
+        GameObject player = GameObject.FindWithTag("Player");
+        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
+        pmc.EnableMovement(false);
+        
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
         yield return new WaitForSeconds(fadeTime);
+
 
         this.destinationTile = destinationTile;
 
@@ -40,45 +45,51 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         }
         enemySpritesInScene.Clear();
 
+
         SceneManager.LoadScene(sceneToLoad);
     }
 
     public IEnumerator SpawnPlayer(Vector3 spawnPosition, Vector2 directionToFace)
     {
-        GameObject player = GameObject.FindWithTag("Player");
+        GameObject player = GameObject.FindWithTag("Player");     
         player.transform.position = spawnPosition;
 
         PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
         pmc.OnSpawnPlayer(directionToFace);
 
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, false));
-        yield return null;
+        yield return new WaitForSeconds(fadeTime);
+
+        pmc.EnableMovement(true);
     }
 
     public void SpawnEnemySprite(GameObject[] possibleEnemies, Vector3 spawnPosition)
     {
-        // Don't spawn enemies if after returning from battle
-        if (previousScene != "Battle")
-        {
-            System.Random r = new System.Random();
-            int i = r.Next(possibleEnemies.Length);
+        // Don't spawn enemies if returning from battle
+        if (previousScene == "Battle") return;
 
-            GameObject enemy = Instantiate(possibleEnemies[i]);
-            enemy.transform.position = spawnPosition;
-        }        
+        System.Random r = new System.Random();
+        int i = r.Next(possibleEnemies.Length);
+
+        GameObject enemy = Instantiate(possibleEnemies[i]);
+        enemy.transform.position = spawnPosition;
     }
 
     public IEnumerator EnterBattle(GameObject engagedEnemySprite)
     {
+        GameObject player = GameObject.FindWithTag("Player");
+        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
+        pmc.EnableMovement(false);
+        
         StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, true));
         yield return new WaitForSeconds(battleFadeTime);
 
 
+        destinationTile = null;
+
         this.engagedEnemySprite = engagedEnemySprite;
 
         previousScene = SceneManager.GetActiveScene().name;
-
-        GameObject player = GameObject.FindWithTag("Player");
         previousPosition = player.transform.position;
 
 
@@ -106,30 +117,36 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         yield return null;
     }
 
-    public void ExitBattle()
+    public IEnumerator ExitBattle()
     {
+        StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
+        yield return new WaitForSeconds(fadeTime);
+        
         string temp = previousScene;
 
         previousScene = "Battle";
         
         SceneManager.LoadScene(temp);
+
+
+        for (int i = 0; i < enemySpritesInScene.Count; i++)
+        {
+            enemySpritesInScene[i].SetActive(true);
+        }
+
+        enemySpritesInScene.Remove(engagedEnemySprite);
+        Destroy(engagedEnemySprite);
     }
 
     void OnLevelWasLoaded()
     {
-        if(previousScene == "Battle")
+        if (previousScene == "Battle")
         {
-            for (int i = 0; i < enemySpritesInScene.Count; i++)
-            {
-                enemySpritesInScene[i].SetActive(true);
-            }
-
-            enemySpritesInScene.Remove(engagedEnemySprite);
-            Destroy(engagedEnemySprite);
-            
-
             GameObject player = GameObject.FindWithTag("Player");
             player.transform.position = previousPosition;
+
+            PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
+            pmc.EnableMovement(true);
         }
     }
 }

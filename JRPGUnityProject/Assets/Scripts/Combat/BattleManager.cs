@@ -39,6 +39,7 @@ public class BattleManager : MonoBehaviour {
 
     bool choosingAction = false;
     bool doingAction = false;
+    bool exitingBattle = false;
 
     // Use this for initialization
     void Start () {
@@ -76,7 +77,11 @@ public class BattleManager : MonoBehaviour {
                 }
                 break;
             case BattlePhase.BattleEnd:
-                SceneTransitionManager.Instance.ExitBattle();
+                if(!exitingBattle)
+                {
+                    exitingBattle = true;
+                    StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
+                }
                 break;
             default:
                 break;

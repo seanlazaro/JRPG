@@ -55,7 +55,7 @@ public abstract class Battler : MonoBehaviour {
 
     protected IEnumerator BasicAttack(Action<bool, bool> callback)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
 
         float damage = CalculateStandardDamage(singleAttackTarget);
 

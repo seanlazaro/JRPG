@@ -13,6 +13,8 @@ public class PlayerMovementController : MonoBehaviour {
     bool playerMoving;
     Vector2 lastMove;
 
+    bool movementEnabled = true;
+
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator> ();
@@ -20,7 +22,9 @@ public class PlayerMovementController : MonoBehaviour {
     }
     
     // Update is called once per frame
-    void Update () {        
+    void Update () {
+        if (!movementEnabled) return;
+        
         float xInput = Input.GetAxisRaw("Horizontal");
         float yInput = Input.GetAxisRaw("Vertical");
 
@@ -60,5 +64,20 @@ public class PlayerMovementController : MonoBehaviour {
     public void OnSpawnPlayer(Vector2 directionToFace)
     {
         lastMove = directionToFace;
+    }
+
+    public void EnableMovement(bool enable)
+    {
+        movementEnabled = enable;
+
+        if(!enable)
+        {
+            playerMoving = false;
+            playerRigidBody.velocity = new Vector2(0f, 0f);
+
+            anim.SetFloat("MoveX", 0f);
+            anim.SetFloat("MoveY", 0f);
+            anim.SetBool("PlayerMoving", playerMoving);
+        }
     }
 }

@@ -13,9 +13,4 @@ public class SpawnPlayer : MonoBehaviour {
             StartCoroutine(SceneTransitionManager.Instance.SpawnPlayer(transform.position, directionToFace));
         }
     }
-
-    // Update is called once per frame
-    void Update () {
-    
-    }
 }
