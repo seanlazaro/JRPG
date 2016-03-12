@@ -1,22 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     // Prevent use of constructor
     protected SceneTransitionManager() { }
     
+
     const float fadeTime = 1f;
     const float battleFadeTime = 1f;
     
+
     string destinationTile;
     public string DestinationTile
     {
         get { return destinationTile; }
     }
 
-    GameObject[] possibleEnemies;
+    string previousScene;
+    Vector3 previousPosition;
+
+    GameObject engagedEnemySprite;
+    List<GameObject> enemySpritesInScene = new List<GameObject>();
 
     public IEnumerator LoadScene(string sceneToLoad, string destinationTile)
     {
@@ -24,6 +31,14 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         yield return new WaitForSeconds(fadeTime);
 
         this.destinationTile = destinationTile;
+
+        previousScene = SceneManager.GetActiveScene().name;
+
+        for (int i = 0; i < enemySpritesInScene.Count; i++)
+        {
+            Destroy(enemySpritesInScene[i]);
+        }
+        enemySpritesInScene.Clear();
 
         SceneManager.LoadScene(sceneToLoad);
     }
@@ -33,33 +48,88 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         GameObject player = GameObject.FindWithTag("Player");
         player.transform.position = spawnPosition;
 
-        PlayerMovementController pmc =
-            (PlayerMovementController)player.GetComponent("PlayerMovementController");
+        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
         pmc.OnSpawnPlayer(directionToFace);
 
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, false));
         yield return null;
     }
 
-    public IEnumerator LoadBattleScene(GameObject[] possibleEnemies)
+    public void SpawnEnemySprite(GameObject[] possibleEnemies, Vector3 spawnPosition)
+    {
+        // Don't spawn enemies if after returning from battle
+        if (previousScene != "Battle")
+        {
+            System.Random r = new System.Random();
+            int i = r.Next(possibleEnemies.Length);
+
+            GameObject enemy = Instantiate(possibleEnemies[i]);
+            enemy.transform.position = spawnPosition;
+        }        
+    }
+
+    public IEnumerator EnterBattle(GameObject engagedEnemySprite)
     {
         StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, true));
         yield return new WaitForSeconds(battleFadeTime);
 
-        this.possibleEnemies = possibleEnemies;
+
+        this.engagedEnemySprite = engagedEnemySprite;
+
+        previousScene = SceneManager.GetActiveScene().name;
+
+        GameObject player = GameObject.FindWithTag("Player");
+        previousPosition = player.transform.position;
+
+
+        GameObject[] enemySpritesArray = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemySpritesArray.Length; i++)
+        {
+            DontDestroyOnLoad(enemySpritesArray[i]);
+            enemySpritesArray[i].SetActive(false);
+            enemySpritesInScene.Add(enemySpritesArray[i]);
+        }
+
 
         SceneManager.LoadScene("Battle");
     }
 
     public IEnumerator SpawnEnemyInBattle(Vector2 spawnPosition)
     {
-        System.Random r = new System.Random();
-        int i = r.Next(possibleEnemies.Length);
+        EnterBattle battleData = engagedEnemySprite.GetComponent<EnterBattle>();
 
-        GameObject enemy = Instantiate(possibleEnemies[i]);
+        GameObject enemy = Instantiate(battleData.enemyInBattle);
         enemy.transform.position = spawnPosition;
+        enemy.GetComponent<Battler>().battleState = battleData.enemyBattleState;
 
         StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, false));
         yield return null;
+    }
+
+    public void ExitBattle()
+    {
+        string temp = previousScene;
+
+        previousScene = "Battle";
+        
+        SceneManager.LoadScene(temp);
+    }
+
+    void OnLevelWasLoaded()
+    {
+        if(previousScene == "Battle")
+        {
+            for (int i = 0; i < enemySpritesInScene.Count; i++)
+            {
+                enemySpritesInScene[i].SetActive(true);
+            }
+
+            enemySpritesInScene.Remove(engagedEnemySprite);
+            Destroy(engagedEnemySprite);
+            
+
+            GameObject player = GameObject.FindWithTag("Player");
+            player.transform.position = previousPosition;
+        }
     }
 }
