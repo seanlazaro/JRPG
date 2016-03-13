@@ -10,7 +10,7 @@ public class ChangeScene : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            SceneTransitionManager.Instance.LoadScene(sceneToLoad, destinationTile);
+            StartCoroutine(SceneTransitionManager.Instance.LoadScene(sceneToLoad, destinationTile));
         }
     }
 }

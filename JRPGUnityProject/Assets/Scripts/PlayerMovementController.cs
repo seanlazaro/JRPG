@@ -13,15 +13,18 @@ public class PlayerMovementController : MonoBehaviour {
     bool playerMoving;
     Vector2 lastMove;
 
+    bool movementEnabled = true;
+
     // Use this for initialization
     void Start () {
-        moveSpeed = 5f;
         anim = GetComponent<Animator> ();
         playerRigidBody = GetComponent<Rigidbody2D> ();
     }
     
     // Update is called once per frame
-    void Update () {        
+    void Update () {
+        if (!movementEnabled) return;
+        
         float xInput = Input.GetAxisRaw("Horizontal");
         float yInput = Input.GetAxisRaw("Vertical");
 
@@ -30,6 +33,7 @@ public class PlayerMovementController : MonoBehaviour {
         if (xInput > 0.5f || xInput < -0.5f) // Moving horizontally
         {
             playerRigidBody.velocity = new Vector2(xInput * moveSpeed, playerRigidBody.velocity.y);
+            //anim.gameObject.transform.Translate(new Vector3(xInput * moveSpeed * Time.deltaTime, 0f));
             playerMoving = true;
             lastMove = new Vector2(xInput, 0f);
         }
@@ -40,7 +44,8 @@ public class PlayerMovementController : MonoBehaviour {
 
         if (yInput > 0.5f || yInput < -0.5f) // Moving vertically
         {
-            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, yInput * moveSpeed); 
+            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, yInput * moveSpeed);
+            //anim.gameObject.transform.Translate(new Vector3(0f, yInput * moveSpeed * Time.deltaTime));
             playerMoving = true;
             lastMove = new Vector2(0f, yInput);
         }
@@ -59,5 +64,20 @@ public class PlayerMovementController : MonoBehaviour {
     public void OnSpawnPlayer(Vector2 directionToFace)
     {
         lastMove = directionToFace;
+    }
+
+    public void EnableMovement(bool enable)
+    {
+        movementEnabled = enable;
+
+        if(!enable)
+        {
+            playerMoving = false;
+            playerRigidBody.velocity = new Vector2(0f, 0f);
+
+            anim.SetFloat("MoveX", 0f);
+            anim.SetFloat("MoveY", 0f);
+            anim.SetBool("PlayerMoving", playerMoving);
+        }
     }
 }
