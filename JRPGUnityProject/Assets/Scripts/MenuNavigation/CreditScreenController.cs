@@ -2,20 +2,21 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-public class CreditScreenManager : MonoBehaviour {
 
-    GameObject goToTitleScreen;
+public class CreditScreenController : MonoBehaviour {
+
+    GameObject backButton;
     EventSystem eventSystem;
 
 	// Use this for initialization
 	void Start () {
-	    goToTitleScreen = GameObject.Find("Main Menu Button");
+	    backButton = GameObject.Find("Back Button");
         GameObject temp = GameObject.Find("EventSystem");
         eventSystem = temp.GetComponent<EventSystem>();
 	}
 	
-	public void ChangeScene () {
-	    if(eventSystem.currentSelectedGameObject == goToTitleScreen)
+	public void LoadScene () {
+	    if(eventSystem.currentSelectedGameObject == backButton)
         {
             SceneManager.LoadScene("TitleMenu");
         }

@@ -21,23 +21,4 @@ public class BattleState {
     public int currentHealth;
     public int maximumHealth;
     public List<bool> statusEffects;
-
-    public BattleState() { }
-
-    public BattleState(BattleState battleStateToCopy)
-    {
-        level = battleStateToCopy.level;
-
-        strength = battleStateToCopy.strength;
-        accuracy = battleStateToCopy.accuracy;
-        speed = battleStateToCopy.speed;
-        deadliness = battleStateToCopy.deadliness;
-
-        attackRating = battleStateToCopy.attackRating;
-        defenceRating = battleStateToCopy.defenceRating;
-
-        currentHealth = battleStateToCopy.currentHealth;
-        maximumHealth = battleStateToCopy.maximumHealth;
-        statusEffects = new List<bool>(battleStateToCopy.statusEffects);
-    }
 }

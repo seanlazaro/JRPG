@@ -53,7 +53,7 @@ public abstract class Battler : MonoBehaviour {
         }
     }
 
-    protected IEnumerator BasicAttack(Action<bool, bool> callback)
+    protected IEnumerator BasicAttack(Action<bool, bool> Finish)
     {
         yield return new WaitForSeconds(1);
 
@@ -69,6 +69,6 @@ public abstract class Battler : MonoBehaviour {
         bool killed = singleAttackTarget.TakeDamage((int)damage);
         if (killed) singleAttackTarget.gameObject.SetActive(false);
 
-        callback(killed, false);
+        Finish(killed, false);
     }
 }

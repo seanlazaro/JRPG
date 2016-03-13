@@ -4,7 +4,7 @@ using System;
 
 public class BasicAttackEnemy : Battler {
 
-    public override IEnumerator ChooseAction(Action callback)
+    public override IEnumerator ChooseAction(Action Finish)
     {
         yield return null;
         DoAction = BasicAttack;
@@ -12,6 +12,6 @@ public class BasicAttackEnemy : Battler {
         GameObject player = GameObject.FindWithTag("Player");
         singleAttackTarget = player.transform.parent.gameObject.GetComponent<Battler>();
 
-        callback();
+        Finish();
     }
 }
