@@ -1,0 +1,224 @@
+[33mcommit fb7f550d4e730307e35cea336e762a7768ff0be6[m
+Merge: e81ba08 6756c65
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sun Mar 20 11:41:14 2016 -0400
+
+    Fixed Merge Error
+    
+    Other version of title menu and credit scenes were overwritten with mine
+
+[33mcommit e81ba081023bd0121b3034ce996eaac89e6a53cb[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sun Mar 20 11:20:22 2016 -0400
+
+    Added Music, and Fixed Title Screen
+    
+    If there are any merge errors, I will cry
+
+[33mcommit 6756c65985e8180b8cdc97caac1a0d66c8a47702[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Mar 19 18:33:08 2016 -0400
+
+    Improved title and credit scene code
+
+[33mcommit 28592013b6ed09998c03fdc771f9b6a4ce9c1b37[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sun Mar 13 16:05:10 2016 -0400
+
+    Organized files with new folder and some new names
+
+[33mcommit 4c83487aa937e24910e0d71e5a8d7e5836e630c3[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sun Mar 13 15:14:51 2016 -0400
+
+    Added Title Screen Changes
+    
+    There may be some sound file thrown in there in prep for next commit
+
+[33mcommit 19254e76c4a15b73af791cca67041c4b1782c1bf[m
+Merge: 2e18e3c 8e1e8ad
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sat Mar 12 20:42:16 2016 -0500
+
+    Fixed Merge Conflict From Title Screen Commit
+
+[33mcommit 2e18e3ce3a44e814474727eae97b636d9661b1d2[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sat Mar 12 20:10:39 2016 -0500
+
+    Idk
+    
+    Added title art
+
+[33mcommit 8e1e8ad1fac53c3fb99c0b62cff74f9c989b4a38[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Mar 12 12:49:06 2016 -0500
+
+    Prevented moving during fade and fixed player spawning after battle
+
+[33mcommit e071e039902dc9d79f939d0b9e61fc3fa33bcc18[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Fri Mar 11 22:12:16 2016 -0500
+
+    Implemented basic turn based combat
+
+[33mcommit 9e748a2231a435f39e0f5b21007a8897750381e9[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Thu Mar 3 22:10:06 2016 -0500
+
+    Tweaks to scene change code
+
+[33mcommit 87dc65b9df5a520b6d823465faf85969ac131611[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sun Feb 28 20:06:29 2016 -0500
+
+    Fixed jittery movement bug, spawn enemy in battle bug and improved fade
+
+[33mcommit 57ca08485778fb142fd8ea7462d7b4d004dc4215[m
+Merge: 3ebf2a8 2f1ac0c
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Feb 27 18:51:33 2016 -0500
+
+    Code cleanup
+    
+    Included singleton generic class, placed fade code in
+    TransitionFxManager and made it reusable through a static function, gave
+    several files more descriptive names
+
+[33mcommit 3ebf2a8ac0cc2a137f71129738c31339449207e8[m
+Merge: 50f6f5f 54d4c52
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Feb 27 18:14:16 2016 -0500
+
+    Started BattleStateMachine
+
+[33mcommit 2f1ac0c75f9e630fbd4e693a433e65dbcca814d8[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Feb 27 18:10:10 2016 -0500
+
+    Created new managers
+    
+    Replaced GameStateController with SceneTransitionManager and
+    TransitionFxManager
+
+[33mcommit 50f6f5ff83d2e5dfe0ef9cd2455b151699fdede5[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sat Feb 27 17:57:35 2016 -0500
+
+    Added World Details, Changed Sprite Color
+    
+    Pretty World
+
+[33mcommit e0db200c02d6ab7f19854b047c813af68026479d[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Feb 27 09:30:05 2016 -0500
+
+    Tried another implementation of fade
+
+[33mcommit 4b688f49415c0a45ba8514bdbd3d05fc71fb6865[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sat Feb 27 08:18:02 2016 -0500
+
+    Code cleanup
+    
+    Removed some global variables, renamed some files, tried different
+    implementation for scene transition fading
+
+[33mcommit b215cd0cd776ef1e541ff0cd2a465a70b8a5eff1[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Fri Feb 26 22:11:28 2016 -0500
+
+    Added camera controller to main scene, flipped cloud
+    
+    Camera moves slightly behind, this is intentional.
+    Cloud now faces the correct direction for the battle scene.
+
+[33mcommit 53235e253752a1e143158f313ab19797219513dc[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Thu Feb 25 21:54:50 2016 -0500
+
+    Changed fading to fadescene, added some pictures and stuff
+
+[33mcommit 54d4c526ee93ea5c2c7a3eb60c7693b8d03b48d9[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Thu Feb 25 21:14:12 2016 -0500
+
+    Changed GameStateController name and started BattleStateMachine
+
+[33mcommit bac7eb049cc7a728b035d2db5dd94ca08db5f683[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Thu Feb 25 21:01:27 2016 -0500
+
+    Fixed Fading
+
+[33mcommit 54f49f1de23bdd86c253180f4da040b275c38a28[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Thu Feb 25 20:49:35 2016 -0500
+
+    Fixed error
+    
+    Wont give an error if the player is in the next scene
+
+[33mcommit df75c91dd9dd23d5c1fff71e745c7aee3b5f725a[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Thu Feb 25 17:00:41 2016 -0500
+
+    Moved Animation Files, Added Fading
+    
+    Fading between scenes on the loadscene.cs file, and the
+    testBattleScene.cs file
+
+[33mcommit 9f75829082d73f721b0690ee53f6cdc42541ba7d[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Wed Feb 24 20:54:16 2016 -0500
+
+    Implemented moving to Battle scene
+
+[33mcommit 8407da2d4b8da706b41c6b340af6febd08acd77a[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Wed Feb 24 00:13:09 2016 -0500
+
+    Implemented moving between scenes and created Output folder
+    
+    Output folder is ignored by git. When building, files such as the .exe
+    file should be created in this folder.
+
+[33mcommit 4741d72b404a4c2e17459256281ea475dfdd9d01[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sun Feb 21 12:05:06 2016 -0500
+
+    Repo cleanup
+
+[33mcommit ed2d1e5a0bca0345089cd163351da5285e832773[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sun Feb 21 11:57:28 2016 -0500
+
+    Update .gitignore
+
+[33mcommit 34b04650e673e3aa6b5a8f04253b1d5ad08afa15[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sun Feb 21 11:38:03 2016 -0500
+
+    Changed name of project, and put files in a folder
+
+[33mcommit 38d36709cce39a8aeb56d3bc887c3ca6e28b8290[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sun Feb 21 11:00:39 2016 -0500
+
+    Got rid of unnecessary files
+
+[33mcommit 4269279a98d680dbe8b2aff015347eaca0676ee9[m
+Author: Shaun Lazaro <shaunlazaro@gmail.com>
+Date:   Sat Feb 20 19:16:59 2016 -0500
+
+    Basic Player Movement
+    
+    The project can be opened with the Unity file in the Assets folder.
+    First part of the sprints have been completed, but the animations will
+    be replaced when the character art is fully created.
+
+[33mcommit 9ec767421c5e60cdff91e8954a2466c4580dc9b6[m
+Author: seanlazaro <seanchristienlazaro@gmail.com>
+Date:   Sun Feb 14 11:10:13 2016 -0500
+
+    :octocat: Added .gitattributes & .gitignore files

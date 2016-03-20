@@ -4,7 +4,7 @@ using System;
 
 public class PlayerBattleController : Battler {
 
-    public override IEnumerator ChooseAction(Action callback)
+    public override IEnumerator ChooseAction(Action Finish)
     {
         // Show GUI allowing player to choose an action
         // Only option is Basic Attack until techniques are implemented
@@ -17,6 +17,6 @@ public class PlayerBattleController : Battler {
         GameObject enemy = GameObject.FindWithTag("Enemy");
         singleAttackTarget = enemy.transform.parent.gameObject.GetComponent<Battler>();
 
-        callback();
+        Finish();
     }
 }

@@ -66,14 +66,14 @@ public class BattleManager : MonoBehaviour {
                 if(!choosingAction)
                 {
                     choosingAction = true;
-                    StartCoroutine(activeBattler.ChooseAction(chooseActionCallback));
+                    StartCoroutine(activeBattler.ChooseAction(FinishChoosingAction));
                 }
                 break;
             case BattlePhase.DoAction:
                 if(!doingAction)
                 {
                     doingAction = true;
-                    StartCoroutine(activeBattler.DoAction(doActionCallback));
+                    StartCoroutine(activeBattler.DoAction(FinishDoingAction));
                 }
                 break;
             case BattlePhase.BattleEnd:
@@ -88,7 +88,7 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
-    void chooseActionCallback()
+    void FinishChoosingAction()
     {
         choosingAction = false;
         activeBattlerIndex++;
@@ -104,7 +104,7 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
-    void doActionCallback(bool deathOccurred, bool speedChanged)
+    void FinishDoingAction(bool deathOccurred, bool speedChanged)
     {
         doingAction = false;
 
