@@ -8,7 +8,7 @@ public abstract class Battler : MonoBehaviour {
     public BattleState battleState;
     public Func<Action<bool, bool>, IEnumerator> DoAction;
 
-    public abstract IEnumerator ChooseAction(Action callback);
+    public abstract IEnumerator ChooseAction(Action Finish);
 
     protected Battler singleAttackTarget;
 
