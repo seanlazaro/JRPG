@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class AudioManager : MonoBehaviour {
 
     public AudioSource musicSource;
-    public GameObject dontDestroy;
     public AudioClip battleBGM;
     public AudioClip normalBGM;
     public AudioClip battleTransition;
@@ -17,17 +16,17 @@ public class AudioManager : MonoBehaviour {
     public string[] overWorldScenes;
     public string[] fightingScenes;
 
-    private bool changingMusic = false;
+    private bool changingMusic = true;
 
     void Awake()
     {
         if (Instance)
         {
-            Destroy(dontDestroy);
+            Destroy(this.gameObject);
         }
         else
         {
-            DontDestroyOnLoad(dontDestroy);
+            DontDestroyOnLoad(this.gameObject);
             Instance = this;
         }
         musicSource.playOnAwake = false;
@@ -35,27 +34,22 @@ public class AudioManager : MonoBehaviour {
         musicSource.loop = true;
     }
 
-	void Start () 
+    void Start () 
     {
         StartAudio(SceneManager.GetActiveScene().name);
     }
 
-	public IEnumerator PlayTransition(string newScene)
+    public IEnumerator PlayTransition(string newScene)
     {
         changingMusic = false;
         
         musicSource.loop = false;
-        Debug.Log(newScene);
 
         if (overWorldScenes.Contains(newScene))
         {
-            Debug.Log("2");
             if (musicSource.clip != normalTransition && musicSource.clip != normalBGM)
             {
                 musicSource.clip = normalTransition;
-            }
-            else
-            {
                 changingMusic = true;
             }
         }
@@ -64,14 +58,11 @@ public class AudioManager : MonoBehaviour {
             if (musicSource.clip != battleTransition && musicSource.clip != battleBGM)
             {
                 musicSource.clip = battleTransition;
-            }
-            else
-            {
                 changingMusic = true;
             }
         }
-        Debug.Log("3");
-        if (!changingMusic)
+
+        if (changingMusic)
         {
             musicSource.Play();
         }
@@ -82,30 +73,24 @@ public class AudioManager : MonoBehaviour {
 
     void StartAudio(string newScene)
     {
-        Debug.Log("Starting Audio");
-        Debug.Log(newScene);
         if (overWorldScenes.Contains(newScene))
         {
-            Debug.Log("Audio Changed");
             musicSource.clip = normalBGM;
         }
-        if (fightingScenes.Contains(newScene))
+        else if (fightingScenes.Contains(newScene))
         {
-            Debug.Log("Audio Changed");
             musicSource.clip = battleBGM;
         }
-        if (!changingMusic)
+
+        if (changingMusic)
         {
             musicSource.Play();
-            Debug.Log("Audio Loop Playing");
         }
-        Debug.Log("Audio Code Done");
     }
 
     IEnumerator OnLevelWasLoaded()
     {
-        Debug.Log("hi");
         StartCoroutine(PlayTransition(SceneManager.GetActiveScene().name));
-        yield return new WaitForSeconds(0.25f);
+        yield break;
     }
 }
