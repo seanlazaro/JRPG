@@ -13,7 +13,6 @@ public class BattleManager : MonoBehaviour {
         BattleEnd
     }
     BattlePhase currentBattlePhase = BattlePhase.BattleStart;
-
     // Stores battlers from greatest to least speed (determines order at start of battle)
     // Any action that changes the speed of a battler should resort
     GameObject[] battlers;
@@ -59,7 +58,7 @@ public class BattleManager : MonoBehaviour {
         switch (currentBattlePhase)
         {
             case BattlePhase.BattleStart:
-                Debug.Log("The battle has started.");
+                StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.",3));
                 currentBattlePhase = BattlePhase.ChooseAction;
                 break;
             case BattlePhase.ChooseAction:

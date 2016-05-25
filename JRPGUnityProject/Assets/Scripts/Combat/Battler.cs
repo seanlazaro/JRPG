@@ -28,7 +28,7 @@ public abstract class Battler : MonoBehaviour {
         if (criticalHitChance > r.NextDouble())
         {
             criticalHitFactor = 3f;
-            Debug.Log("Critical hit!");
+            StartCoroutine(CombatUI.Instance.DisplayMessage("Critical Hit!", 1));
         }
         else criticalHitFactor = 1f;
 
@@ -39,23 +39,23 @@ public abstract class Battler : MonoBehaviour {
     
     // Returns true if the battler dies
     // Animations for taking damage will be placed in here
-    public bool TakeDamage(int dmg)
+    public bool TakeDamage(int dmg, string defender)
     {
         battleState.currentHealth -= dmg;
 
         if (battleState.currentHealth <= 0) return true;
         else
         {
-            string message = string.Format("Remaining health: {0}/{1}", battleState.currentHealth, 
+            string message = string.Format("Remaining health: {0}/{1}", battleState.currentHealth,
                 battleState.maximumHealth);
             Debug.Log(message);
+            StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, (double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
             return false;
         }
     }
 
     protected IEnumerator BasicAttack(Action<bool, bool> Finish)
     {
-        yield return new WaitForSeconds(1);
 
         float damage = CalculateStandardDamage(singleAttackTarget);
 
@@ -64,11 +64,12 @@ public abstract class Battler : MonoBehaviour {
         string defender = singleAttackTarget.gameObject.name;
         string message = string.Format("{0} dealt {1} damage to {2}.", attacker, (int)damage, defender);
         Debug.Log(message);
+        StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1));
 
-
-        bool killed = singleAttackTarget.TakeDamage((int)damage);
+        bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
         if (killed) singleAttackTarget.gameObject.SetActive(false);
 
+        yield return new WaitForSeconds(1); // Moved this line from the start to the end.
         Finish(killed, false);
     }
 }
