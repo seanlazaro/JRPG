@@ -62,12 +62,10 @@ public class CombatUI : Singleton<CombatUI> {
         if (playerDamaged)
         {
             healthBar = GameObject.Find("/Canvas/Health Bar");
-            Debug.Log("I Updated The Player");
         }
         else
         {
             healthBar = GameObject.Find("/Canvas/Enemy Health Bar");
-            Debug.Log("I Updated The Enemy");
         }
         healthBar.GetComponent<UpdateHealth>().UpdateText((int)health, (int)maxHealth);
         healthBar.GetComponent<UpdateHealth>().UpdateBar((float)health / (float)maxHealth);

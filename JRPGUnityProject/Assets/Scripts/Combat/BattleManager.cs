@@ -13,6 +13,7 @@ public class BattleManager : MonoBehaviour {
         BattleEnd
     }
     BattlePhase currentBattlePhase = BattlePhase.BattleStart;
+
     // Stores battlers from greatest to least speed (determines order at start of battle)
     // Any action that changes the speed of a battler should resort
     GameObject[] battlers;
@@ -114,14 +115,14 @@ public class BattleManager : MonoBehaviour {
             GameObject player = GameObject.FindWithTag("Player");
             if (player == null)
             {
-                Debug.Log("You've been wrecked...");
+                StartCoroutine(CombatUI.Instance.DisplayMessage("You've been wrecked...", 3));
                 return;
             }
 
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies.Length == 0)
             {
-                Debug.Log("You've wonnerino!");
+                StartCoroutine(CombatUI.Instance.DisplayMessage("You've wonnerino!", 3));
                 return;
             }
         }

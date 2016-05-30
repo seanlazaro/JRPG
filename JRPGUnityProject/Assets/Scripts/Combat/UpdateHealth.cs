@@ -11,12 +11,10 @@ public class UpdateHealth : MonoBehaviour
     {
         healthBar.fillAmount = percentHpLeft;
         Canvas.ForceUpdateCanvases();
-        Debug.Log("He Did!");
     }
     public void UpdateText(int hp, int maxHp)
     {
         healthText.text = string.Format("HP: {0}/{1}", hp, maxHp);
         Canvas.ForceUpdateCanvases();
-        Debug.Log("Mmmmhmmm");
     }
 }
