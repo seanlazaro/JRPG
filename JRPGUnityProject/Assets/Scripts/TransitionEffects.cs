@@ -22,7 +22,6 @@ public class TransitionEffects : Singleton<TransitionEffects> {
         Color fadeNewColor;
         if (fadeOut)
         {
-
             fadeStartColor = Color.clear;
             fadeNewColor = Color.black;
         }
@@ -30,9 +29,11 @@ public class TransitionEffects : Singleton<TransitionEffects> {
         {
             fadeStartColor = Color.black;
             fadeNewColor = Color.clear;
-        }
+		}
 
         float fadeLerpVar = 0f;
+
+		StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, fadeOut));
         while (fadeLerpVar < 1f)
         {
             fadeLerpVar += Time.deltaTime / fadeTime;

@@ -47,7 +47,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                         _instance = singleton.AddComponent<T>();
                         singleton.name = "(singleton) " + typeof(T).ToString();
 
-                        DontDestroyOnLoad(singleton);
+						DontDestroyOnLoad(singleton);
 
                         Debug.Log("[Singleton] An instance of " + typeof(T) +
                             " is needed in the scene, so '" + singleton +

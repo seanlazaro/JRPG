@@ -1,33 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class CombatUI : Singleton<CombatUI> {
 
-    //For Displaying Text
-    bool talking = false;
-    int fontSpacing = 16;
-    int fontSize = 32;
-    int dialogueWidth;
-    int dialogueHeight = 32;
-    string message;
-    GUIStyle displayStyle = new GUIStyle();
+	bool talking;
+	int fontSize;
+	int fontSpacing;
+	int dialogueWidth;
+	int dialogueHeight;
+	string message;
+	GUIStyle displayStyle = new GUIStyle();
 
-    protected CombatUI() { }
+	void Start()
+	{
+		//To prevent singleton from being destroyed and causing errors.
+		DontDestroyOnLoad(this);
+		//For Displaying Text
+		talking = false;
+		fontSize = (int)Math.Floor((decimal)((Screen.height + Screen.width) / 60));
+		fontSpacing = fontSize / 2 + 1;
+		dialogueHeight = fontSize;
+	}
 	
     void OnGUI () 
     {
         if (talking)
         {
-            dialogueWidth = message.Length * fontSpacing;
-            GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2, 50,
-            dialogueWidth + 10, dialogueHeight));
+			dialogueHeight = fontSize;
+			if (message.Length * fontSpacing < Screen.width / 3)
+				dialogueWidth = message.Length * fontSpacing;
+			else {
+				dialogueWidth = (int)(Screen.width / 3);
+				dialogueHeight = (int)((dialogueHeight+2) * Math.Floor (message.Length * fontSpacing / (Screen.width / 3.0)+0.5));
+			}
+			Debug.Log (dialogueHeight);
+			//Starter rect (screen.width / 2 - dialogue width/2 is the left side of rect
+			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2
+				, Screen.height / 7,
+            dialogueWidth + 10, dialogueHeight + 10));
             //The background box
-            GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
-            //The conversation text
-            GUI.Label(new Rect(0, 0, dialogueWidth, fontSize),
-            message, displayStyle);
-            //Layout end
-            GUI.EndGroup();
+			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
+
+			//Layout end
+			GUI.Label(new Rect(0, 0, dialogueWidth, dialogueHeight) ,
+				message, displayStyle);
+			//Layout end
+			GUI.EndGroup();
         }
     }
 
@@ -36,7 +55,8 @@ public class CombatUI : Singleton<CombatUI> {
         GUI.color = Color.white;
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
-        message = messageInput;
+		displayStyle.wordWrap = true;
+		message = messageInput;
         talking = true;
         yield return new WaitForSeconds(displayTime);
         talking = false;
@@ -47,6 +67,7 @@ public class CombatUI : Singleton<CombatUI> {
         GUI.color = color;
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
+		displayStyle.wordWrap = true;
         message = messageInput;
         talking = true;
         yield return new WaitForSeconds(displayTime);
@@ -54,7 +75,6 @@ public class CombatUI : Singleton<CombatUI> {
     }
 
     // For displaying health bar.
-
     GameObject healthBar;
 
     public IEnumerator UpdateHealthBar(double health, double maxHealth, bool playerDamaged)

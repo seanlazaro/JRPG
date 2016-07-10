@@ -93,4 +93,26 @@ public class AudioManager : MonoBehaviour {
         StartCoroutine(PlayTransition(SceneManager.GetActiveScene().name));
         yield break;
     }
+		
+	public IEnumerator AudioFade(float fadeTime, bool fadeOut)
+	{
+		bool increasing;
+		float totalChange = 0;
+
+		if (fadeOut)
+			increasing = false;
+		else 
+			increasing = true;
+		
+		while(!(totalChange >= 1))
+		{
+			if (increasing)
+				musicSource.volume += Time.deltaTime / fadeTime;
+			else
+				musicSource.volume -= Time.deltaTime / fadeTime;
+			totalChange += Time.deltaTime / fadeTime;
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
 }

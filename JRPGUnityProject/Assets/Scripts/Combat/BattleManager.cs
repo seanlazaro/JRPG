@@ -52,6 +52,7 @@ public class BattleManager : MonoBehaviour {
         Array.Sort(battlers, speedComparer);
 
         activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
+
     }
     
     // Update is called once per frame
@@ -59,8 +60,11 @@ public class BattleManager : MonoBehaviour {
         switch (currentBattlePhase)
         {
             case BattlePhase.BattleStart:
-                StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.",3));
-                currentBattlePhase = BattlePhase.ChooseAction;
+				for(int j = 0; j < battlers.Length; j++)
+				StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battlers[j].GetComponent<Battler>().battleState.currentHealth, 
+					(double)battlers[j].GetComponent<Battler>().battleState.maximumHealth, battlers[j].name == "PlayerDuringBattle"));StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.",3));
+    
+				currentBattlePhase = BattlePhase.ChooseAction;
                 break;
             case BattlePhase.ChooseAction:
                 if(!choosingAction)

@@ -40,18 +40,25 @@ public abstract class Battler : MonoBehaviour {
     // Returns true if the battler dies
     // Animations for taking damage will be placed in here
     public bool TakeDamage(int dmg, string defender)
-    {
-        battleState.currentHealth -= dmg;
+	{
+		battleState.currentHealth -= dmg;
 
-        if (battleState.currentHealth <= 0) return true;
-        else
-        {
-            string message = string.Format("Remaining health: {0}/{1}", battleState.currentHealth,
-                battleState.maximumHealth);
-            StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, 
-                (double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
-            return false;
-        }
+		//
+		//  Take Damage Animation!
+		//
+
+		// The UpdateHealthBar Coroutine is put in both if/else blocks to
+		// prevent enemy health from being shown as a negative number.
+		if (battleState.currentHealth <= 0) {	
+			StartCoroutine (CombatUI.Instance.UpdateHealthBar (0, 
+				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
+			return true;
+		} 
+		else {
+			StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, 
+				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
+		}
+		return false;
     }
 
     protected IEnumerator BasicAttack(Action<bool, bool> Finish)
@@ -65,6 +72,7 @@ public abstract class Battler : MonoBehaviour {
 
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
         if (killed) singleAttackTarget.gameObject.SetActive(false);
+
 
         Finish(killed, false);
 
