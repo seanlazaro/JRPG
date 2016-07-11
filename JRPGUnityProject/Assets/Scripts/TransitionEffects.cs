@@ -33,8 +33,12 @@ public class TransitionEffects : Singleton<TransitionEffects> {
 
         float fadeLerpVar = 0f;
 
-		StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, fadeOut));
-        while (fadeLerpVar < 1f)
+		//If statement added to avoid errors when testing without the audio manager.
+		//This happens when one does not pass through the title screen.
+		if(GameObject.Find("Audio Manager" != null))
+			StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, fadeOut));
+        
+		while (fadeLerpVar < 1f)
         {
             fadeLerpVar += Time.deltaTime / fadeTime;
             fadeTexture.color = Color.Lerp(fadeStartColor, fadeNewColor, fadeLerpVar);
