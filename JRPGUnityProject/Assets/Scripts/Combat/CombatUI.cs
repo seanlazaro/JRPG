@@ -32,9 +32,8 @@ public class CombatUI : Singleton<CombatUI> {
 				dialogueWidth = message.Length * fontSpacing;
 			else {
 				dialogueWidth = (int)(Screen.width / 3);
-				dialogueHeight = (int)((dialogueHeight+2) * Math.Floor (message.Length * fontSpacing / (Screen.width / 3.0)+0.5));
+				dialogueHeight = (int)((dialogueHeight+5) * Math.Floor (message.Length * fontSpacing / (Screen.width / 3)+1.0));
 			}
-			Debug.Log (dialogueHeight);
 			//Starter rect (screen.width / 2 - dialogue width/2 is the left side of rect
 			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2
 				, Screen.height / 7,

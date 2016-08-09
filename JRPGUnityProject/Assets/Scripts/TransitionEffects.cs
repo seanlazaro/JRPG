@@ -35,7 +35,7 @@ public class TransitionEffects : Singleton<TransitionEffects> {
 
 		//If statement added to avoid errors when testing without the audio manager.
 		//This happens when one does not pass through the title screen.
-		if(GameObject.Find("Audio Manager" != null))
+		if(GameObject.Find("Audio Manager") != null)
 			StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, fadeOut));
         
 		while (fadeLerpVar < 1f)

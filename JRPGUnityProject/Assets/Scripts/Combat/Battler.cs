@@ -71,6 +71,7 @@ public abstract class Battler : MonoBehaviour {
         StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1));
 
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
+		yield return new WaitForSeconds (1);
         if (killed) singleAttackTarget.gameObject.SetActive(false);
 
 
