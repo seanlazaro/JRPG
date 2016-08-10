@@ -6,6 +6,9 @@ public class DialogueController : MonoBehaviour {
 	// Only used to enable and disable player movement.
 	GameObject player;
 
+	// Used to disable pausing.
+	GameObject pauseMenu;
+
 	// Stores npc image, it should be a square.
 	public Texture image;
 	public string npcName;
@@ -76,6 +79,8 @@ public class DialogueController : MonoBehaviour {
 	void Start () {
 		// Used to disable movement.
 		player = GameObject.FindWithTag("Player");
+		// Used to disable pausing
+		pauseMenu = GameObject.FindWithTag("Pause Menu Canvas");
 
 		// If the choices array length is over 0, there must be multiple dialogue branches.
 		if (choices.Length > 0) {
@@ -102,6 +107,7 @@ public class DialogueController : MonoBehaviour {
 
 	public IEnumerator StartDialogue(){
 		player.GetComponent<PlayerMovementController> ().EnableMovement (false);
+		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
 		talking = true;
 		currentDialogueState = (int)dialogueState.MainBranch;
 
@@ -240,6 +246,7 @@ public class DialogueController : MonoBehaviour {
 				}
 			}
 		}
+		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
 		player.GetComponent<PlayerMovementController> ().EnableMovement (true);
 		yield break;
 	}
