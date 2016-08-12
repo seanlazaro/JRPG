@@ -272,7 +272,8 @@ public class DialogueController : MonoBehaviour {
 				// Displays text 10 pixels away from the top, bottom, and 50 pixels to the right of the picture.
 				// The width is set to width - height + 30, because it should be as wide as the box, minus the
 				// width of the picture(20), and with a 10 pixel buffer on both sides(20).
-				GUI.Label(new Rect(height + 40, 10, width - height + 40, height - 20), currentText);
+			// (GUI.skin.label.fontSize * 4) is added to prevent words overflowing too far, without clipping
+				GUI.Label(new Rect(height + 40, 10, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 20), currentText);
 				GUI.EndGroup();
 
 			// Player choice will be set to true in the playerchoice state, after the main branch.
@@ -320,7 +321,7 @@ public class DialogueController : MonoBehaviour {
 			// If there is no player choice going on, display a name tag for the NPC.
 			else {
 				// The text will be a part of the box, to allow customization seperate from the label text.
-				GUI.skin.box.fontSize = Screen.width / 25;
+				GUI.skin.box.fontSize = Screen.width / 30;
 
 				// Box will be lined up with the box around the picture, in width and location.
 				GUI.BeginGroup (new Rect (locationX, locationY - buttonHeight * 1.5f, height, buttonHeight * 1.5f));

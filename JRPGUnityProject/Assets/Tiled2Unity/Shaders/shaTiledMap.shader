@@ -1,4 +1,5 @@
-﻿Shader "Tiled/TextureTintSnap"
+﻿// Legacy shader for older Tiled2Unity builds. Will eventually remove.
+Shader "Tiled2Unity/TextureTintSnap (Legacy)"
 {
     Properties
     {

@@ -10,7 +10,8 @@ public class CameraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		// To prevent awkward camera jumps across maps with multiple spawn points
+		transform.position = new Vector3 (followTarget.transform.position.x, followTarget.transform.position.y, transform.position.z);
 	}
 	
 	// Update is called once per frame

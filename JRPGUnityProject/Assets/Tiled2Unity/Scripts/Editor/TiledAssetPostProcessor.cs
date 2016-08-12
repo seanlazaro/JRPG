@@ -1,4 +1,16 @@
-﻿using System.Collections;
+﻿#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2
+#define T2U_USE_LEGACY_IMPORTER
+#else
+#undef T2U_USE_LEGACY_IMPORTER
+#endif
+
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3
+#define T2U_USE_LIGHT_PROBES_API
+#else
+#undef T2U_USE_LIGHT_PROBES_API
+#endif
+
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -15,7 +27,8 @@ namespace Tiled2Unity
         private static bool UseThisImporter(string assetPath)
         {
             // Certain file types are ignored by this asset post processor (i.e. scripts)
-            string[] ignoreThese = { ".cs", ".txt", };
+            // (Note that an empty string as the extension is a folder)
+            string[] ignoreThese = { ".cs", ".txt",  ".shader", "", };
             if (ignoreThese.Any(ext => String.Compare(ext, Path.GetExtension(assetPath), true) == 0))
             {
                 return false;
@@ -42,7 +55,7 @@ namespace Tiled2Unity
             if (useThisImporter == true)
             {
 #if UNITY_WEBPLAYER
-                String warning = String.Format("Importing '{0}' but Tiled2Unity files cannot be imported with the WebPlayer[deprecated] platform.\nHowever, You can use Tiled2Unity prefabs imported by another platform.", assetPath);
+                String warning = String.Format("Can not import through Tiled2Unity using the WebPlayer platform. This is depecrated by Unity Technologies and is no longer supported. Go to File -> Build Settings... and switch to another platform. (You can switch back to Web Player after importing.). File: {0}", assetPath);
                 Debug.LogWarning(warning);
                 return false;
 #else
@@ -109,20 +122,19 @@ namespace Tiled2Unity
 
             // Keep normals otherwise Unity will complain about needing them.
             // Normals may not be a bad idea anyhow
-#if UNITY_5_0 || UNITY_5_1 || UNITY_5_2
+#if T2U_USE_LEGACY_IMPORTER
             modelImporter.normalImportMode = ModelImporterTangentSpaceMode.Import;
+            modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.None;
 #else
             modelImporter.importNormals = ModelImporterNormals.Import;
+            modelImporter.importTangents = ModelImporterTangents.None;
 #endif
+
+            modelImporter.importBlendShapes = false;
 
             // Don't need animations or tangents.
             modelImporter.generateAnimations = ModelImporterGenerateAnimations.None;
             modelImporter.animationType = ModelImporterAnimationType.None;
-#if UNITY_5_0 || UNITY_5_1 || UNITY_5_2
-            modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.None;
-#else
-            modelImporter.importTangents = ModelImporterTangents.None;
-#endif
 
             // Do not need mesh colliders on import.
             modelImporter.addCollider = false;
@@ -144,11 +156,22 @@ namespace Tiled2Unity
 
                 // No shadows
                 mr.receiveShadows = false;
+#if T2U_USE_LEGACY_IMPORTER
+                mr.castShadows = false;
+#else
                 mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+#endif
 
+#if !T2U_USE_LEGACY_IMPORTER
+                mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+#endif
+
+#if T2U_USE_LIGHT_PROBES_API
                 // No probes
                 mr.useLightProbes = false;
-                mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+#else
+                //mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
+#endif
             }
         }
 

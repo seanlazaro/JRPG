@@ -18,7 +18,7 @@ namespace Tiled2Unity
     // Concentrates on the Xml file being imported
     partial class ImportTiled2Unity
     {
-        public static readonly string ThisVersion = "1.0.4.2";
+        public static readonly string ThisVersion = "1.0.7.7";
 
         // Called when Unity detects the *.tiled2unity.xml file needs to be (re)imported
         public void ImportBegin(string xmlPath)
@@ -28,7 +28,7 @@ namespace Tiled2Unity
             XDocument xml = importBehaviour.XmlDocument;
             if (xml == null)
             {
-                Debug.LogErrorFormat("GameObject {0} not successfully initialized. Is it left over from a previous import. Try removing from scene are re-importing {1}.", importBehaviour.gameObject.name, xmlPath);
+                Debug.LogError(String.Format("GameObject {0} not successfully initialized. Is it left over from a previous import. Try removing from scene are re-importing {1}.", importBehaviour.gameObject.name, xmlPath));
                 return;
             }
 
@@ -44,8 +44,11 @@ namespace Tiled2Unity
         // Called when the import process has completed and we have a prefab ready to go
         public void ImportFinished(string prefabPath)
         {
+            // String the prefab extension
+            string prefabName = Path.GetFileNameWithoutExtension(prefabPath);
+
             // Get at the import behavour tied to this prefab and remove it from the scene
-            string xmlAssetPath = GetXmlImportAssetPath(prefabPath);
+            string xmlAssetPath = GetXmlImportAssetPath(prefabName);
             ImportBehaviour importBehaviour = ImportBehaviour.FindOrCreateImportBehaviour(xmlAssetPath);
             importBehaviour.DestroyImportBehaviour();
         }
@@ -79,18 +82,13 @@ namespace Tiled2Unity
                     AssetDatabase.ImportAsset(pathToSave, ImportAssetOptions.ForceSynchronousImport);
                 }
 
-                // Create a material if needed in prepartion for the texture being successfully imported
+                // Create a material in prepartion for the texture being successfully imported
                 {
+                    // We need to recreate the material every time because the Tiled Map may have changed
                     string materialPath = GetMaterialAssetPath(name);
-                    Material material = AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)) as Material;
-                    if (material == null)
-                    {
-                        // We need to create the material afterall
-                        // Use our custom shader
-                        material = new Material(Shader.Find("Tiled/TextureTintSnap"));
-                        ImportUtils.ReadyToWrite(materialPath);
-                        AssetDatabase.CreateAsset(material, materialPath);
-                    }
+                    Material material = CreateMaterialFromXml(tex);
+                    ImportUtils.ReadyToWrite(materialPath);
+                    ImportUtils.CreateOrReplaceAsset(material, materialPath);
                 }
             }
         }
@@ -103,21 +101,64 @@ namespace Tiled2Unity
                 string texAssetPath = tex.Attribute("assetPath").Value;
                 string materialPath = GetMaterialAssetPath(texAssetPath);
 
-                Material material = AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)) as Material;
-                if (material == null)
-                {
-                    // Create our material
-                    material = new Material(Shader.Find("Tiled/TextureTintSnap"));
+                // Create our material
+                Material material = CreateMaterialFromXml(tex);
 
-                    // Assign to it the texture that is already internal to our Unity project
-                    Texture2D texture2d = AssetDatabase.LoadAssetAtPath(texAssetPath, typeof(Texture2D)) as Texture2D;
-                    material.SetTexture("_MainTex", texture2d);
+                // Assign to it the texture that is already internal to our Unity project
+                Texture2D texture2d = AssetDatabase.LoadAssetAtPath(texAssetPath, typeof(Texture2D)) as Texture2D;
+                material.SetTexture("_MainTex", texture2d);
 
-                    // Write the material to our asset database
-                    ImportUtils.ReadyToWrite(materialPath);
-                    AssetDatabase.CreateAsset(material, materialPath);
-                }
+                // Write the material to our asset database
+                ImportUtils.ReadyToWrite(materialPath);
+                ImportUtils.CreateOrReplaceAsset(material, materialPath);
             }
+        }
+
+        private Material CreateMaterialFromXml(XElement xml)
+        {
+            // Does this material support alpha color key?
+            string htmlColor = ImportUtils.GetAttributeAsString(xml, "alphaColorKey", "");
+            bool usesDepthShader = ImportUtils.GetAttributeAsBoolean(xml, "usesDepthShaders", false);
+
+            // Determine which shader we sould be using
+            string shaderName = "Tiled2Unity/";
+
+            // Are we using depth shaders?
+            if (usesDepthShader)
+            {
+                shaderName += "Depth";
+            }
+            else
+            {
+                shaderName += "Default";
+            }
+
+            // Are we using color key shaders?
+            Color? keyColor = null;
+            if (!String.IsNullOrEmpty(htmlColor))
+            {
+                shaderName += " Color Key";
+
+                // Sometimes Tiled saves out color without the leading # but we expect it to be there
+                if (!htmlColor.StartsWith("#"))
+                {
+                    htmlColor = "#" + htmlColor;
+                }
+
+                byte r = byte.Parse(htmlColor.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                byte g = byte.Parse(htmlColor.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                byte b = byte.Parse(htmlColor.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                keyColor = new Color32(r, g, b, 255);
+            }
+
+            Material material = new Material(Shader.Find(shaderName));
+
+            if (keyColor.HasValue)
+            {
+                material.SetColor("_AlphaColorKey", keyColor.Value);
+            }
+
+            return material;
         }
 
         private void ImportMeshesFromXml(XDocument xml)

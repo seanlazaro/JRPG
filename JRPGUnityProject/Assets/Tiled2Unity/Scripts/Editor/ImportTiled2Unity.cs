@@ -22,7 +22,7 @@ namespace Tiled2Unity
 
             // Discover the root of the Tiled2Unity scripts and assets
             this.pathToTiled2UnityRoot = Path.GetDirectoryName(this.fullPathToFile);
-            int index = this.pathToTiled2UnityRoot.LastIndexOf("Tiled2Unity");
+            int index = this.pathToTiled2UnityRoot.LastIndexOf("Tiled2Unity", StringComparison.InvariantCultureIgnoreCase);
             if (index == -1)
             {
                 Debug.LogError(String.Format("There is an error with your Tiled2Unity install. Could not find Tiled2Unity folder in {0}", file));
@@ -88,17 +88,17 @@ namespace Tiled2Unity
             return textureAsset;
         }
 
-        public string GetXmlImportAssetPath(string file)
+        public string GetXmlImportAssetPath(string name)
         {
-            string name = Path.GetFileNameWithoutExtension(file);
+#if !UNITY_WEBPLAYER
+            name = Tiled2Unity.ImportBehaviour.GetFilenameWithoutTiled2UnityExtension(name);
+#endif
             string xmlAsset = String.Format("{0}/Imported/{1}.tiled2unity.xml", this.assetPathToTiled2UnityRoot, name);
             return xmlAsset;
         }
 
         public string GetPrefabAssetPath(string name, bool isResource, string extraPath)
         {
-            name = Path.GetFileNameWithoutExtension(name);
-
             string prefabAsset = "";
             if (isResource)
             {
