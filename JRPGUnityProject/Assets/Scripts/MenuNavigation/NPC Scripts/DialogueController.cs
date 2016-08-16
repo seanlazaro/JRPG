@@ -13,8 +13,6 @@ public class DialogueController : MonoBehaviour {
 	public Texture image;
 	public string npcName;
 
-	// If a variable is set, then the
-
 	//Stores text style info for dialogue text, will be edited in the inspector.
 	public GUISkin textStyle;
 

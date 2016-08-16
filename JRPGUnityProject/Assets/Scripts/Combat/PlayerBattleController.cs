@@ -4,13 +4,18 @@ using System;
 
 public class PlayerBattleController : Battler {
 
+
+	bool choosing;
     public override IEnumerator ChooseAction(Action Finish)
     {
-        // Show GUI allowing player to choose an action
-        // Only option is Basic Attack until techniques are implemented
-        // After techniques are implemented, remove Basic Attack
+        // Show GUI allowing player to choose an action.
+        // Only option is Basic Attack until techniques are implemented.
+        // After techniques are implemented, remove Basic Attack.
+		choosing = true;
 
-        // Until GUI is implemented, automatically choose Basic Attack
+		choosing = true;
+
+        // Until GUI is implemented, automatically choose Basic Attack.
         yield return new WaitForSeconds(3);
         DoAction = BasicAttack;
 
