@@ -13,15 +13,26 @@ public class DialogueController : MonoBehaviour {
 	public Texture image;
 	public string npcName;
 
+	// If a variable is set, then the
+
 	//Stores text style info for dialogue text, will be edited in the inspector.
 	public GUISkin textStyle;
+
 	// Stores the entire dialogue tree.
+	[Header("Up to [8], [9] - null, [10] - closer")]
 	public string[] dialogueArray;
+
+	public string[] choices;
 	public string[] branchA;
 	public string[] branchB;
 	public string[] branchC;
 	public string[] branchD;
-	public string[] choices;
+
+	public string[][] brallsls;
+
+	[Header("Dont change.")]
+	public bool triggerOtherScripts;
+
 	// Stores the current line to be displayed.
 	string currentText;
 	int currentTextIndex = 0;
@@ -103,6 +114,9 @@ public class DialogueController : MonoBehaviour {
 		button2Location = new Rect (buttonWidth + 10, 0, buttonWidth, buttonHeight);
 		button3Location = new Rect (buttonWidth + 10 * 2, 0, buttonWidth, buttonHeight);
 		button4Location = new Rect (buttonWidth + 10 * 3, 0, buttonWidth, buttonHeight);
+
+		// Makes sure that the other scripts aren't triggered before dialogue
+		triggerOtherScripts = false;
 	}
 
 	public IEnumerator StartDialogue(){
@@ -110,144 +124,20 @@ public class DialogueController : MonoBehaviour {
 		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
 		talking = true;
 		currentDialogueState = (int)dialogueState.MainBranch;
+		currentTextIndex = 0;
 
-		while (talking) {
+		// Gives player 0.2 seconds to let go of space key.
+		yield return new WaitForSeconds (0.2f);
 
-			// Buttons set index to -1, to prevent the script from skipping directly to the closer line.
-			if (currentTextIndex < 0) {
-				currentTextIndex = 0;
-			}
-			switch(currentDialogueState)
-			{
-				case (int)dialogueState.MainBranch:
-					currentText = dialogueArray [currentTextIndex];
-					
-					// Gives player 0.2 seconds to let go of space key.
-					yield return new WaitForSeconds (0.2f);
-					advance = false;
-					yield return new WaitUntil (() => advance);
-					advance = false;
-					// If the next line isn't null, advances text.
-					// Else, the dialogue state will change after.
-					if (dialogueArray [currentTextIndex + 1] != "") {
-						currentTextIndex++;
-					}
-					break;
 
-				case (int)dialogueState.PlayerChoice:
-					if (!dialogueHasBranches) {
-						break;
-					}
-					currentText = choices[0];
-					playerChoice = true;
-					yield return new WaitUntil (() => !playerChoice);
-					break;
-
-				case (int)dialogueState.BranchOne: // 11-19
-					currentText = branchA[currentTextIndex];
-
-					advance = false;
-					yield return new WaitUntil (() => advance);
-					advance = false;
-					if (dialogueArray [currentTextIndex + 1] != "") {
-						currentTextIndex++;
-					}
-					break;
-
-				case (int)dialogueState.BranchTwo: // 21 - 29
-					currentText = branchB [currentTextIndex];
-
-					advance = false;
-					yield return new WaitUntil (() => advance);
-					advance = false;
-					if (dialogueArray [currentTextIndex + 1] != "") {
-						currentTextIndex++;
-					}
-					break;
-
-				case (int)dialogueState.BranchThree: // 31 - 39
-					currentText = branchC[currentTextIndex];
-
-					advance = false;
-					yield return new WaitUntil (() => advance);
-					advance = false;
-					if (dialogueArray [currentTextIndex + 1] != "") {
-						currentTextIndex++;
-					}
-					break;
-
-				case (int)dialogueState.BranchFour: // 41 - 49
-					currentText = branchD[currentTextIndex];
-
-					advance = false;
-					yield return new WaitUntil (() => advance);
-					advance = false;
-					if (dialogueArray [currentTextIndex + 1] != "") {
-						currentTextIndex++;
-					}
-					break;
-
-				case (int)dialogueState.Closer:
-					if (dialogueArray.Length != 11)
-						break;
-					// The ninth element will always be the closer line.
-					currentText = dialogueArray [10];
-					advance = false;
-					yield return new WaitUntil (() => advance);	
-					talking = false;
-					advance = false;
-					break;
-
-				case (int)dialogueState.End: // Should never be this, unless there is no closer line.
-					talking = false;
-					break;
-				default:
-					talking = false;
-					break;
-				}
-
-			// If the main branch is done, change state to PlayerChoice.
-			if (currentDialogueState == (int)dialogueState.MainBranch && dialogueArray [currentTextIndex + 1] == "") {
-				currentDialogueState = (int)dialogueState.PlayerChoice;
-			}
-
-			// If there are no branches and the main branch is complete, then go to the closer line.
-			if(currentDialogueState == (int)dialogueState.PlayerChoice && !dialogueHasBranches)
-			{
-				currentDialogueState = (int)dialogueState.Closer;
-			}
-				
-			if (currentDialogueState == (int)dialogueState.BranchOne && branchA.Length >= currentTextIndex + 1)
-			{
-				if(branchA[currentTextIndex+1] == "")
-					currentDialogueState = (int)dialogueState.Closer;
-			}
-			else if (currentDialogueState == (int)dialogueState.BranchTwo && branchB.Length >= currentTextIndex + 1){
-				if(branchA[currentTextIndex+1] == "")
-					currentDialogueState = (int)dialogueState.Closer;
-			}
-			else if (currentDialogueState == (int)dialogueState.BranchThree && branchC.Length >= currentTextIndex + 1){
-				if(branchA[currentTextIndex+1] == "")
-					currentDialogueState = (int)dialogueState.Closer;
-			}
-			else if (currentDialogueState == (int)dialogueState.BranchFour && branchD.Length >= currentTextIndex + 1){
-				if(branchA[currentTextIndex+1] == "")
-					currentDialogueState = (int)dialogueState.Closer;
-			}
-
-			// If the script is trying to view the closing line, but there is none, then stop dialogue.
-			if(currentDialogueState == (int)dialogueState.Closer)
-			{
-				if (dialogueArray.Length != 11) {
-					currentDialogueState = (int)dialogueState.End;
-				} 
-				else if (dialogueArray [10] == "") {
-					currentDialogueState = (int)dialogueState.End;
-				}
-			}
-		}
 		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
 		player.GetComponent<PlayerMovementController> ().EnableMovement (true);
+
+		// Other Scripts
+		Debug.Log("Other Scripts Triggered");
+		triggerOtherScripts = true;
+
+
 		yield break;
 	}
 
