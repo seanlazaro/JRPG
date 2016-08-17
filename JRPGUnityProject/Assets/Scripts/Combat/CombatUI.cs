@@ -11,6 +11,8 @@ public class CombatUI : Singleton<CombatUI> {
 	int dialogueHeight;
 	string message;
 	GUIStyle displayStyle = new GUIStyle();
+	Color GuiColor;
+
 
 	void Start()
 	{
@@ -21,15 +23,21 @@ public class CombatUI : Singleton<CombatUI> {
 		fontSize = (int)Math.Floor((decimal)((Screen.height + Screen.width) / 60));
 		fontSpacing = fontSize / 2 + 1;
 		dialogueHeight = fontSize;
+
+		GuiColor = Color.black;
 	}
 	
-    void OnGUI () 
+    void OnGUI ()
     {
         if (talking)
         {
 			dialogueHeight = fontSize;
-			if (message.Length * fontSpacing < Screen.width / 3)
-				dialogueWidth = message.Length * fontSpacing;
+			if (message.Length * fontSpacing < Screen.width / 3) {
+				if (message.Length < 10)
+					dialogueWidth = (int)Math.Floor ((decimal)(message.Length * fontSpacing * 1.5));
+				else
+					dialogueWidth = message.Length * fontSpacing;
+			}
 			else {
 				dialogueWidth = (int)(Screen.width / 3);
 				dialogueHeight = (int)((dialogueHeight+5) * Math.Floor (message.Length * fontSpacing / (Screen.width / 3)+1.0));
@@ -38,6 +46,8 @@ public class CombatUI : Singleton<CombatUI> {
 			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2
 				, Screen.height / 7,
             dialogueWidth + 10, dialogueHeight + 10));
+			GUI.color = GuiColor;
+			Debug.Log (GUI.color);
             //The background box
 			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
 
@@ -51,7 +61,7 @@ public class CombatUI : Singleton<CombatUI> {
 
     public IEnumerator DisplayMessage(string messageInput, float displayTime)
     {
-        GUI.color = Color.white;
+        GuiColor = Color.white;
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
 		displayStyle.wordWrap = true;
@@ -63,7 +73,7 @@ public class CombatUI : Singleton<CombatUI> {
 
     public IEnumerator DisplayMessage(string messageInput, float displayTime, Color color)
     {
-        GUI.color = color;
+        GuiColor = color;
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
 		displayStyle.wordWrap = true;

@@ -120,7 +120,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     public IEnumerator ExitBattle()
     {
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
-        yield return new WaitForSeconds(fadeTime);
+		// 2f is added because the win message takes 3 seconds.
+        yield return new WaitForSeconds(fadeTime + 2f);
         
         string temp = previousScene;
 
