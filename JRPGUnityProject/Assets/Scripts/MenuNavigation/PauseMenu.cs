@@ -38,7 +38,7 @@ public class PauseMenu : MonoBehaviour {
 				TogglePauseMenu ();
 			}
 		}
-		if (EventSystem.current.currentSelectedGameObject == null)
+		if (EventSystem.current.currentSelectedGameObject == null && paused)
 			EventSystem.current.SetSelectedGameObject (EventSystem.current.firstSelectedGameObject);
 	}
 

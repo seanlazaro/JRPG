@@ -11,8 +11,6 @@ public class CombatUI : Singleton<CombatUI> {
 	int dialogueHeight;
 	string message;
 	GUIStyle displayStyle = new GUIStyle();
-	Color GuiColor;
-
 
 	void Start()
 	{
@@ -24,7 +22,6 @@ public class CombatUI : Singleton<CombatUI> {
 		fontSpacing = fontSize / 2 + 1;
 		dialogueHeight = fontSize;
 
-		GuiColor = Color.black;
 	}
 	
     void OnGUI ()
@@ -46,8 +43,6 @@ public class CombatUI : Singleton<CombatUI> {
 			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2
 				, Screen.height / 7,
             dialogueWidth + 10, dialogueHeight + 10));
-			GUI.color = GuiColor;
-			Debug.Log (GUI.color);
             //The background box
 			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
 
@@ -61,23 +56,10 @@ public class CombatUI : Singleton<CombatUI> {
 
     public IEnumerator DisplayMessage(string messageInput, float displayTime)
     {
-        GuiColor = Color.white;
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
 		displayStyle.wordWrap = true;
 		message = messageInput;
-        talking = true;
-        yield return new WaitForSeconds(displayTime);
-        talking = false;
-    }
-
-    public IEnumerator DisplayMessage(string messageInput, float displayTime, Color color)
-    {
-        GuiColor = color;
-        displayStyle.alignment = TextAnchor.UpperCenter;
-        displayStyle.fontSize = fontSize;
-		displayStyle.wordWrap = true;
-        message = messageInput;
         talking = true;
         yield return new WaitForSeconds(displayTime);
         talking = false;

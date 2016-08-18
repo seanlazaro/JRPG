@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System;
 
@@ -25,7 +27,9 @@ public class DialogueController : MonoBehaviour {
     // a valid value that indicates which index to start reading from in the choices array.
     // Dialogue effect indicates which block of code to execute in the the npc effects script.
     // If dialogue effect is 0, then there is no effect.
-    public string[] dialogue;
+    
+	[Header("Next Four Must Be Equal Size")]
+	public string[] dialogue;
     public int[] numberOfChoices;
     public int[] startIndexInChoices;
     public int[] dialogueEffect;
@@ -33,7 +37,8 @@ public class DialogueController : MonoBehaviour {
     // The elements of the final two arrays with the same index correspond to each other.
     // Each choice in the choices array will have a corresponding index to which to skip to in the 
     // dialogue array.
-    public string[] choices;
+	[Header("Next Two Must Be Equal Size")]
+	public string[] choices;
     public int[] nextIndexInDialogue;
 
     public bool effectTriggered = false;
@@ -57,6 +62,22 @@ public class DialogueController : MonoBehaviour {
     }
 
 	bool talking = false;
+	// Choice Stuff
+	bool choosing = false;
+
+
+	// Each NPC must have its own dialogue choice buttons,
+	// So create a transparent panel and duplicate all buttons into it to sort.
+	public GameObject DialogueChoiceMenu;
+
+	public GameObject ButtonOne;
+	int buttonOneDestination;
+	public GameObject ButtonTwo;
+	int buttonTwoDestination;
+	public GameObject ButtonThree;
+	int buttonThreeDestination;
+	public GameObject ButtonFour;
+	int buttonFourDestination;
 
 	// Value is changed to true when user advances dialogue.
 	// It will be set back to false after dialogue state changes.
@@ -69,12 +90,7 @@ public class DialogueController : MonoBehaviour {
 	float locationX;
 	float locationY;
 
-	float buttonWidth;
 	float buttonHeight;
-	Rect button1Location;
-	Rect button2Location;
-	Rect button3Location;
-	Rect button4Location;
 
 	// Use this for initialization
 	void Start () {
@@ -89,12 +105,10 @@ public class DialogueController : MonoBehaviour {
 		locationX = (Screen.width - width) / 2;
 		locationY = Screen.height - height - 10;
 		//Dimensions of player choice buttons.
-		buttonWidth = width / 4 - 20;
 		buttonHeight = height / 4 - 10;
-		button1Location = new Rect (0, 0, buttonWidth, buttonHeight);
-		button2Location = new Rect (buttonWidth + 10, 0, buttonWidth, buttonHeight);
-		button3Location = new Rect (buttonWidth + 10 * 2, 0, buttonWidth, buttonHeight);
-		button4Location = new Rect (buttonWidth + 10 * 3, 0, buttonWidth, buttonHeight);
+
+		if(DialogueChoiceMenu != null)
+		DialogueChoiceMenu.SetActive (false);
 	}
 
 	public IEnumerator StartDialogue(){
@@ -113,52 +127,70 @@ public class DialogueController : MonoBehaviour {
                 effectTriggered = true;
             }
 
-            if (numberOfChoices[currentTextIndex] != 0)
-            {               
-                int numChoices = numberOfChoices[currentTextIndex];
-                int startIndex = startIndexInChoices[currentTextIndex];
+			if (numberOfChoices [currentTextIndex] != 0) {               
+				int numChoices = numberOfChoices [currentTextIndex];
+				int startIndex = startIndexInChoices [currentTextIndex];
 
-                string[] choiceButtonLabels = new string[numChoices];
-                int[] nextIndexAfterChoice = new int[numChoices];
+				string[] choiceButtonLabels = new string[numChoices];
+				int[] nextIndexAfterChoice = new int[numChoices];
 
-                for (int i = 0; i < numChoices; i++)
-                {
-                    choiceButtonLabels[i] = choices[startIndex + i];
-                    nextIndexAfterChoice[i] = nextIndexInDialogue[startIndex + i];
-                }
+				for (int i = 0; i < numChoices; i++) {
+					choiceButtonLabels [i] = choices [startIndex + i];
+					nextIndexAfterChoice [i] = nextIndexInDialogue [startIndex + i];
+				}
 
-                // Test code:
-                for (int i = 0; i < choiceButtonLabels.Length; i++)
-                {
-                    Debug.Log(String.Format("Choice {0}: {1} (next index: {2})", i,
-                        choiceButtonLabels[i], nextIndexAfterChoice[i]));
-                }
+				// Displays buttons.
+				for (int i = 0; i < choiceButtonLabels.Length; i++) {
+					Debug.Log (String.Format ("Choice {0}: {1} (next index: {2})", i,
+						choiceButtonLabels [i], nextIndexAfterChoice [i]));
+					switch (i) {
+					case 0:
+						ButtonOne.SetActive (true);
+						ButtonOne.GetComponentInChildren<Text> ().text = choiceButtonLabels [i];
+						buttonOneDestination = nextIndexAfterChoice [i];
+						break;
+					case 1:
+						ButtonTwo.SetActive(true);
+						ButtonTwo.GetComponentInChildren<Text> ().text = choiceButtonLabels [i];
+						buttonTwoDestination = nextIndexAfterChoice [i];
+						break;
+					case 2:
+						ButtonThree.SetActive(true);
+						ButtonThree.GetComponentInChildren<Text> ().text = choiceButtonLabels [i];
+						buttonThreeDestination = nextIndexAfterChoice [i];
+						break;
+					case 3:
+						ButtonFour.SetActive(true);
+						ButtonFour.GetComponentInChildren<Text> ().text = choiceButtonLabels [i];
+						buttonFourDestination = nextIndexAfterChoice [i];
+						break;
+					default:
+						Debug.Log ("Something went wrong in dialogue choice.");
+						break;
+					}
+				}
 
-                // Insert a function call in here that takes choiceButtonLabels and 
-                // nextIndexAfterChoice as arguments. It displays as many buttons as the length of
-                // choiceButtonLabels. This function will use the CurrentTextIndex property to
-                // change currentTextIndex according to the nextIndexAfterChoice value corresponding
-                // to the choice that the player picked. 
-            }
+				choosing = true;
+				DialogueChoiceMenu.SetActive (true);
+				EventSystem.current.SetSelectedGameObject (ButtonOne);
+				yield return new WaitUntil (() => !choosing);
+				DialogueChoiceMenu.SetActive (false);
+			} 
+			else {
+				advance = false;
+				yield return new WaitUntil (() => advance);
+				advance = false;
 
-            // Gives player 0.2 seconds to let go of space key.
-            yield return new WaitForSeconds(0.2f);
-            advance = false;
-
-            yield return new WaitUntil(() => advance);
-            advance = false;
-
-            if (currentTextIndex + 1 < dialogue.Length)
-            {
-                if(dialogue[currentTextIndex + 1] == "")
-                {
-                    talking = false;
-                }
-                else
-                {
-                    currentTextIndex++;
-                }
-            }
+				if (currentTextIndex + 1 < dialogue.Length) {
+					if (dialogue [currentTextIndex + 1] == "") {
+						talking = false;
+					} else {
+						currentTextIndex++;
+					}
+				}
+			}
+			// Gives player 0.2 seconds to let go of space key.
+			yield return new WaitForSeconds(0.2f);
         }
         
 
@@ -168,6 +200,34 @@ public class DialogueController : MonoBehaviour {
 		yield break;
 	}
 
+	#region Button Clicks
+
+	public void ButtonOnePress()
+	{
+		currentTextIndex = buttonOneDestination;
+		choosing = false;
+	}
+
+	public void ButtonTwoPress()
+	{
+		currentTextIndex = buttonTwoDestination;
+		choosing = false;
+	}
+
+	public void ButtonThreePress()
+	{
+		currentTextIndex = buttonThreeDestination;
+		choosing = false;
+	}
+
+	public void ButtonFourPress()
+	{
+		currentTextIndex = buttonFourDestination;
+		choosing = false;
+	}
+	#endregion
+
+	// UI Stuff!
 	void OnGUI(){
 		if (talking) {
 		
@@ -208,10 +268,25 @@ public class DialogueController : MonoBehaviour {
 		}
 	}
 
+	// Prevents skipping first line.
+	bool spacePress = false;
+
 	void Update(){
-        if (Input.GetKeyUp(KeyCode.Space) && talking)
-        {
-            advance = true;
-        }
+		if (Input.GetKeyUp(KeyCode.Space) && talking && spacePress)
+		{
+			advance = true;
+		}
+		if (Input.GetKeyUp(KeyCode.Space) && talking && !spacePress)
+		{
+			spacePress = true;
+		}
+	}
+
+	void LateUpdate()
+	{
+		// Put in lateupdate to prevent conflict with pause menu and other types of
+		if (EventSystem.current.currentSelectedGameObject == null && choosing) {
+			EventSystem.current.SetSelectedGameObject (ButtonOne);
+		}
 	}
 }
