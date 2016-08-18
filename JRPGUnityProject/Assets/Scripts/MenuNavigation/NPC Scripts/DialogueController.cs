@@ -90,7 +90,7 @@ public class DialogueController : MonoBehaviour {
 	float locationX;
 	float locationY;
 
-	float buttonHeight;
+	float NpcNameHeight;
 
 	// Use this for initialization
 	void Start () {
@@ -105,7 +105,7 @@ public class DialogueController : MonoBehaviour {
 		locationX = (Screen.width - width) / 2;
 		locationY = Screen.height - height - 10;
 		//Dimensions of player choice buttons.
-		buttonHeight = height / 4 - 10;
+		NpcNameHeight = height / 4 - 10;
 
 		if(DialogueChoiceMenu != null)
 		DialogueChoiceMenu.SetActive (false);
@@ -230,40 +230,37 @@ public class DialogueController : MonoBehaviour {
 	// UI Stuff!
 	void OnGUI(){
 		if (talking) {
-		
+
 			// Edit the GUI Skin to change the text's style.
 			GUI.skin = textStyle;
 
 			// Changing the divisor will change the font size ratio,
-			GUI.skin.label.fontSize = Screen.width / 20;
-
+			GUI.skin.label.fontSize = (int)Math.Floor((double)(Screen.width /20	));
+			int LabelFontSize = GUI.skin.label.fontSize;
 			GUI.BeginGroup(new Rect(locationX, locationY, width, height));
 
-			// The big box that contains the dialogue and the 
+			// The big box that contains the dialogue and the image.
 			GUI.Box (new Rect(0, 0, width, height), "");
-		
-			// Displays box with same dimensions as picture to give border.
-			GUI.Box(new Rect(8, 8, height-16, height-16), "");
 
 			// Displays image ten pixels away from the top, bottom, and left sides, scaling the image to fit.
-			GUI.DrawTexture(new Rect(10, 10, height-20, height-20),  image, ScaleMode.StretchToFill, true, 1);
-	
-			// Displays text 10 pixels away from the top, bottom, and 50 pixels to the right of the picture.
+			GUI.DrawTexture(new Rect(LabelFontSize, LabelFontSize, height-LabelFontSize * 2, height-LabelFontSize * 2),  image, ScaleMode.StretchToFill, true, 1);
+
+			// Displays text 24 pixels away from the top, bottom, and 50 pixels to the right of the picture.
 			// The width is set to width - height + 30, because it should be as wide as the box, minus the
 			// width of the picture(20), and with a 10 pixel buffer on both sides(20).
 			// (GUI.skin.label.fontSize * 4) is added to prevent words overflowing too far, without clipping
-			GUI.Label(new Rect(height + 40, 10, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 20), currentText);
+			GUI.Label(new Rect(height + 40, 24, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 48), currentText);
 			GUI.EndGroup();
-
 			
 			//Display a name tag for the NPC.
             
 			// The text will be a part of the box, to allow customization seperate from the label text.
-			GUI.skin.box.fontSize = Screen.width / 30;
+			GUI.skin.label.fontSize = Screen.width / 25;
 
 			// Box will be lined up with the box around the picture, in width and location.
-			GUI.BeginGroup (new Rect (locationX, locationY - buttonHeight * 1.5f, height, buttonHeight * 1.5f));
-			GUI.Box(new Rect(8, 8, height - 16, (buttonHeight + 4) * 1.5f), npcName );
+			GUI.BeginGroup (new Rect (locationX, locationY - NpcNameHeight * 1.5f, height, NpcNameHeight * 1.5f));
+			GUI.Box(new Rect(8, 0, height - LabelFontSize, (LabelFontSize) * 3f), "");
+			GUI.Label (new Rect (24, LabelFontSize / 2, height - LabelFontSize - 20, (LabelFontSize) * 3f), npcName);
 			GUI.EndGroup ();
 		}
 	}
@@ -272,13 +269,9 @@ public class DialogueController : MonoBehaviour {
 	bool spacePress = false;
 
 	void Update(){
-		if (Input.GetKeyUp(KeyCode.Space) && talking && spacePress)
+		if (Input.GetKeyDown(KeyCode.Space) && talking && spacePress)
 		{
 			advance = true;
-		}
-		if (Input.GetKeyUp(KeyCode.Space) && talking && !spacePress)
-		{
-			spacePress = true;
 		}
 	}
 
@@ -287,6 +280,10 @@ public class DialogueController : MonoBehaviour {
 		// Put in lateupdate to prevent conflict with pause menu and other types of
 		if (EventSystem.current.currentSelectedGameObject == null && choosing) {
 			EventSystem.current.SetSelectedGameObject (ButtonOne);
+		}		
+		if (Input.GetKeyUp(KeyCode.Space) && talking && !spacePress)
+		{
+			spacePress = true;
 		}
 	}
 }
