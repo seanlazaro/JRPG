@@ -24,7 +24,6 @@ public class PauseMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		Debug.Log ("Start called");
 		player = GameObject.FindGameObjectWithTag ("Player");
 		pauseObjects = GameObject.FindGameObjectsWithTag ("Pause Menu");
 		TogglePauseMenu ();
@@ -47,7 +46,6 @@ public class PauseMenu : MonoBehaviour {
 	// and sets their to the bool passed to the method's.
 	public void TogglePauseMenu () {
 		paused = !paused;
-		Debug.Log (pauseObjects.Length);
 		foreach (GameObject i in pauseObjects) {
 			i.SetActive (paused);
 		}

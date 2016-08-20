@@ -141,8 +141,6 @@ public class DialogueController : MonoBehaviour {
 
 				// Displays buttons.
 				for (int i = 0; i < choiceButtonLabels.Length; i++) {
-					Debug.Log (String.Format ("Choice {0}: {1} (next index: {2})", i,
-						choiceButtonLabels [i], nextIndexAfterChoice [i]));
 					switch (i) {
 					case 0:
 						ButtonOne.SetActive (true);

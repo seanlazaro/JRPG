@@ -106,10 +106,8 @@ public class PlayerMovementController : MonoBehaviour {
 			
 		// GetKeyUp is used here, and GetKeyDown is used in the dialogue controller script, to prevent conflict.
 		if (Input.GetKeyUp (KeyCode.Space)) {
-			Debug.Log ("Space Pressed");
 			if(CheckForNPC(interactionBox, ref interactingNPC))
 			{
-				Debug.Log ("Interact With: " + interactingNPC.name);
 				StartCoroutine(interactingNPC.GetComponent<DialogueController> ().StartDialogue ());
 			}
 		}
@@ -145,7 +143,6 @@ public class PlayerMovementController : MonoBehaviour {
 
     public void EnableMovement(bool enable)
     {
-		Debug.Log ("Enable movement: " + enable);
         movementEnabled = enable;
 
         if(!enable)
