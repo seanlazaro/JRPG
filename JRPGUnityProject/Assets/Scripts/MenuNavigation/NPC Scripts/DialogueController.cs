@@ -70,13 +70,13 @@ public class DialogueController : MonoBehaviour {
 	// So create a transparent panel and duplicate all buttons into it to sort.
 	public GameObject DialogueChoiceMenu;
 
-	public GameObject ButtonOne;
+	GameObject ButtonOne;
 	int buttonOneDestination;
-	public GameObject ButtonTwo;
+	GameObject ButtonTwo;
 	int buttonTwoDestination;
-	public GameObject ButtonThree;
+	GameObject ButtonThree;
 	int buttonThreeDestination;
-	public GameObject ButtonFour;
+	GameObject ButtonFour;
 	int buttonFourDestination;
 
 	// Value is changed to true when user advances dialogue.
@@ -98,6 +98,23 @@ public class DialogueController : MonoBehaviour {
 		player = GameObject.FindWithTag("Player");
 		// Used to disable pausing
 		pauseMenu = GameObject.FindWithTag("Pause Menu Canvas");
+
+		ButtonOne = GameObject.Find ("DialogueButtonOne");
+		ButtonTwo = GameObject.Find ("DialogueButtonTwo");
+		ButtonThree = GameObject.Find ("DialogueButtonThree");
+		ButtonFour = GameObject.Find ("DialogueButtonFour");
+
+		ButtonOne.GetComponent<Button> ().onClick.RemoveAllListeners ();
+		ButtonTwo.GetComponent<Button> ().onClick.RemoveAllListeners ();
+		ButtonThree.GetComponent<Button> ().onClick.RemoveAllListeners ();
+		ButtonFour.GetComponent<Button> ().onClick.RemoveAllListeners ();
+
+		// The strange lamda usage is allows methods to accept arguments in the future.
+		ButtonOne.GetComponent<Button> ().onClick.AddListener (()=>{ButtonOnePress();});
+		ButtonTwo.GetComponent<Button> ().onClick.AddListener (()=>{ButtonTwoPress();});
+		ButtonThree.GetComponent<Button> ().onClick.AddListener (()=>{ButtonThreePress();});
+		ButtonFour.GetComponent<Button> ().onClick.AddListener (()=>{ButtonFourPress();});
+
 
 		// Sets dimensions of the main dialogue box.
 		width = Screen.width / 20 * 19;
