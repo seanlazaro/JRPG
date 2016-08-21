@@ -15,12 +15,13 @@ public class PlayerBattleController : Battler {
 	public GameObject CombatUIPanel;
 
 	// This contains the four "Special Move" buttons.
-	public GameObject CombatButtonsPanel;
+	public GameObject SpecialMoveMenu;
 	// This contains the top "Special Move" buttons.
-	public GameObject CombatTopButton;
+	public GameObject SpecialMoveMenuTopButton;
 
-	public GameObject MenuButtonsPanel;
-	public GameObject MenuTopButton;
+	public GameObject MainCombatMenu;
+	public GameObject MainCombatMenuTopButton;
+    public GameObject MainCombatMenuSecondButton;
 
 	// Used to update range text.
 	public Text Range;
@@ -42,16 +43,40 @@ public class PlayerBattleController : Battler {
 		inMenu = true;
 		// Hides the panel containing all the combatui elements.
 		CombatUIPanel.SetActive (false);
-		CombatButtonsPanel.SetActive (false);
+		SpecialMoveMenu.SetActive (false);
 
 		// Will remain hidden until CombatUIPanel becomes active.
-		MenuButtonsPanel.SetActive (true);
+		MainCombatMenu.SetActive (true);
 	}
+
+    void Update()
+    {
+        if (EventSystem.current.currentSelectedGameObject == null)
+        {
+            if (inMenu)
+                EventSystem.current.SetSelectedGameObject(MainCombatMenuTopButton);
+            else
+                EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
+        }
+    }
 
     public override IEnumerator ChooseAction(Action Finish)
 	{
-		CombatUIPanel.SetActive(true);
-		// This triggers the choice GUI.
+        //this triggers the choice GUI
+        CombatUIPanel.SetActive(true);
+
+        //the next turn after using Cocoon, prevent attacking
+        if(battleState.statusEffects.Exists(
+            se => se.name == "Cocoon" && se.numberOfTurnsRemaining == 3))
+        {
+            MainCombatMenuTopButton.GetComponent<Button>().interactable = false;
+            SpecialMoveMenuTopButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            MainCombatMenuTopButton.GetComponent<Button>().interactable = true;
+            SpecialMoveMenuTopButton.GetComponent<Button>().interactable = true;
+        }
 
 		choosing = true;
 		yield return new WaitUntil (() => !choosing);
@@ -60,101 +85,137 @@ public class PlayerBattleController : Battler {
 
 		// One second for the message to disappear.
 		yield return new WaitForSeconds(1);
-        // Until GUI is implemented, automatically choose Basic Attack.
-        DoAction = BasicAttack;
-
-		// TODO: Animations for attack.
-		// AnimateMethod(DoAction, ref bool)
-		// yield return new WaitUntil(()=>bool)
-
-		// In place of animations, there is a 2 second wait.
-		yield return new WaitForSeconds(2);
 
         GameObject enemy = GameObject.FindWithTag("Enemy");
         singleAttackTarget = enemy.transform.parent.gameObject.GetComponent<Battler>();
 
         Finish();
     }
-		
 
-	// Triggered when player selects the initial Top Button("Basic Attack").
-	public void BasicAttackButtonPress()
+	//triggered when player selects main combat menu's top button ("Attack")
+	public void AttackButtonPress()
 	{
-		//
-		// TODO: Create "Basic" Attack, it will be assigned here.
-		//
-
-		//DoAction = BasicAttack;
-		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("Basic Attack Chosen", 1));
+        choosing = false;
+        DoAction = BasicAttack;
+		StartCoroutine(CombatUI.Instance.DisplayMessage("You attack the enemy!", 1f));
 	}
 
-	// Triggered when player selects the initial Bottom Button("Special Attacks").
-	public void SpecialAttacksButtonPress()
+    //triggered when player selects main combat menu's bottom button ("Special Move")
+	public void SpecialMoveButtonPress()
 	{
-		CombatButtonsPanel.SetActive (true);
-		MenuButtonsPanel.SetActive (false);
+		SpecialMoveMenu.SetActive (true);
+		MainCombatMenu.SetActive (false);
 
 		inMenu = false;
 
-		EventSystem.current.SetSelectedGameObject(CombatTopButton);
+		EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
 	}
 
 
-	// Triggered when player selects the Top Button ("Hyper").
-	public void TopButtonPress()
+	//triggered when player selects special move menu's top button ("Reckless")
+	public void SpecialMoveMenuTopButtonPress()
 	{
-		//
-		// TODO: Create "Hyper" attack, it will be assigned here.
-		//
-
-		//DoAction = Hyper;
+		DoAction = SpecialMoveReckless;
 		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("Hyper", 1));
+		StartCoroutine(CombatUI.Instance.DisplayMessage("You launch a wild assault!", 1f));
 	}
 
-	// Triggered when player selects the Top-Middle Button ("Heal").
-	public void MiddleTopButtonPress()
+    //triggered when player selects special move menu's middle top button ("Cocoon")
+    public void SpecialMoveMenuMiddleTopButtonPress()
 	{
-		// 
-		// TODO: Create "Heal" attack, it will be assigned here.
-		//
-
-		//DoAction = Heal;
+        DoAction = SpecialMoveCocoon;
 		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("Heal", 1));
+		StartCoroutine(CombatUI.Instance.DisplayMessage("You prepare a strong defence.", 1f));
 	}
 
-	// Triggered when player selects the Bottom-Middle Button ("Resolve").
-	public void MiddleBottomButtonPress()
+    //triggered when player selects the special move menu's middle bottom button ("Resolve")
+    public void SpecialMoveMenuMiddleBottomButtonPress()
 	{
-		//
-		// TODO: Create "Resolve" attack, it will be assigned here.
-		//
-
-		//DoAction = Resolve;
+		DoAction = SpecialMoveResolve;
 		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("Resolve", 1));
+		StartCoroutine(CombatUI.Instance.DisplayMessage("You gather your strength.", 1f));
 	}
 
-	// Triggered when player selects the Bottom Button ("Back").
-	public void BottomButtonPress()
+    //triggered when player selects special move menu's bottom button ("Back")
+    public void SpecialMoveMenuBottomButtonPress()
 	{
-		MenuButtonsPanel.SetActive (true);
-		CombatButtonsPanel.SetActive (false);
+		MainCombatMenu.SetActive (true);
+		SpecialMoveMenu.SetActive (false);
 
 		inMenu = true;
 
-		EventSystem.current.SetSelectedGameObject(MenuTopButton);
+        if (MainCombatMenuTopButton.GetComponent<Button>().interactable == false)
+        {
+            EventSystem.current.SetSelectedGameObject(MainCombatMenuSecondButton);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(MainCombatMenuTopButton);
+        }
 	}
 
-	void Update()
-	{
-		if (EventSystem.current.currentSelectedGameObject == null) {
-			if(inMenu)
-				EventSystem.current.SetSelectedGameObject(MenuTopButton);
-			else
-				EventSystem.current.SetSelectedGameObject(CombatTopButton);
-		}
-	}
+    // In Prototype 1, Reckless increases the player's damage by 100% for one turn and applies a
+    // debuff to the player that increases the enemy's damage by 60% for two turns.
+    IEnumerator SpecialMoveReckless(Action<bool, bool> Finish)
+    {
+        float damage = 2f * CalculateStandardDamage(singleAttackTarget);
+
+        statusEffect se = new statusEffect();
+        se.name = "Reckless";
+        se.limitedDuration = true;
+        se.startedDuration = false;
+        se.numberOfTurnsRemaining = 2;
+        se.debuff = true;
+
+        battleState.statusEffects.Add(se);
+
+        //in place of animations, there is a 2 second wait
+        yield return new WaitForSeconds(2);
+
+        StartCoroutine(DealDamage(damage, Finish));
+    }
+
+    // In Prototype 1, Cocoon reduces the damage taken by the player by 50% for 3 turns but prevents
+    // attacking for 1 turn.
+    IEnumerator SpecialMoveCocoon(Action<bool, bool> Finish)
+    {
+        statusEffect se = new statusEffect();
+        se.name = "Cocoon";
+        se.limitedDuration = true;
+        se.startedDuration = false;
+        se.numberOfTurnsRemaining = 3;
+        se.debuff = false;
+
+        battleState.statusEffects.Add(se);
+
+        //in place of animations, there is a 2 second wait
+        yield return new WaitForSeconds(2);
+
+        Finish(false, false);
+    }
+
+    // In Prototype 1, Resolve removes all debuffs and increases the player's defence by 3 for the
+    // rest of the battle. This value was chosen because increasing defence by 9, which can be
+    // achieved by using Resolve 3 times, leads to a decrease in damage of 36% due to the damage
+    // formulas.
+    IEnumerator SpecialMoveResolve(Action<bool, bool> Finish)
+    {
+        //reverse iteration over the list so that elements can be removed while iterating
+        for (int i = battleState.statusEffects.Count - 1; i >= 0; i--)
+        {
+            statusEffect se = battleState.statusEffects[i];
+
+            if (se.debuff)
+            {
+                battleState.statusEffects.Remove(se);
+            }
+        }
+
+        battleState.defenceRating += 3;
+
+        //in place of animations, there is a 2 second wait
+        yield return new WaitForSeconds(2);
+
+        Finish(false, false);
+    }
 }

@@ -129,8 +129,8 @@ public class DialogueController : MonoBehaviour {
 	}
 
 	public IEnumerator StartDialogue(){
-		player.GetComponent<PlayerMovementController> ().EnableMovement (false);
-		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
+		player.GetComponent<PlayerSpriteController> ().EnableMovement (false);
+		pauseMenu.GetComponent<PauseMenuController> ().ToggleTalking ();
 		talking = true;
 		currentTextIndex = 0;
 
@@ -209,8 +209,8 @@ public class DialogueController : MonoBehaviour {
         }
         
 
-		pauseMenu.GetComponent<PauseMenu> ().ToggleTalking ();
-		player.GetComponent<PlayerMovementController> ().EnableMovement (true);
+		pauseMenu.GetComponent<PauseMenuController> ().ToggleTalking ();
+		player.GetComponent<PlayerSpriteController> ().EnableMovement (true);
 
 		yield break;
 	}

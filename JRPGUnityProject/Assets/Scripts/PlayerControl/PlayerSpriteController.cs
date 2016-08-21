@@ -3,7 +3,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerMovementController : MonoBehaviour {
+public class PlayerSpriteController : MonoBehaviour {
 
 	enum DirectionFacing {North=1, East, South, West};
 

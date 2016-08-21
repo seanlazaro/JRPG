@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class PauseMenu : MonoBehaviour {
+public class PauseMenuController : MonoBehaviour {
 
 	// Basic array of objects loaded.
 	GameObject player;
@@ -51,7 +51,7 @@ public class PauseMenu : MonoBehaviour {
 		}
 		if (paused)
 			StartCoroutine ("SelectProperButton");
-		player.GetComponent<PlayerMovementController> ().EnableMovement (!paused);
+		player.GetComponent<PlayerSpriteController> ().EnableMovement (!paused);
 	}
 
 	IEnumerator SelectProperButton()

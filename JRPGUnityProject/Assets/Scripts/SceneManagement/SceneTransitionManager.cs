@@ -28,8 +28,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     public IEnumerator LoadScene(string sceneToLoad, string destinationTile)
     {
         GameObject player = GameObject.FindWithTag("Player");
-        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
-        pmc.EnableMovement(false);
+        PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
+        psc.EnableMovement(false);
         
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
         yield return new WaitForSeconds(fadeTime);
@@ -54,13 +54,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         GameObject player = GameObject.FindWithTag("Player");     
         player.transform.position = spawnPosition;
 
-        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
-        pmc.OnSpawnPlayer(directionToFace);
+        PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
+        psc.OnSpawnPlayer(directionToFace);
 
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, false));
         yield return new WaitForSeconds(fadeTime);
 
-        pmc.EnableMovement(true);
+        psc.EnableMovement(true);
     }
 
     public void SpawnEnemySprite(GameObject[] possibleEnemies, Vector3 spawnPosition)
@@ -78,8 +78,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     public IEnumerator EnterBattle(GameObject engagedEnemySprite)
     {
         GameObject player = GameObject.FindWithTag("Player");
-        PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
-        pmc.EnableMovement(false);
+        PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
+        psc.EnableMovement(false);
         
         StartCoroutine(TransitionEffects.Instance.Fade(battleFadeTime, true));
         yield return new WaitForSeconds(battleFadeTime);
@@ -146,8 +146,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
             GameObject player = GameObject.FindWithTag("Player");
             player.transform.position = previousPosition;
 
-            PlayerMovementController pmc = player.GetComponent<PlayerMovementController>();
-            pmc.EnableMovement(true);
+            PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
+            psc.EnableMovement(true);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 // Will be a private member of PlayerStateManager and a public member of ally sprites,
 // enemy sprites, PlayerBattleController, allies in battle and enemies in battle.
@@ -20,5 +21,14 @@ public class BattleState {
 
     public int currentHealth;
     public int maximumHealth;
-    public List<bool> statusEffects;
+    public List<statusEffect> statusEffects;
+}
+
+public class statusEffect
+{
+    public string name;
+    public bool limitedDuration;
+    public bool startedDuration;
+    public int numberOfTurnsRemaining;
+    public bool debuff;
 }

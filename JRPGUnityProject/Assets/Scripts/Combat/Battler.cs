@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 // Battlers include the player, allies and enemies
 public abstract class Battler : MonoBehaviour {
@@ -38,7 +39,6 @@ public abstract class Battler : MonoBehaviour {
     }
     
     // Returns true if the battler dies
-    // Animations for taking damage will be placed in here
     public bool TakeDamage(int dmg, string defender)
 	{
 		battleState.currentHealth -= dmg;
@@ -65,18 +65,48 @@ public abstract class Battler : MonoBehaviour {
     {
         float damage = CalculateStandardDamage(singleAttackTarget);
 
+        // TODO: Animations for attack.
+        // AnimateMethod(DoAction, ref bool)
+        // yield return new WaitUntil(()=>bool)
+
+        //in place of animations, there is a 2 second wait
+        yield return new WaitForSeconds(2);
+
+        StartCoroutine(DealDamage(damage, Finish));
+    }
+
+    protected IEnumerator DealDamage(float damage, Action<bool, bool> Finish)
+    {
+        List<statusEffect> statusEffects = singleAttackTarget.battleState.statusEffects;
+        float dmgIncrease = 0;
+        float dmgDecrease = 0;
+
+        if (statusEffects.Exists(se => se.name == "Reckless"))
+        {
+            List<statusEffect> recklessStacks = statusEffects.FindAll(se => se.name == "Reckless");
+            dmgIncrease += (0.6f * recklessStacks.Count);
+        }
+        if (statusEffects.Exists(se => se.name == "Cocoon"))
+        {
+            List<statusEffect> cocoonStacks = statusEffects.FindAll(se => se.name == "Cocoon");
+            dmgDecrease += (0.5f * cocoonStacks.Count);    
+        }
+
+        float multiplier = 1 + dmgIncrease - dmgDecrease;
+        if (multiplier < 0) multiplier = 0;
+        damage *= multiplier;
+
         string attacker = this.gameObject.name;
         string defender = singleAttackTarget.gameObject.name;
         string message = string.Format("{0} dealt {1} damage to {2}.", attacker, (int)damage, defender);
-        StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1));
+        StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1f));
 
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
-		yield return new WaitForSeconds (1);
+
+        //since a damage animation hasn't yet been implemented, wait 1 second instead
+        yield return new WaitForSeconds (1f);
+
         if (killed) singleAttackTarget.gameObject.SetActive(false);
-
-
         Finish(killed, false);
-
-        yield break;
     }
 }
