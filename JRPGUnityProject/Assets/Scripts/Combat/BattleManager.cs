@@ -44,8 +44,9 @@ public class BattleManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
-        player.GetComponent<PlayerBattleController>().battleState =
-            PlayerStateManager.Instance.PlayerBattleState;
+        player.GetComponent<PlayerBattleController>().battleState = new BattleState();
+        PlayerStateManager.Instance.CopyPlayerBattleState(
+            player.GetComponent<PlayerBattleController>().battleState);
 
         battlers = GameObject.FindGameObjectsWithTag("Battler");
         IComparer speedComparer = new SpeedComparer();
@@ -84,6 +85,21 @@ public class BattleManager : MonoBehaviour {
                 if(!exitingBattle)
                 {
                     exitingBattle = true;
+
+                    GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
+                    BattleState playerBattleState = player.GetComponent<PlayerBattleController>().battleState;
+
+                    //reverse iteration over the list so that elements can be removed while iterating
+                    for (int i = playerBattleState.statusEffects.Count - 1; i >= 0; i--)
+                    {
+                        statusEffect se = playerBattleState.statusEffects[i];
+
+                        if (se.limitedDuration)
+                        {
+                            playerBattleState.statusEffects.Remove(se);
+                        }
+                    }
+
                     StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
                 }
                 break;
@@ -111,6 +127,29 @@ public class BattleManager : MonoBehaviour {
     void FinishDoingAction(bool deathOccurred, bool speedChanged)
     {
         doingAction = false;
+
+        //reverse iteration over the list so that elements can be removed while iterating
+        for (int i = activeBattler.battleState.statusEffects.Count - 1; i >= 0; i--)
+        {
+            statusEffect se = activeBattler.battleState.statusEffects[i];
+
+            if (se.limitedDuration)
+            {
+                if (!se.startedDuration)
+                {
+                    se.startedDuration = true;
+                }
+                else
+                {
+                    se.numberOfTurnsRemaining--;
+
+                    if (se.numberOfTurnsRemaining == 0)
+                    {
+                        activeBattler.battleState.statusEffects.Remove(se);
+                    }
+                }
+            }
+        }
 
         if (deathOccurred)
         {
