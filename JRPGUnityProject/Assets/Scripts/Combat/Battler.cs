@@ -29,7 +29,7 @@ public abstract class Battler : MonoBehaviour {
         if (criticalHitChance > r.NextDouble())
         {
             criticalHitFactor = 3f;
-            StartCoroutine(CombatUI.Instance.DisplayMessage("Critical Hit!", 1));
+            StartCoroutine(CombatUI.Instance.DisplayMessage("Critical Hit!", 1f));
         }
         else criticalHitFactor = 1f;
 
@@ -47,22 +47,34 @@ public abstract class Battler : MonoBehaviour {
 		//  Take Damage Animation!
 		//
 
+        bool killed = false;
+
 		// The UpdateHealthBar Coroutine is put in both if/else blocks to
 		// prevent enemy health from being shown as a negative number.
 		if (battleState.currentHealth <= 0) {	
 			StartCoroutine (CombatUI.Instance.UpdateHealthBar (0, 
 				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
-			return true;
+            killed = true;
 		} 
 		else {
 			StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, 
 				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
 		}
-		return false;
+
+        return killed;
     }
 
     protected IEnumerator BasicAttack(Action<bool, bool> Finish)
     {
+        if (this.gameObject.name == "PlayerDuringBattle")
+        {
+            StartCoroutine(CombatUI.Instance.DisplayMessage("You attack the enemy!", 1f));
+        }
+        else
+        {
+            StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy attacks you!", 1f));
+        }
+        
         float damage = CalculateStandardDamage(singleAttackTarget);
 
         // TODO: Animations for attack.
@@ -91,6 +103,10 @@ public abstract class Battler : MonoBehaviour {
             List<statusEffect> cocoonStacks = statusEffects.FindAll(se => se.name == "Cocoon");
             dmgDecrease += (0.5f * cocoonStacks.Count);    
         }
+        if (statusEffects.Exists(se => se.name == "Shapeshifter Vulnerability"))
+        {
+            dmgIncrease += 1f;
+        }
 
         float multiplier = 1 + dmgIncrease - dmgDecrease;
         if (multiplier < 0) multiplier = 0;
@@ -104,9 +120,17 @@ public abstract class Battler : MonoBehaviour {
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
 
         //since a damage animation hasn't yet been implemented, wait 1 second instead
-        yield return new WaitForSeconds (1f);
+        yield return new WaitForSeconds(1f);
+
+        if (statusEffects.Exists(se => se.name == "Charged Up"))
+        {
+            StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy's preparation was interrupted!", 1f));
+            yield return new WaitForSeconds(1f);
+            statusEffects.RemoveAll(se => se.name == "Charged Up");
+        }
 
         if (killed) singleAttackTarget.gameObject.SetActive(false);
+
         Finish(killed, false);
     }
 }

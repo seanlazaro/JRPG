@@ -29,7 +29,13 @@ public class BattleManager : MonoBehaviour {
             int ySpeed = gameObj.GetComponent<Battler>().battleState.speed;
 
             if (xSpeed > ySpeed) return -1;
-            else if (xSpeed == ySpeed) return 0;
+            else if (xSpeed == ySpeed)
+            {
+                //if two battlers have the same speed, their turn order will be randomly chosen
+                System.Random r = new System.Random();
+                if (r.Next(2) == 1) return 1;
+                else return -1;
+            }
             else return 1;
         }
     }
@@ -61,9 +67,15 @@ public class BattleManager : MonoBehaviour {
         switch (currentBattlePhase)
         {
             case BattlePhase.BattleStart:
-				for(int j = 0; j < battlers.Length; j++)
-				StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battlers[j].GetComponent<Battler>().battleState.currentHealth, 
-					(double)battlers[j].GetComponent<Battler>().battleState.maximumHealth, battlers[j].name == "PlayerDuringBattle"));StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.",3));
+                for (int j = 0; j < battlers.Length; j++)
+                {
+                    StartCoroutine(CombatUI.Instance.UpdateHealthBar(
+                        (double)battlers[j].GetComponent<Battler>().battleState.currentHealth,
+                        (double)battlers[j].GetComponent<Battler>().battleState.maximumHealth,
+                        battlers[j].name == "PlayerDuringBattle"));
+                }
+				
+                StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.", 2f));
     
 				currentBattlePhase = BattlePhase.ChooseAction;
                 break;
@@ -86,19 +98,8 @@ public class BattleManager : MonoBehaviour {
                 {
                     exitingBattle = true;
 
-                    GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
-                    BattleState playerBattleState = player.GetComponent<PlayerBattleController>().battleState;
-
-                    //reverse iteration over the list so that elements can be removed while iterating
-                    for (int i = playerBattleState.statusEffects.Count - 1; i >= 0; i--)
-                    {
-                        statusEffect se = playerBattleState.statusEffects[i];
-
-                        if (se.limitedDuration)
-                        {
-                            playerBattleState.statusEffects.Remove(se);
-                        }
-                    }
+                    BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
+                    playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
 
                     StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
                 }
@@ -158,14 +159,14 @@ public class BattleManager : MonoBehaviour {
             GameObject player = GameObject.FindWithTag("Player");
             if (player == null)
             {
-                StartCoroutine(CombatUI.Instance.DisplayMessage("You've been wrecked...", 3));
+                StartCoroutine(CombatUI.Instance.DisplayMessage("You've been wrecked...", 1f));
                 return;
             }
 
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies.Length == 0)
             {
-                StartCoroutine(CombatUI.Instance.DisplayMessage("You've wonnerino!", 3));
+                StartCoroutine(CombatUI.Instance.DisplayMessage("You've wonnerino!", 1f));
                 return;
             }
         }

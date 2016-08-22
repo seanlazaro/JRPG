@@ -97,7 +97,6 @@ public class PlayerBattleController : Battler {
 	{
         choosing = false;
         DoAction = BasicAttack;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("You attack the enemy!", 1f));
 	}
 
     //triggered when player selects main combat menu's bottom button ("Special Move")
@@ -117,15 +116,13 @@ public class PlayerBattleController : Battler {
 	{
 		DoAction = SpecialMoveReckless;
 		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("You launch a wild assault!", 1f));
 	}
 
     //triggered when player selects special move menu's middle top button ("Cocoon")
     public void SpecialMoveMenuMiddleTopButtonPress()
 	{
         DoAction = SpecialMoveCocoon;
-		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("You prepare a strong defence.", 1f));
+        choosing = false;
 	}
 
     //triggered when player selects the special move menu's middle bottom button ("Resolve")
@@ -133,7 +130,6 @@ public class PlayerBattleController : Battler {
 	{
 		DoAction = SpecialMoveResolve;
 		choosing = false;
-		StartCoroutine(CombatUI.Instance.DisplayMessage("You gather your strength.", 1f));
 	}
 
     //triggered when player selects special move menu's bottom button ("Back")
@@ -158,6 +154,8 @@ public class PlayerBattleController : Battler {
     // debuff to the player that increases the enemy's damage by 60% for two turns.
     IEnumerator SpecialMoveReckless(Action<bool, bool> Finish)
     {
+        StartCoroutine(CombatUI.Instance.DisplayMessage("You launch a wild assault!", 1f));
+        
         float damage = 2f * CalculateStandardDamage(singleAttackTarget);
 
         statusEffect se = new statusEffect();
@@ -179,6 +177,8 @@ public class PlayerBattleController : Battler {
     // attacking for 1 turn.
     IEnumerator SpecialMoveCocoon(Action<bool, bool> Finish)
     {
+        StartCoroutine(CombatUI.Instance.DisplayMessage("You prepare a strong defence.", 1f));
+        
         statusEffect se = new statusEffect();
         se.name = "Cocoon";
         se.limitedDuration = true;
@@ -200,17 +200,9 @@ public class PlayerBattleController : Battler {
     // formulas.
     IEnumerator SpecialMoveResolve(Action<bool, bool> Finish)
     {
-        //reverse iteration over the list so that elements can be removed while iterating
-        for (int i = battleState.statusEffects.Count - 1; i >= 0; i--)
-        {
-            statusEffect se = battleState.statusEffects[i];
-
-            if (se.debuff)
-            {
-                battleState.statusEffects.Remove(se);
-            }
-        }
-
+        StartCoroutine(CombatUI.Instance.DisplayMessage("You gather your strength.", 1f));
+        
+        battleState.statusEffects.RemoveAll(se => se.debuff);
         battleState.defenceRating += 3;
 
         //in place of animations, there is a 2 second wait
