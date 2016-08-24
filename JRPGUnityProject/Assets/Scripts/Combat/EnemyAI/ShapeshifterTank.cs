@@ -70,13 +70,7 @@ public class ShapeshifterTank : Battler {
         StartCoroutine(CombatUI.Instance.DisplayMessage(
             "The enemy momentarily lowers their guard to heal.", 1f));
 
-        statusEffect se = new statusEffect();
-        se.name = "Shapeshifter Vulnerability";
-        se.limitedDuration = true;
-        se.startedDuration = false;
-        se.numberOfTurnsRemaining = 1;
-        se.debuff = true;
-
+        statusEffect se = new statusEffect("Shapeshifter Vulnerability", true, false, 1, true);
         battleState.statusEffects.Add(se);
 
         //in place of animations, there is a 2 second wait

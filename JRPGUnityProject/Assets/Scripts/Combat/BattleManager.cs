@@ -43,9 +43,13 @@ public class BattleManager : MonoBehaviour {
     Battler activeBattler;
     int activeBattlerIndex = 0;
 
+    bool startingBattle = false;
     bool choosingAction = false;
     bool doingAction = false;
     bool exitingBattle = false;
+
+    bool blockedByMessage = false;
+    public bool blockingMessageReleased = false;
 
     // Use this for initialization
     void Start () {
@@ -64,20 +68,39 @@ public class BattleManager : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
+       
         switch (currentBattlePhase)
         {
             case BattlePhase.BattleStart:
-                for (int j = 0; j < battlers.Length; j++)
+                if (!startingBattle)
                 {
-                    StartCoroutine(CombatUI.Instance.UpdateHealthBar(
-                        (double)battlers[j].GetComponent<Battler>().battleState.currentHealth,
-                        (double)battlers[j].GetComponent<Battler>().battleState.maximumHealth,
-                        battlers[j].name == "PlayerDuringBattle"));
+                    startingBattle = true;
+
+                    for (int j = 0; j < battlers.Length; j++)
+                    {
+                        StartCoroutine(CombatUI.Instance.UpdateHealthBar(
+                            (double)battlers[j].GetComponent<Battler>().battleState.currentHealth,
+                            (double)battlers[j].GetComponent<Battler>().battleState.maximumHealth,
+                            battlers[j].name == "PlayerDuringBattle"));
+                    }
+
+                    StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("The battle has started."));
+
+                    blockedByMessage = true;
                 }
-				
-                StartCoroutine(CombatUI.Instance.DisplayMessage("The battle has started.", 2f));
-    
-				currentBattlePhase = BattlePhase.ChooseAction;
+
+                if (blockedByMessage)
+                {
+                    if (blockingMessageReleased)
+                    {
+                        currentBattlePhase = BattlePhase.ChooseAction;
+                        
+                        //reset
+                        blockedByMessage = false;
+                        blockingMessageReleased = false;
+                    }
+                }
+                
                 break;
             case BattlePhase.ChooseAction:
                 if(!choosingAction)
@@ -100,9 +123,20 @@ public class BattleManager : MonoBehaviour {
 
                     BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
                     playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
-
-                    StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
                 }
+
+                if (blockedByMessage)
+                {
+                    if (blockingMessageReleased)
+                    {
+                        StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
+
+                        //reset
+                        blockedByMessage = false;
+                        blockingMessageReleased = false;
+                    }
+                }
+
                 break;
             default:
                 break;
@@ -154,21 +188,21 @@ public class BattleManager : MonoBehaviour {
 
         if (deathOccurred)
         {
-            currentBattlePhase = BattlePhase.BattleEnd;
-
             GameObject player = GameObject.FindWithTag("Player");
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
             if (player == null)
             {
-                StartCoroutine(CombatUI.Instance.DisplayMessage("You've been wrecked...", 1f));
-                return;
+                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've been wrecked..."));
             }
-
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            if (enemies.Length == 0)
+            else if (enemies.Length == 0)
             {
-                StartCoroutine(CombatUI.Instance.DisplayMessage("You've wonnerino!", 1f));
-                return;
+                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've wonnerino!"));
             }
+            blockedByMessage = true;
+
+            currentBattlePhase = BattlePhase.BattleEnd;
+            return;
         }
 
         activeBattlerIndex++;

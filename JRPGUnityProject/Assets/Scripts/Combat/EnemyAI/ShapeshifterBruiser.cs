@@ -66,13 +66,7 @@ public class ShapeshifterBruiser : Battler {
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy begins setting up an attack.", 1f));
 
-        statusEffect se = new statusEffect();
-        se.name = "Charged Up";
-        se.limitedDuration = true;
-        se.startedDuration = false;
-        se.numberOfTurnsRemaining = 1;
-        se.debuff = false;
-
+        statusEffect se = new statusEffect("Charged Up", true, false, 1, false);
         battleState.statusEffects.Add(se);
 
         //in place of animations, there is a 2 second wait
@@ -123,18 +117,13 @@ public class ShapeshifterBruiser : Battler {
         StartCoroutine(DealDamage(damage, Finish));
     }
 
-    //increases hp by 25% of max hp, but causes double damage to be taken next turn
+    //applies a permanent debuff to the player, which allows the use of DoubleAttack
     IEnumerator Toxin(Action<bool, bool> Finish)
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage(
             "The enemy releases shapeshifter toxin into the air.", 1f));
         
-        statusEffect se = new statusEffect();
-        se.name = "Shapeshifter Toxin";
-        se.limitedDuration = false;
-        se.startedDuration = false;
-        se.numberOfTurnsRemaining = 0;
-        se.debuff = true;
+        statusEffect se = new statusEffect("Shapeshifter Toxin", false, false, 0, true);
 
         GameObject player = GameObject.FindWithTag("Player");
         singleAttackTarget = player.transform.parent.gameObject.GetComponent<Battler>();

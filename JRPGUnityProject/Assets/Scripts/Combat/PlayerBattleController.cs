@@ -158,13 +158,7 @@ public class PlayerBattleController : Battler {
         
         float damage = 2f * CalculateStandardDamage(singleAttackTarget);
 
-        statusEffect se = new statusEffect();
-        se.name = "Reckless";
-        se.limitedDuration = true;
-        se.startedDuration = false;
-        se.numberOfTurnsRemaining = 2;
-        se.debuff = true;
-
+        statusEffect se = new statusEffect("Reckless", true, false, 2, true);
         battleState.statusEffects.Add(se);
 
         //in place of animations, there is a 2 second wait
@@ -179,13 +173,7 @@ public class PlayerBattleController : Battler {
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("You prepare a strong defence.", 1f));
         
-        statusEffect se = new statusEffect();
-        se.name = "Cocoon";
-        se.limitedDuration = true;
-        se.startedDuration = false;
-        se.numberOfTurnsRemaining = 3;
-        se.debuff = false;
-
+        statusEffect se = new statusEffect("Cocoon", true, false, 3, false);
         battleState.statusEffects.Add(se);
 
         //in place of animations, there is a 2 second wait

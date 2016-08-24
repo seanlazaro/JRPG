@@ -31,4 +31,13 @@ public class statusEffect
     public bool startedDuration;
     public int numberOfTurnsRemaining;
     public bool debuff;
+
+    public statusEffect(string name, bool limitedDuration, bool startedDuration, int numberOfTurnsRemaining, bool debuff)
+    {
+        this.name = name;
+        this.limitedDuration = limitedDuration;
+        this.startedDuration = startedDuration;
+        this.numberOfTurnsRemaining = numberOfTurnsRemaining;
+        this.debuff = debuff;
+    }
 }

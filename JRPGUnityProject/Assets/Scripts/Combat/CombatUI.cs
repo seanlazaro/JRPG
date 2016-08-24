@@ -11,6 +11,9 @@ public class CombatUI : Singleton<CombatUI> {
 	int dialogueHeight;
 	string message;
 	GUIStyle displayStyle = new GUIStyle();
+    
+    // For displaying health bar.
+    GameObject healthBar;
 
 	void Start()
 	{
@@ -65,8 +68,20 @@ public class CombatUI : Singleton<CombatUI> {
         talking = false;
     }
 
-    // For displaying health bar.
-    GameObject healthBar;
+    public IEnumerator DisplayBlockingMessage(string messageInput)
+    {
+        displayStyle.alignment = TextAnchor.UpperCenter;
+        displayStyle.fontSize = fontSize;
+        displayStyle.wordWrap = true;
+        message = messageInput;
+        talking = true;
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+        talking = false;
+
+        GameObject battleManagerObject = GameObject.Find("BattleManager");
+        BattleManager bm = battleManagerObject.GetComponent<BattleManager>();
+        bm.blockingMessageReleased = true;
+    }
 
     public IEnumerator UpdateHealthBar(double health, double maxHealth, bool playerDamaged)
     {
