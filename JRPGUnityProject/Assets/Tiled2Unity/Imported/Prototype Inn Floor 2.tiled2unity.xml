@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 2016-08-23 10:51:30 PM-->
+<!--Last exported: 2016-08-23 11:04:15 PM-->
 <Tiled2Unity version="1.0.7.7">
   <AssignMaterial mesh="mesh_0001" material="Collision" />
   <AssignMaterial mesh="mesh_0002" material="GameMapSpritesheet" />
@@ -11,6 +11,12 @@
   <Prefab name="Prototype Inn Floor 2" orientation="Orthogonal" staggerAxis="Y" staggerIndex="Odd" hexSideLength="0" numLayers="5" numTilesWide="20" numTilesHigh="20" tileWidth="16" tileHeight="16" exportScale="0.0625" mapWidthInPixels="320" mapHeightInPixels="320">
     <GameObject name="Collision" x="0" y="0" z="0">
       <GameObject name="Collision" copy="mesh_0001" sortingLayerName="" sortingOrder="0" opacity="1" />
+      <GameObject name="Collision">
+        <PolygonCollider2D>
+          <Path>20,-1 0,-1 0,-20 20,-20</Path>
+          <Path>13,-4 15,-4 15,-2 18,-2 18,-5 19,-5 19,-7 18,-7 18,-6 15,-6 15,-7 14,-7 14,-5 13,-5 13,-10 14,-10 14,-8 18,-8 18,-12 19,-12 19,-13 18,-13 18,-12 14,-12 14,-11 13,-11 13,-16 15,-16 15,-14 18,-14 18,-18 19,-18 19,-19 18,-19 18,-18 14,-18 14,-17 13,-17 13,-19 7,-19 7,-17 6,-17 6,-18 2,-18 2,-19 1,-19 1,-18 2,-18 2,-16 1,-16 1,-15 3,-15 3,-14 5,-14 5,-15 6,-15 6,-16 7,-16 7,-11 6,-11 6,-13 5,-13 5,-12 2,-12 2,-13 1,-13 1,-11 2,-11 2,-8 5,-8 5,-10 7,-10 7,-5 6,-5 6,-7 5,-7 5,-6 1,-6 1,-5 2,-5 2,-2 4,-2 4,-3 6,-3 6,-4 7,-4 7,-2 13,-2</Path>
+        </PolygonCollider2D>
+      </GameObject>
     </GameObject>
     <GameObject name="Base/Wall" x="0" y="0" z="0">
       <GameObject name="GameMapSpritesheet" copy="mesh_0002" sortingLayerName="" sortingOrder="1" opacity="1" />

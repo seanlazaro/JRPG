@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 2016-08-23 10:50:20 PM-->
+<!--Last exported: 2016-08-23 11:08:52 PM-->
 <Tiled2Unity version="1.0.7.7">
   <AssignMaterial mesh="mesh_0001" material="Collision" />
   <AssignMaterial mesh="mesh_0002" material="GameMapSpritesheet" />
@@ -10,6 +10,11 @@
   <Prefab name="Prototype Church" orientation="Orthogonal" staggerAxis="Y" staggerIndex="Odd" hexSideLength="0" numLayers="4" numTilesWide="15" numTilesHigh="15" tileWidth="16" tileHeight="16" exportScale="0.0625" mapWidthInPixels="240" mapHeightInPixels="240">
     <GameObject name="Collision" x="0" y="0" z="0">
       <GameObject name="Collision" copy="mesh_0001" sortingLayerName="" sortingOrder="0" opacity="1" />
+      <GameObject name="Collision">
+        <PolygonCollider2D>
+          <Path>14,-7 9,-7 9,-9 10,-9 10,-8 11,-8 11,-9 12,-9 12,-8 13,-8 13,-9 14,-9 14,-10 9,-10 9,-12 10,-12 10,-11 11,-11 11,-12 12,-12 12,-11 13,-11 13,-12 14,-12 14,-14 9,-14 9,-15 15,-15 15,0 0,0 0,-15 6,-15 6,-14 1,-14 1,-12 2,-12 2,-11 3,-11 3,-12 4,-12 4,-11 5,-11 5,-12 6,-12 6,-10 1,-10 1,-9 2,-9 2,-8 3,-8 3,-9 4,-9 4,-8 5,-8 5,-9 6,-9 6,-7 1,-7 1,-4 6,-4 6,-5 9,-5 9,-4 14,-4</Path>
+        </PolygonCollider2D>
+      </GameObject>
     </GameObject>
     <GameObject name="Base/Walls" x="0" y="0" z="0">
       <GameObject name="GameMapSpritesheet" copy="mesh_0002" sortingLayerName="" sortingOrder="1" opacity="1" />
@@ -52,12 +57,6 @@
           <Path>1.9375,-7.3125 1.1875,-7.3125 1.1875,-7.75 1.9375,-7.75</Path>
           <Path>5.75,-7.3125 5,-7.3125 5,-7.75 5.75,-7.75</Path>
           <Path>9.9375,-7.3125 9.1875,-7.3125 9.1875,-7.75 9.9375,-7.75</Path>
-          <Path>11.9375,-8.5625 11,-8.5625 11,-8.9375 11.9375,-8.9375</Path>
-          <Path>13.9375,-8.5625 13,-8.5625 13,-8.9375 13.9375,-8.9375</Path>
-          <Path>1.9375,-8.5625 1,-8.5625 1,-8.9375 1.9375,-8.9375</Path>
-          <Path>3.9375,-8.5625 3,-8.5625 3,-8.9375 3.9375,-8.9375</Path>
-          <Path>5.9375,-8.5625 5,-8.5625 5,-8.9375 5.9375,-8.9375</Path>
-          <Path>9.9375,-8.5625 9,-8.5625 9,-8.9375 9.9375,-8.9375</Path>
           <Path>13.9375,-10 13.8125,-10 13.8125,-10.9375 13.9375,-10.9375</Path>
           <Path>1.125,-10 1,-10 1,-10.9375 1.125,-10.9375</Path>
           <Path>5.9375,-10 5.8125,-10 5.8125,-10.9375 5.9375,-10.9375</Path>
@@ -66,12 +65,6 @@
           <Path>1.9375,-10.3125 1.1875,-10.3125 1.1875,-10.75 1.9375,-10.75</Path>
           <Path>5.75,-10.3125 5,-10.3125 5,-10.75 5.75,-10.75</Path>
           <Path>9.9375,-10.3125 9.1875,-10.3125 9.1875,-10.75 9.9375,-10.75</Path>
-          <Path>11.9375,-11.5625 11,-11.5625 11,-11.9375 11.9375,-11.9375</Path>
-          <Path>13.9375,-11.5625 13,-11.5625 13,-11.9375 13.9375,-11.9375</Path>
-          <Path>1.9375,-11.5625 1,-11.5625 1,-11.9375 1.9375,-11.9375</Path>
-          <Path>3.9375,-11.5625 3,-11.5625 3,-11.9375 3.9375,-11.9375</Path>
-          <Path>5.9375,-11.5625 5,-11.5625 5,-11.9375 5.9375,-11.9375</Path>
-          <Path>9.9375,-11.5625 9,-11.5625 9,-11.9375 9.9375,-11.9375</Path>
         </PolygonCollider2D>
       </GameObject>
     </GameObject>

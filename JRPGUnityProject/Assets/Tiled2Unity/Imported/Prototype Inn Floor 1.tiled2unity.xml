@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 2016-08-23 10:45:32 PM-->
+<!--Last exported: 2016-08-23 11:03:53 PM-->
 <Tiled2Unity version="1.0.7.7">
   <AssignMaterial mesh="mesh_0001" material="Collision" />
   <AssignMaterial mesh="mesh_0002" material="GameMapSpritesheet" />
@@ -10,6 +10,16 @@
   <Prefab name="Prototype Inn Floor 1" orientation="Orthogonal" staggerAxis="Y" staggerIndex="Odd" hexSideLength="0" numLayers="4" numTilesWide="20" numTilesHigh="20" tileWidth="16" tileHeight="16" exportScale="0.0625" mapWidthInPixels="320" mapHeightInPixels="320">
     <GameObject name="Collision" x="0" y="0" z="0">
       <GameObject name="Collision" copy="mesh_0001" sortingLayerName="" sortingOrder="0" opacity="1" />
+      <GameObject name="Collision">
+        <PolygonCollider2D>
+          <Path>13,-6 14,-6 14,-5 19,-5 19,-19 11,-19 11,-20 20,-20 20,0 0,0 0,-20 9,-20 9,-19 1,-19 1,-5 6,-5 6,-6 7,-6 7,-2 13,-2</Path>
+          <Path>14,-4 14,-2 19,-2 19,-4</Path>
+          <Path>1,-4 1,-2 6,-2 6,-4</Path>
+          <Path>6,-11 6,-8 3,-8 3,-11</Path>
+          <Path>17,-13 14,-13 14,-16 17,-16</Path>
+          <Path>6,-13 3,-13 3,-16 6,-16</Path>
+        </PolygonCollider2D>
+      </GameObject>
     </GameObject>
     <GameObject name="Base/Walls" x="0" y="0" z="0">
       <GameObject name="GameMapSpritesheet" copy="mesh_0002" sortingLayerName="" sortingOrder="1" opacity="1" />

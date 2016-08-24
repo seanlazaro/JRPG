@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 2016-08-23 10:47:19 PM-->
+<!--Last exported: 2016-08-23 11:03:31 PM-->
 <Tiled2Unity version="1.0.7.7">
   <AssignMaterial mesh="mesh_0001" material="Collision" />
   <AssignMaterial mesh="mesh_0002" material="GameMapSpritesheet" />
@@ -11,6 +11,12 @@
   <Prefab name="Prototype CreepyShed" orientation="Orthogonal" staggerAxis="Y" staggerIndex="Odd" hexSideLength="0" numLayers="5" numTilesWide="15" numTilesHigh="15" tileWidth="16" tileHeight="16" exportScale="0.0625" mapWidthInPixels="240" mapHeightInPixels="240">
     <GameObject name="Collision" x="0" y="0" z="0">
       <GameObject name="Collision" copy="mesh_0001" sortingLayerName="" sortingOrder="0" opacity="1" />
+      <GameObject name="Collision">
+        <PolygonCollider2D>
+          <Path>11,-6 9,-6 9,-14 8,-14 8,-15 10,-15 10,-7 12,-7 12,0 3,0 3,-7 5,-7 5,-15 7,-15 7,-14 6,-14 6,-6 4,-6 4,-2 6,-2 6,-3 7,-3 7,-2 8,-2 8,-3 9,-3 9,-2 11,-2</Path>
+          <Path>8,-4 7,-4 7,-5 8,-5</Path>
+        </PolygonCollider2D>
+      </GameObject>
     </GameObject>
     <GameObject name="Base/Walls" x="0" y="0" z="0">
       <GameObject name="GameMapSpritesheet" copy="mesh_0002" sortingLayerName="" sortingOrder="1" opacity="1" />
