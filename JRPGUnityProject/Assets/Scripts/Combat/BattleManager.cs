@@ -59,10 +59,11 @@ public class BattleManager : MonoBehaviour {
         playerBattler = player.GetComponent<PlayerBattleController>();
         playerBattler.battleState = new BattleState();
         PlayerStateManager.Instance.CopyPlayerBattleState(
-            player.GetComponent<PlayerBattleController>().battleState);
+            playerBattler.battleState);
 
         battlers = GameObject.FindGameObjectsWithTag("Battler");
         IComparer speedComparer = new SpeedComparer();
+
         Array.Sort(battlers, speedComparer);
 
         activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
@@ -174,6 +175,11 @@ public class BattleManager : MonoBehaviour {
             if (activeBattlerIndex < battlers.Length)
             {
                 activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
+
+                if (activeBattler == playerBattler)
+                {
+                    playerTurnChooseAction = true;
+                }
             }
             else //all non-player battlers have chosen their action
             {

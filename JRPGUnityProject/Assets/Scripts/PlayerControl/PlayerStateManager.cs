@@ -20,19 +20,19 @@ public class PlayerStateManager : Singleton<PlayerStateManager> {
     {
         playerBattleState = new BattleState();
 
-        playerBattleState.level = 1;//50;
+        playerBattleState.level = 50;
 
-        playerBattleState.strength = 2;//100;
-        playerBattleState.endurance = 2;// 100;
-        playerBattleState.accuracy = 2;// 100;
-        playerBattleState.speed = 2;// 100;
-        playerBattleState.deadliness = 2;// 50;
+        playerBattleState.strength = 100;
+        playerBattleState.endurance = 100;
+        playerBattleState.accuracy = 100;
+        playerBattleState.speed = 100;
+        playerBattleState.deadliness = 50;
 
-        playerBattleState.attackRating = 1;// 50;
-        playerBattleState.defenceRating = 1;// 50;
+        playerBattleState.attackRating = 50;
+        playerBattleState.defenceRating = 50;
 
-        playerBattleState.currentHealth = 20;// 2519;
-        playerBattleState.maximumHealth = 20;// 2519;
+        playerBattleState.currentHealth = 2519;
+        playerBattleState.maximumHealth = 2519;
         playerBattleState.statusEffects = new List<statusEffect>();
     }
 
