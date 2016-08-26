@@ -24,11 +24,11 @@ public class ShapeshifterBruiser : Battler {
             {
                 int n = r.Next(3);
 
-                if (n == 2)
+                if (n == 2) //33% of time
                 {
                     DoAction = Charge;
                 }
-                else
+                else //66% of time
                 {
                     DoAction = DoubleAttack;
                 }
@@ -37,15 +37,15 @@ public class ShapeshifterBruiser : Battler {
             {
                 int n = r.Next(4);
 
-                if (n == 3)
+                if (n == 3) //25% of time
                 {
                     DoAction = Toxin;
                 }
-                else if (n == 2)
+                else if (n == 2) //25% of time
                 {
                     DoAction = Charge;
                 }
-                else
+                else //50% of time
                 {
                     DoAction = BasicAttack;
                 }

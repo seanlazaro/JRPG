@@ -133,4 +133,12 @@ public abstract class Battler : MonoBehaviour {
 
         Finish(killed, false);
     }
+
+    public virtual void StartRoundAction()
+    {
+    }
+
+    public virtual void EndRoundAction()
+    {
+    }
 }

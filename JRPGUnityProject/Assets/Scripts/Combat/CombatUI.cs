@@ -70,17 +70,20 @@ public class CombatUI : Singleton<CombatUI> {
 
     public IEnumerator DisplayBlockingMessage(string messageInput)
     {
+        GameObject battleManagerObject = GameObject.Find("BattleManager");
+        BattleManager bm = battleManagerObject.GetComponent<BattleManager>();
+        bm.blockedByMessage = true;
+
         displayStyle.alignment = TextAnchor.UpperCenter;
         displayStyle.fontSize = fontSize;
         displayStyle.wordWrap = true;
         message = messageInput;
         talking = true;
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
-        talking = false;
 
-        GameObject battleManagerObject = GameObject.Find("BattleManager");
-        BattleManager bm = battleManagerObject.GetComponent<BattleManager>();
-        bm.blockingMessageReleased = true;
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+
+        talking = false;
+        bm.blockedByMessage = false;
     }
 
     public IEnumerator UpdateHealthBar(double health, double maxHealth, bool playerDamaged)

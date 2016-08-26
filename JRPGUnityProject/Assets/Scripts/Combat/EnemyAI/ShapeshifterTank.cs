@@ -12,11 +12,11 @@ public class ShapeshifterTank : Battler {
         {
             int n = r.Next(4);
 
-            if (n == 3)
+            if (n == 3) //25% of time
             {
                 DoAction = StrongAttack;
             }
-            else
+            else //75% of time
             {
                 DoAction = BasicAttack;
             }
@@ -25,15 +25,15 @@ public class ShapeshifterTank : Battler {
         {
             int n = r.Next(5);
 
-            if (n == 4)
+            if (n == 4) //20% of time
             {
                 DoAction = Heal;
             }
-            else if (n == 3)
+            else if (n == 3) //20% of time
             {
                 DoAction = StrongAttack;
             }
-            else
+            else//60% of time
             {
                 DoAction = BasicAttack;
             }

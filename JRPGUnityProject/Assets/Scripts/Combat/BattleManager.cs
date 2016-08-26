@@ -41,20 +41,23 @@ public class BattleManager : MonoBehaviour {
     }
 
     Battler activeBattler;
+    Battler playerBattler;
     int activeBattlerIndex = 0;
+    bool playerTurnChooseAction = false;
 
     bool startingBattle = false;
     bool choosingAction = false;
     bool doingAction = false;
+    bool endingBattle = false;
     bool exitingBattle = false;
 
-    bool blockedByMessage = false;
-    public bool blockingMessageReleased = false;
+    public bool blockedByMessage = false;
 
     // Use this for initialization
     void Start () {
         GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
-        player.GetComponent<PlayerBattleController>().battleState = new BattleState();
+        playerBattler = player.GetComponent<PlayerBattleController>();
+        playerBattler.battleState = new BattleState();
         PlayerStateManager.Instance.CopyPlayerBattleState(
             player.GetComponent<PlayerBattleController>().battleState);
 
@@ -63,7 +66,6 @@ public class BattleManager : MonoBehaviour {
         Array.Sort(battlers, speedComparer);
 
         activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
-
     }
     
     // Update is called once per frame
@@ -85,28 +87,37 @@ public class BattleManager : MonoBehaviour {
                     }
 
                     StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("The battle has started."));
-
-                    blockedByMessage = true;
                 }
 
-                if (blockedByMessage)
+                if (!blockedByMessage)
                 {
-                    if (blockingMessageReleased)
-                    {
-                        currentBattlePhase = BattlePhase.ChooseAction;
-                        
-                        //reset
-                        blockedByMessage = false;
-                        blockingMessageReleased = false;
-                    }
+                    currentBattlePhase = BattlePhase.ChooseAction;
                 }
                 
                 break;
-            case BattlePhase.ChooseAction:
+            case BattlePhase.ChooseAction: //player always chooses action last
                 if(!choosingAction)
-                {
-                    choosingAction = true;
-                    StartCoroutine(activeBattler.ChooseAction(FinishChoosingAction));
+                {                  
+                    if (!blockedByMessage)
+                    {                       
+                        choosingAction = true;
+
+                        if (playerTurnChooseAction)
+                        {
+                            StartCoroutine(playerBattler.ChooseAction(FinishChoosingAction));
+                        }
+                        else
+                        {
+                            //skip player until all non-player battlers have chosen their action
+                            if (activeBattler == playerBattler)
+                            {
+                                activeBattlerIndex++;
+                                activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
+                            }
+
+                            StartCoroutine(activeBattler.ChooseAction(FinishChoosingAction));
+                        }
+                    }
                 }
                 break;
             case BattlePhase.DoAction:
@@ -117,23 +128,20 @@ public class BattleManager : MonoBehaviour {
                 }
                 break;
             case BattlePhase.BattleEnd:
-                if(!exitingBattle)
+                if(!endingBattle)
                 {
-                    exitingBattle = true;
+                    endingBattle = true;
 
                     BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
                     playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
                 }
 
-                if (blockedByMessage)
+                if (!blockedByMessage)
                 {
-                    if (blockingMessageReleased)
+                    if (!exitingBattle)
                     {
+                        exitingBattle = true;
                         StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
-
-                        //reset
-                        blockedByMessage = false;
-                        blockingMessageReleased = false;
                     }
                 }
 
@@ -146,16 +154,31 @@ public class BattleManager : MonoBehaviour {
     void FinishChoosingAction()
     {
         choosingAction = false;
-        activeBattlerIndex++;
-        if (activeBattlerIndex < battlers.Length)
+
+        if (playerTurnChooseAction)
         {
-            activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
-        }
-        else
-        {
+            playerTurnChooseAction = false; //reset
+            
             activeBattlerIndex = 0;
             activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
             currentBattlePhase = BattlePhase.DoAction;
+
+            for (int i = 0; i < battlers.Length; i++)
+            {
+                battlers[i].GetComponent<Battler>().StartRoundAction();
+            }
+        }
+        else
+        {
+            activeBattlerIndex++;
+            if (activeBattlerIndex < battlers.Length)
+            {
+                activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
+            }
+            else //all non-player battlers have chosen their action
+            {
+                playerTurnChooseAction = true;                
+            }
         }
     }
 
@@ -199,7 +222,6 @@ public class BattleManager : MonoBehaviour {
             {
                 StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've wonnerino!"));
             }
-            blockedByMessage = true;
 
             currentBattlePhase = BattlePhase.BattleEnd;
             return;
@@ -212,6 +234,11 @@ public class BattleManager : MonoBehaviour {
         }
         else
         {
+            for (int i = 0; i < battlers.Length; i++)
+            {
+                battlers[i].GetComponent<Battler>().EndRoundAction();
+            }
+            
             activeBattlerIndex = 0;
             activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
             currentBattlePhase = BattlePhase.ChooseAction;
