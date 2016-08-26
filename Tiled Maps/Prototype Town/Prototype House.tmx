@@ -675,9 +675,9 @@
    <tile gid="536872193"/>
    <tile gid="536872193"/>
    <tile gid="536872193"/>
+   <tile gid="536872193"/>
    <tile gid="1280"/>
-   <tile gid="1280"/>
-   <tile gid="1280"/>
+   <tile gid="536872193"/>
    <tile gid="536872193"/>
    <tile gid="536872193"/>
    <tile gid="536872193"/>
@@ -690,9 +690,9 @@
    <tile gid="720"/>
    <tile gid="720"/>
    <tile gid="720"/>
-   <tile gid="2147484929"/>
+   <tile gid="721"/>
    <tile gid="1280"/>
-   <tile gid="1073743105"/>
+   <tile gid="2147484369"/>
    <tile gid="720"/>
    <tile gid="720"/>
    <tile gid="720"/>

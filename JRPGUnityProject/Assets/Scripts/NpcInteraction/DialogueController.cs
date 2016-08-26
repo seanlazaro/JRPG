@@ -65,6 +65,12 @@ public class DialogueController : MonoBehaviour {
 	// Choice Stuff
 	bool choosing = false;
 
+	// Prevents skipping first line.
+	bool spacePress = false;
+
+	public bool SpacePress {
+		set{ spacePress = value; }
+	}
 
 	// Each NPC must have its own dialogue choice buttons,
 	// So create a transparent panel and duplicate all buttons into it to sort.
@@ -250,7 +256,7 @@ public class DialogueController : MonoBehaviour {
 			GUI.skin = textStyle;
 
 			// Changing the divisor will change the font size ratio,
-			GUI.skin.label.fontSize = (int)Math.Floor((double)(Screen.width /20	));
+			GUI.skin.label.fontSize = Screen.width / 60;
 			int LabelFontSize = GUI.skin.label.fontSize;
 			GUI.BeginGroup(new Rect(locationX, locationY, width, height));
 
@@ -266,22 +272,21 @@ public class DialogueController : MonoBehaviour {
 			// (GUI.skin.label.fontSize * 4) is added to prevent words overflowing too far, without clipping
 			GUI.Label(new Rect(height + 40, 24, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 48), currentText);
 			GUI.EndGroup();
-			
+
 			//Display a name tag for the NPC.
             
 			// The text will be a part of the box, to allow customization seperate from the label text.
-			GUI.skin.label.fontSize = Screen.width / 25;
-
+			GUI.skin.label.fontSize = Screen.width / 120;
+			GUI.skin.label.alignment = TextAnchor.UpperCenter;
 			// Box will be lined up with the box around the picture, in width and location.
-			GUI.BeginGroup (new Rect (locationX, locationY - NpcNameHeight * 1.5f, height, NpcNameHeight * 1.5f));
-			GUI.Box(new Rect(8, 0, height - LabelFontSize, (LabelFontSize) * 3f), "");
-			GUI.Label (new Rect (24, LabelFontSize / 2, height - LabelFontSize - 20, (LabelFontSize) * 3f), npcName);
+			GUI.BeginGroup (new Rect (locationX, locationY - NpcNameHeight * 1.25f, height, NpcNameHeight * 1.25f));
+			GUI.Box(new Rect(8, 0, height - LabelFontSize, NpcNameHeight * 1.5f), "");
+			GUI.Label (new Rect (8,0, height - LabelFontSize, NpcNameHeight * 1.5f), npcName);
 			GUI.EndGroup ();
+			GUI.skin.label.alignment = TextAnchor.UpperLeft;
 		}
 	}
-
-	// Prevents skipping first line.
-	bool spacePress = false;
+		
 
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Space) && talking && spacePress)
