@@ -74,7 +74,7 @@ public class DialogueController : MonoBehaviour {
 
 	// Each NPC must have its own dialogue choice buttons,
 	// So create a transparent panel and duplicate all buttons into it to sort.
-	public GameObject DialogueChoiceMenu;
+	GameObject DialogueChoiceMenu;
 
 	GameObject ButtonOne;
 	int buttonOneDestination;
@@ -99,16 +99,19 @@ public class DialogueController : MonoBehaviour {
 	float NpcNameHeight;
 
 	// Use this for initialization
-	void Start () {
+	void Awake(){
 		// Used to disable movement.
 		player = GameObject.FindWithTag("Player");
 		// Used to disable pausing
 		pauseMenu = GameObject.FindWithTag("Pause Menu Canvas");
+		DialogueChoiceMenu = GameObject.FindWithTag ("Dialogue Choice Menu");
+		ButtonOne = GameObject.FindWithTag ("DialogueButtonOne");
+		ButtonTwo = GameObject.FindWithTag ("DialogueButtonTwo");
+		ButtonThree = GameObject.FindWithTag ("DialogueButtonThree");
+		ButtonFour = GameObject.FindWithTag ("DialogueButtonFour");
 
-		ButtonOne = GameObject.Find ("DialogueButtonOne");
-		ButtonTwo = GameObject.Find ("DialogueButtonTwo");
-		ButtonThree = GameObject.Find ("DialogueButtonThree");
-		ButtonFour = GameObject.Find ("DialogueButtonFour");
+	}
+	void Start () {
 
 		ButtonOne.GetComponent<Button> ().onClick.RemoveAllListeners ();
 		ButtonTwo.GetComponent<Button> ().onClick.RemoveAllListeners ();
@@ -298,7 +301,7 @@ public class DialogueController : MonoBehaviour {
 	void LateUpdate()
 	{
 		// Put in lateupdate to prevent conflict with pause menu and other types of
-		if (EventSystem.current.currentSelectedGameObject == null && choosing) {
+		if (EventSystem.current.currentSelectedGameObject == null && choosing && ButtonOne.activeInHierarchy) {
 			EventSystem.current.SetSelectedGameObject (ButtonOne);
 		}		
 		if (Input.GetKeyUp(KeyCode.Space) && talking && !spacePress)
