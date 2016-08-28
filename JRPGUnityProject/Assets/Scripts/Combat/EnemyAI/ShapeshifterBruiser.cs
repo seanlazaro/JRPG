@@ -13,45 +13,23 @@ public class ShapeshifterBruiser : Battler {
         singleAttackTarget = player.transform.parent.gameObject.GetComponent<Battler>();
         List<statusEffect> playerStatusEffects = singleAttackTarget.battleState.statusEffects;
 
-
-        if (battleState.statusEffects.Exists(se => se.name == "Charged Up"))
+        if (playerStatusEffects.Exists(se => se.name == "Shapeshifter Toxin"))
         {
-            DoAction = ChargedAttack;
+            DoAction = DoubleAttack;
         }
         else
         {
-            if (playerStatusEffects.Exists(se => se.name == "Shapeshifter Toxin"))
-            {
-                int n = r.Next(3);
+            int n = r.Next(3);
 
-                if (n == 2) //33% of time
-                {
-                    DoAction = Charge;
-                }
-                else //66% of time
-                {
-                    DoAction = DoubleAttack;
-                }
+            if (n == 2) //33% of time
+            {
+                DoAction = Toxin;
             }
-            else
+            else //66% of time
             {
-                int n = r.Next(4);
-
-                if (n == 3) //25% of time
-                {
-                    DoAction = Toxin;
-                }
-                else if (n == 2) //25% of time
-                {
-                    DoAction = Charge;
-                }
-                else //50% of time
-                {
-                    DoAction = BasicAttack;
-                }
+                DoAction = BasicAttack;
             }
         }
-
 
         Finish();
 
@@ -59,39 +37,39 @@ public class ShapeshifterBruiser : Battler {
     }
 
 
-    // Charges for one turn then attacks for three times standard damage the next turn. If attacked 
-    // during the charging turn, the attack is cancelled.
+    //// Charges for one turn then attacks for three times standard damage the next turn. If attacked 
+    //// during the charging turn, the attack is cancelled.
 
-    IEnumerator Charge(Action<bool, bool> Finish)
-    {
-        StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy begins setting up an attack.", 1f));
+    //IEnumerator Charge(Action<bool, bool> Finish)
+    //{
+    //    StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy begins setting up an attack.", 1f));
 
-        statusEffect se = new statusEffect("Charged Up", true, false, 1, false);
-        battleState.statusEffects.Add(se);
+    //    statusEffect se = new statusEffect("Charged Up", true, false, 1, false);
+    //    battleState.statusEffects.Add(se);
 
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
+    //    //in place of animations, there is a 2 second wait
+    //    yield return new WaitForSeconds(2);
 
-        Finish(false, false);
-    }
+    //    Finish(false, false);
+    //}
 
-    IEnumerator ChargedAttack(Action<bool, bool> Finish)
-    {
-        if (battleState.statusEffects.Exists(se => se.name == "Charged Up"))
-        {
-            StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy hits you with a devastating blow!", 1f));
+    //IEnumerator ChargedAttack(Action<bool, bool> Finish)
+    //{
+    //    if (battleState.statusEffects.Exists(se => se.name == "Charged Up"))
+    //    {
+    //        StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy hits you with a devastating blow!", 1f));
 
-            battleState.statusEffects.RemoveAll(se => se.name == "Charged Up");
+    //        battleState.statusEffects.RemoveAll(se => se.name == "Charged Up");
 
-            StartCoroutine(StandardAttackWithMultiplier(3f, Finish));
+    //        StartCoroutine(StandardAttackWithMultiplier(3f, Finish));
 
-            yield break;
-        }
-        else
-        {
-            Finish(false, false);
-        }
-    }
+    //        yield break;
+    //    }
+    //    else
+    //    {
+    //        Finish(false, false);
+    //    }
+    //}
 
     //deals twice as much damage as a regular attack
     IEnumerator DoubleAttack(Action<bool, bool> Finish)

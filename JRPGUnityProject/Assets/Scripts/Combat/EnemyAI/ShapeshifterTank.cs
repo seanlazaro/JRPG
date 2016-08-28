@@ -8,32 +8,32 @@ public class ShapeshifterTank : Battler {
     {
         System.Random r = new System.Random();
 
-        if (battleState.currentHealth > 0.75f * battleState.maximumHealth)
+        if (battleState.currentHealth > 0.65f * battleState.maximumHealth)
         {
-            int n = r.Next(4);
+            int n = r.Next(3);
 
-            if (n == 3) //25% of time
+            if (n == 2) //33% of time
             {
                 DoAction = StrongAttack;
             }
-            else //75% of time
+            else //66% of time
             {
                 DoAction = BasicAttack;
             }
         }
         else
         {
-            int n = r.Next(5);
+            int n = r.Next(20);
 
-            if (n == 4) //20% of time
-            {
-                DoAction = Heal;
-            }
-            else if (n == 3) //20% of time
+            if (n > 14) //25% of time
             {
                 DoAction = StrongAttack;
             }
-            else//60% of time
+            else if (n > 6) //40% of time
+            {
+                DoAction = Heal;
+            }
+            else //35% of time
             {
                 DoAction = BasicAttack;
             }
@@ -69,7 +69,7 @@ public class ShapeshifterTank : Battler {
         //in place of animations, there is a 2 second wait
         yield return new WaitForSeconds(2);
 
-        battleState.currentHealth += (int)(0.25f * battleState.maximumHealth);
+        battleState.currentHealth += (int)(0.35f * battleState.maximumHealth);
 
         StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth,
                 (double)battleState.maximumHealth, false));

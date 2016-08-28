@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class BattleManager : MonoBehaviour {
 
@@ -17,28 +18,6 @@ public class BattleManager : MonoBehaviour {
     // Stores battlers from greatest to least speed (determines order at start of battle)
     // Any action that changes the speed of a battler should resort
     GameObject[] battlers;
-
-    class SpeedComparer : IComparer
-    {
-        int IComparer.Compare(System.Object x, System.Object y)
-        {
-            GameObject gameObj = (GameObject)x;
-            int xSpeed = gameObj.GetComponent<Battler>().battleState.speed;
-
-            gameObj = (GameObject)y;
-            int ySpeed = gameObj.GetComponent<Battler>().battleState.speed;
-
-            if (xSpeed > ySpeed) return -1;
-            else if (xSpeed == ySpeed)
-            {
-                //if two battlers have the same speed, their turn order will be randomly chosen
-                System.Random r = new System.Random();
-                if (r.Next(2) == 1) return 1;
-                else return -1;
-            }
-            else return 1;
-        }
-    }
 
     Battler activeBattler;
     Battler playerBattler;
@@ -58,13 +37,10 @@ public class BattleManager : MonoBehaviour {
         GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
         playerBattler = player.GetComponent<PlayerBattleController>();
         playerBattler.battleState = new BattleState();
-        PlayerStateManager.Instance.CopyPlayerBattleState(
-            playerBattler.battleState);
+        PlayerStateManager.Instance.CopyPlayerBattleState(playerBattler.battleState);
 
         battlers = GameObject.FindGameObjectsWithTag("Battler");
-        IComparer speedComparer = new SpeedComparer();
-
-        Array.Sort(battlers, speedComparer);
+        battlers = battlers.OrderByDescending(go => go.GetComponent<Battler>().battleState.speed).ToArray();
 
         activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
     }
