@@ -7,14 +7,19 @@ public class TitleScreenController : MonoBehaviour {
 
     public void OnStartClicked()
     {
-        SceneManager.LoadScene("main");
+        SceneManager.LoadScene("Prototype Town");
     }
 
-    public void OnCreditsClicked()
-    {
-        SceneManager.LoadScene("Credits");
+	public void OnCreditsClicked()
+	{
+		SceneManager.LoadScene("Credits");
+	}
 
-    }
+	public void OnInstructionsClicked()
+	{
+		SceneManager.LoadScene("Instructions");
+	}
+
 	void Update()
 	{
 		if (EventSystem.current.currentSelectedGameObject == null)

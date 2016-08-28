@@ -64,7 +64,6 @@ public class PauseMenuController : MonoBehaviour {
 	}
 	public void ToggleInstructionsMenu () {
 		instructionsDisplayed = !instructionsDisplayed;
-		Debug.Log (instructionMenu.Length);
 		foreach(GameObject i in instructionMenu)
 			i.SetActive (instructionsDisplayed);
 		instructionReturnButton.SetActive (instructionsDisplayed);

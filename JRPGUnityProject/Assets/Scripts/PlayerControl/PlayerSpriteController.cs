@@ -124,8 +124,12 @@ public class PlayerSpriteController : MonoBehaviour {
 			height = rt.rect.height;
 
 			// The range for the interaction box to be detected is slightly increased for convenience.
-			if (interactionBox.transform.position.x > npc.transform.position.x - 0.2 && interactionBox.transform.position.x < npc.transform.position.x + width) {
-				if (interactionBox.transform.position.y > npc.transform.position.y && interactionBox.transform.position.y < npc.transform.position.y + height +0.2) {
+			if (interactionBox.transform.position.x > npc.transform.position.x - width / 2 &&
+				interactionBox.transform.position.x < npc.transform.position.x + width / 2) 
+			{
+				if (interactionBox.transform.position.y > npc.transform.position.y - height / 2 &&
+					interactionBox.transform.position.y < npc.transform.position.y + height / 2) 
+				{
 					npcInteracting = npc;
 					npcInRange = true;
 					break;
