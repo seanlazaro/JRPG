@@ -6,41 +6,21 @@ using System;
 
 public class PlayerBattleController : Battler {
 
-	bool choosing;
-
-	// Prototype-Only, controls focus.
-	bool inMenu;
-
 	// This is what contains everything.
 	public GameObject CombatUIPanel;
 
-	// This contains the four "Special Move" buttons.
-	public GameObject SpecialMoveMenu;
-	// This contains the top "Special Move" buttons.
-	public GameObject SpecialMoveMenuTopButton;
-
-	public GameObject MainCombatMenu;
-	public GameObject MainCombatMenuTopButton;
+    public GameObject MainCombatMenu;
+    public GameObject MainCombatMenuTopButton;
     public GameObject MainCombatMenuSecondButton;
 
-	// Used to update range text.
-	public Text Range;
+	public GameObject SpecialMoveMenu;
+	public GameObject SpecialMoveMenuTopButton;
+    public GameObject SpecialMoveMenuMiddleTopButton;
 
-	// Prototype one only shows four attacks, so the last three arrays are useless.
-	// USELESS!
-	string[] DefaultMenu;
-	string[] AttackCategoryMenu;
-	string[] AttackListClose;
-	string[] AttackListMiddle;
-	string[] AttackListLong;
-	// USELESS!
+    bool choosing = false; //true if player currently choosing action
 
 	void Start()
 	{
-		// Gives "choosing" a value other than null.
-		choosing = false;
-
-		inMenu = true;
 		// Hides the panel containing all the combatui elements.
 		CombatUIPanel.SetActive (false);
 		SpecialMoveMenu.SetActive (false);
@@ -48,17 +28,6 @@ public class PlayerBattleController : Battler {
 		// Will remain hidden until CombatUIPanel becomes active.
 		MainCombatMenu.SetActive (true);
 	}
-
-    void Update()
-    {
-        if (EventSystem.current.currentSelectedGameObject == null)
-        {
-            if (inMenu)
-                EventSystem.current.SetSelectedGameObject(MainCombatMenuTopButton);
-            else
-                EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
-        }
-    }
 
     public override IEnumerator ChooseAction(Action Finish)
 	{
@@ -76,6 +45,23 @@ public class PlayerBattleController : Battler {
         {
             MainCombatMenuTopButton.GetComponent<Button>().interactable = true;
             SpecialMoveMenuTopButton.GetComponent<Button>().interactable = true;
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
+        if (!MainCombatMenu.activeSelf)
+        {
+            if (!SpecialMoveMenuTopButton.GetComponent<Button>().interactable)
+            {
+                EventSystem.current.SetSelectedGameObject(SpecialMoveMenuMiddleTopButton);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
+            }
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(MainCombatMenuTopButton);
         }
 
 		choosing = true;
@@ -105,11 +91,15 @@ public class PlayerBattleController : Battler {
 		SpecialMoveMenu.SetActive (true);
 		MainCombatMenu.SetActive (false);
 
-		inMenu = false;
-
-		EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
+        if (!SpecialMoveMenuTopButton.GetComponent<Button>().interactable)
+        {
+            EventSystem.current.SetSelectedGameObject(SpecialMoveMenuMiddleTopButton);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(SpecialMoveMenuTopButton);
+        }  
 	}
-
 
 	//triggered when player selects special move menu's top button ("Reckless")
 	public void SpecialMoveMenuTopButtonPress()
@@ -137,8 +127,6 @@ public class PlayerBattleController : Battler {
 	{
 		MainCombatMenu.SetActive (true);
 		SpecialMoveMenu.SetActive (false);
-
-		inMenu = true;
 
         if (MainCombatMenuTopButton.GetComponent<Button>().interactable == false)
         {

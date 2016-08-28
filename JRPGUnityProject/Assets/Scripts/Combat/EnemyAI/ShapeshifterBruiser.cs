@@ -83,16 +83,9 @@ public class ShapeshifterBruiser : Battler {
 
             battleState.statusEffects.RemoveAll(se => se.name == "Charged Up");
 
-            float damage = 3f * CalculateStandardDamage(singleAttackTarget);
+            StartCoroutine(StandardAttackWithMultiplier(3f, Finish));
 
-            // TODO: Animations for attack.
-            // AnimateMethod(DoAction, ref bool)
-            // yield return new WaitUntil(()=>bool)
-
-            //in place of animations, there is a 2 second wait
-            yield return new WaitForSeconds(2);
-
-            StartCoroutine(DealDamage(damage, Finish));
+            yield break;
         }
         else
         {
@@ -105,16 +98,9 @@ public class ShapeshifterBruiser : Battler {
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy strikes twice at lightning speed!", 1f));
         
-        float damage = 2f * CalculateStandardDamage(singleAttackTarget);
+        StartCoroutine(StandardAttackWithMultiplier(2f, Finish));
 
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
+        yield break;
     }
 
     //applies a permanent debuff to the player, which allows the use of DoubleAttack

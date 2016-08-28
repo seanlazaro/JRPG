@@ -7,11 +7,19 @@ using System.Collections.Generic;
 public abstract class Battler : MonoBehaviour {
 
     public BattleState battleState;
-    public Func<Action<bool, bool>, IEnumerator> DoAction;
+    protected Battler singleAttackTarget;
 
     public abstract IEnumerator ChooseAction(Action Finish);
 
-    protected Battler singleAttackTarget;
+    public virtual void StartRoundAction()
+    {
+    }
+
+    public Func<Action<bool, bool>, IEnumerator> DoAction;
+
+    public virtual void EndRoundAction()
+    {
+    }
 
     protected float CalculateStandardDamage(Battler attackTarget)
     {
@@ -64,29 +72,6 @@ public abstract class Battler : MonoBehaviour {
         return killed;
     }
 
-    protected IEnumerator BasicAttack(Action<bool, bool> Finish)
-    {
-        if (this.gameObject.name == "PlayerDuringBattle")
-        {
-            StartCoroutine(CombatUI.Instance.DisplayMessage("You attack the enemy!", 1f));
-        }
-        else
-        {
-            StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy attacks you!", 1f));
-        }
-        
-        float damage = CalculateStandardDamage(singleAttackTarget);
-
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
-    }
-
     protected IEnumerator DealDamage(float damage, Action<bool, bool> Finish)
     {
         List<statusEffect> statusEffects = singleAttackTarget.battleState.statusEffects;
@@ -134,11 +119,33 @@ public abstract class Battler : MonoBehaviour {
         Finish(killed, false);
     }
 
-    public virtual void StartRoundAction()
+    protected IEnumerator StandardAttackWithMultiplier(float multiplier, Action<bool, bool> Finish)
     {
+        float damage = multiplier * CalculateStandardDamage(singleAttackTarget);
+
+        // TODO: Animations for attack.
+        // AnimateMethod(DoAction, ref bool)
+        // yield return new WaitUntil(()=>bool)
+
+        //in place of animations, there is a 2 second wait
+        yield return new WaitForSeconds(2);
+
+        StartCoroutine(DealDamage(damage, Finish));
     }
 
-    public virtual void EndRoundAction()
+    protected IEnumerator BasicAttack(Action<bool, bool> Finish)
     {
+        if (this.gameObject.name == "PlayerDuringBattle")
+        {
+            StartCoroutine(CombatUI.Instance.DisplayMessage("You attack the enemy!", 1f));
+        }
+        else
+        {
+            StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy attacks you!", 1f));
+        }
+
+        StartCoroutine(StandardAttackWithMultiplier(1f, Finish));
+
+        yield break;
     }
 }

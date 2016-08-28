@@ -51,17 +51,10 @@ public class ShapeshifterTank : Battler {
     IEnumerator StrongAttack(Action<bool, bool> Finish)
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy comes at you at full force!", 1f));
-        
-        float damage = 1.5f * CalculateStandardDamage(singleAttackTarget);
 
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
+        StartCoroutine(StandardAttackWithMultiplier(1.5f, Finish));
 
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
+        yield break;
     }
 
     //increases hp by 25% of max hp, but causes double damage to be taken next turn

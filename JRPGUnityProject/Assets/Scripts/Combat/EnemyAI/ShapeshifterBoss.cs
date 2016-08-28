@@ -16,11 +16,7 @@ public class ShapeshifterBoss : Battler
         singleAttackTarget = player.transform.parent.gameObject.GetComponent<Battler>();
         List<statusEffect> playerStatusEffects = singleAttackTarget.battleState.statusEffects;
 
-        if (battleState.statusEffects.Exists(se => se.name == "Charged Up"))
-        {
-            DoAction = ChargedAttack;
-        }
-        else if (battleState.currentHealth < 0.1f * battleState.maximumHealth)
+        if (battleState.currentHealth < 0.1f * battleState.maximumHealth)
         {
             DoAction = Rampage;
         }
@@ -32,18 +28,14 @@ public class ShapeshifterBoss : Battler
         {
             if (playerStatusEffects.Exists(se => se.name == "Shapeshifter Toxin"))
             {
-                int n = r.Next(4);
+                int n = r.Next(20);
 
-                if (n == 3) //25% of time
-                {
-                    DoAction = Charge;
-                }
-                else if (n == 2) //25% of time
+                if (n > 16) //15% of time
                 {
                     DoAction = Taunt;
                     Taunt();
                 }
-                else //50% of time
+                else //85% of time
                 {
                     DoAction = DoubleAttack;
                 }
@@ -54,18 +46,14 @@ public class ShapeshifterBoss : Battler
 
                 if (n > 16) //15% of time
                 {
-                    DoAction = Charge;
-                }
-                else if (n > 13) //15% of time
-                {
                     DoAction = Toxin;
                 }
-                else if (n > 8) //25% of time
+                else if (n > 13) //15% of time
                 {
                     DoAction = Taunt;
                     Taunt();
                 }
-                else //45% of time
+                else //70% of time
                 {
                     DoAction = BasicAttack;
                 }
@@ -79,18 +67,14 @@ public class ShapeshifterBoss : Battler
 
                 if (n > 16) //15% of time
                 {
-                    DoAction = Charge;
-                }
-                else if (n > 13) //15% of time
-                {
-                    DoAction = Heal;
-                }
-                else if (n > 9) //20% of time
-                {
                     DoAction = Taunt;
                     Taunt();
                 }
-                else //50% of time
+                else if (n > 11) //25% of time
+                {
+                    DoAction = Heal;
+                }
+                else //60% of time
                 {
                     DoAction = DoubleAttack;
                 }
@@ -103,20 +87,16 @@ public class ShapeshifterBoss : Battler
                 {
                     DoAction = Toxin;
                 }
-                else if (n > 15) //10% of time
-                {
-                    DoAction = Charge;
-                }
-                else if (n > 12) //15% of time
-                {
-                    DoAction = Heal;
-                }
-                else if (n > 8) //20% of time
+                else if (n > 14) //15% of time
                 {
                     DoAction = Taunt;
                     Taunt();
                 }
-                else //45% of time
+                else if (n > 10) //20% of time
+                {
+                    DoAction = Heal;
+                }
+                else //55% of time
                 {
                     DoAction = BasicAttack;
                 }
@@ -159,62 +139,14 @@ public class ShapeshifterBoss : Battler
         StartCoroutine(CombatUI.Instance.DisplayBlockingMessage(taunts[n]));
     }
 
-    // Charges for one turn then attacks for three times standard damage the next turn. If attacked 
-    // during the charging turn, the attack is cancelled.
-
-    IEnumerator Charge(Action<bool, bool> Finish)
-    {
-        StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy begins setting up an attack.", 1f));
-
-        statusEffect se = new statusEffect("Charged Up", true, false, 1, false);
-        battleState.statusEffects.Add(se);
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        Finish(false, false);
-    }
-
-    IEnumerator ChargedAttack(Action<bool, bool> Finish)
-    {
-        if (battleState.statusEffects.Exists(se => se.name == "Charged Up"))
-        {
-            StartCoroutine(CombatUI.Instance.DisplayMessage("[name]: Take this!", 1f));
-
-            battleState.statusEffects.RemoveAll(se => se.name == "Charged Up");
-
-            float damage = 3f * CalculateStandardDamage(singleAttackTarget);
-
-            // TODO: Animations for attack.
-            // AnimateMethod(DoAction, ref bool)
-            // yield return new WaitUntil(()=>bool)
-
-            //in place of animations, there is a 2 second wait
-            yield return new WaitForSeconds(2);
-
-            StartCoroutine(DealDamage(damage, Finish));
-        }
-        else
-        {
-            Finish(false, false);
-        }
-    }
-
     //deals 2.5 times as much damage as a regular attack
     IEnumerator Rampage(Action<bool, bool> Finish)
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("[name] is on a rampage!", 1f));
 
-        float damage = 2.5f * CalculateStandardDamage(singleAttackTarget);
+        StartCoroutine(StandardAttackWithMultiplier(2.5f, Finish));
 
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
+        yield break;
     }
 
     //deals 3 times as much damage as a regular attack
@@ -222,16 +154,9 @@ public class ShapeshifterBoss : Battler
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("[name]: Man, I'm pumped up!", 1f));
 
-        float damage = 3f * CalculateStandardDamage(singleAttackTarget);
+        StartCoroutine(StandardAttackWithMultiplier(3f, Finish));
 
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
+        yield break;
     }
 
     //deals 4 times as much damage as a regular attack
@@ -241,16 +166,9 @@ public class ShapeshifterBoss : Battler
         {
             StartCoroutine(CombatUI.Instance.DisplayMessage("[name] launches a brutal counterattack!", 1f));
 
-            float damage = 4f * CalculateStandardDamage(singleAttackTarget);
+            StartCoroutine(StandardAttackWithMultiplier(4f, Finish));
 
-            // TODO: Animations for attack.
-            // AnimateMethod(DoAction, ref bool)
-            // yield return new WaitUntil(()=>bool)
-
-            //in place of animations, there is a 2 second wait
-            yield return new WaitForSeconds(2);
-
-            StartCoroutine(DealDamage(damage, Finish));
+            yield break;
         }
         else
         {
@@ -263,16 +181,9 @@ public class ShapeshifterBoss : Battler
     {
         StartCoroutine(CombatUI.Instance.DisplayMessage("The enemy strikes twice at lightning speed!", 1f));
 
-        float damage = 2f * CalculateStandardDamage(singleAttackTarget);
+        StartCoroutine(StandardAttackWithMultiplier(2f, Finish));
 
-        // TODO: Animations for attack.
-        // AnimateMethod(DoAction, ref bool)
-        // yield return new WaitUntil(()=>bool)
-
-        //in place of animations, there is a 2 second wait
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(DealDamage(damage, Finish));
+        yield break;
     }
 
     //applies a permanent debuff to the player, which allows the use of DoubleAttack
@@ -305,7 +216,7 @@ public class ShapeshifterBoss : Battler
         //in place of animations, there is a 2 second wait
         yield return new WaitForSeconds(2);
 
-        battleState.currentHealth += (int)(0.25f * battleState.maximumHealth);
+        battleState.currentHealth += (int)(0.2f * battleState.maximumHealth);
 
         StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth,
                 (double)battleState.maximumHealth, false));

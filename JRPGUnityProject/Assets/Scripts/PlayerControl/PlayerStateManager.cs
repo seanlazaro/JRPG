@@ -26,13 +26,13 @@ public class PlayerStateManager : Singleton<PlayerStateManager> {
         playerBattleState.endurance = 100;
         playerBattleState.accuracy = 100;
         playerBattleState.speed = 100;
-        playerBattleState.deadliness = 50;
+        playerBattleState.deadliness = 25;
 
         playerBattleState.attackRating = 50;
         playerBattleState.defenceRating = 50;
 
-        playerBattleState.currentHealth = 2519;
-        playerBattleState.maximumHealth = 2519;
+        playerBattleState.currentHealth = 2500;
+        playerBattleState.maximumHealth = 2500;
         playerBattleState.statusEffects = new List<statusEffect>();
     }
 
