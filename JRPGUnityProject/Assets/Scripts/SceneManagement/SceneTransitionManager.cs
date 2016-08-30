@@ -117,31 +117,53 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         yield return null;
     }
 
-    public IEnumerator ExitBattle()
-    {
-        StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
+	public IEnumerator ExitBattle()
+	{
+		StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
 		// 2f is added because the win message takes 3 seconds.
-        yield return new WaitForSeconds(fadeTime + 2f);
-        
-        string temp = previousScene;
+		yield return new WaitForSeconds(fadeTime + 2f);
 
-        previousScene = "Battle";
-        
-        SceneManager.LoadScene(temp);
+		string temp = previousScene;
+
+		previousScene = "Battle";
+
+		SceneManager.LoadScene(temp);
 
 
-        for (int i = 0; i < enemySpritesInScene.Count; i++)
-        {
-            enemySpritesInScene[i].SetActive(true);
-        }
+		for (int i = 0; i < enemySpritesInScene.Count; i++)
+		{
+			enemySpritesInScene[i].SetActive(true);
+		}
 
-        enemySpritesInScene.Remove(engagedEnemySprite);
-        Destroy(engagedEnemySprite);
-    }
+		enemySpritesInScene.Remove(engagedEnemySprite);
+		Destroy(engagedEnemySprite);
+	}
+
+	public IEnumerator ExitLostBattle()
+	{
+		StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
+		// 2f is added because the win message takes 3 seconds.
+		yield return new WaitForSeconds(fadeTime + 2f);
+
+		string temp = "Game Over";
+
+		previousScene = "Battle";
+
+		SceneManager.LoadScene(temp);
+
+
+		for (int i = 0; i < enemySpritesInScene.Count; i++)
+		{
+			enemySpritesInScene[i].SetActive(true);
+		}
+
+		enemySpritesInScene.Remove(engagedEnemySprite);
+		Destroy(engagedEnemySprite);
+	}
 
     void OnLevelWasLoaded()
     {
-        if (previousScene == "Battle")
+		if (previousScene == "Battle" && SceneManager.GetActiveScene().name != "Game Over")
         {
             GameObject player = GameObject.FindWithTag("Player");
             player.transform.position = previousPosition;

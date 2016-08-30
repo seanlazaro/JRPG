@@ -5,21 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour {
 
+	// Stores music player.
     public AudioSource musicSource;
-    public AudioClip battleBGM;
-    public AudioClip normalBGM;
-    public AudioClip battleTransition;
-    public AudioClip normalTransition;
-
     public static AudioManager Instance;
 
-    public string[] overWorldScenes;
-    public string[] fightingScenes;
+	// Stores music and corresponding scenes.
+	[Header("Same Length, Clip Corresponds To Scene")]
+	public string[] scenesString;
+	public AudioClip[] clips;
 
+	// Used to prevent the clip from restarting even if the clip didn't change.
     private bool changingMusic = true;
 
     void Awake()
     {
+		// Singleton code.
         if (Instance)
         {
             Destroy(this.gameObject);
@@ -29,6 +29,8 @@ public class AudioManager : MonoBehaviour {
             DontDestroyOnLoad(this.gameObject);
             Instance = this;
         }
+
+		// Prevents awkward behavior.
         musicSource.playOnAwake = false;
         musicSource.rolloffMode = AudioRolloffMode.Logarithmic;
         musicSource.loop = true;
@@ -36,52 +38,35 @@ public class AudioManager : MonoBehaviour {
 
     void Start () 
     {
-        StartAudio(SceneManager.GetActiveScene().name);
+		// Plays initial scene music.
+		StartAudio(SceneManager.GetActiveScene().name);
+
+		// Displays warning if arrays are not configured properly.
+		if (clips.Length != scenesString.Length)
+			Debug.LogWarning ("Audio Manager: Length of 'clips' array does not match the length of the 'scenes' array.");
     }
 
-    public IEnumerator PlayTransition(string newScene)
-    {
-        changingMusic = false;
-        
-        musicSource.loop = false;
 
-        if (overWorldScenes.Contains(newScene))
-        {
-            if (musicSource.clip != normalTransition && musicSource.clip != normalBGM)
-            {
-                musicSource.clip = normalTransition;
-                changingMusic = true;
-            }
-        }
-        if (fightingScenes.Contains(newScene))
-        {
-            if (musicSource.clip != battleTransition && musicSource.clip != battleBGM)
-            {
-                musicSource.clip = battleTransition;
-                changingMusic = true;
-            }
-        }
+	void StartAudio(string newScene)
+	{
+		// Resets changingMusic bool.
+		changingMusic = false;
 
-        if (changingMusic)
-        {
-            musicSource.Play();
-        }
-        yield return new WaitForSeconds(musicSource.clip.length);
-        musicSource.loop = true;
-        StartAudio(newScene);
-    }
+		// If the current scene contains the clip, find scene and play corresponding clip.
+		if ((scenesString.Contains (newScene))) {
+			for (int i = 0; i < clips.Length; i++) {
+				if (scenesString [i] == newScene) {
 
-    void StartAudio(string newScene)
-    {
-        if (overWorldScenes.Contains(newScene))
-        {
-            musicSource.clip = normalBGM;
-        }
-        else if (fightingScenes.Contains(newScene))
-        {
-            musicSource.clip = battleBGM;
-        }
-
+					// Prevents clip from restarting if the music doesn't change.
+					if (musicSource.clip != clips [i]) {
+						musicSource.clip = clips [i];
+						changingMusic = true;
+					}
+					break;
+				}
+			}
+		} else // Triggered when there is no music on given scene.
+			musicSource.Stop ();
         if (changingMusic)
         {
             musicSource.Play();
@@ -90,12 +75,17 @@ public class AudioManager : MonoBehaviour {
 
     IEnumerator OnLevelWasLoaded()
     {
-        StartCoroutine(PlayTransition(SceneManager.GetActiveScene().name));
+		// Updates audio.
+		if(scenesString.Contains(SceneManager.GetActiveScene().name))
+			StartAudio(SceneManager.GetActiveScene().name);
         yield break;
     }
 		
 	public IEnumerator AudioFade(float fadeTime, bool fadeOut)
 	{
+		// Based on the fadescreen code, but uses musicSource.volume
+		// instead of alpha values.
+
 		bool increasing;
 		float totalChange = 0;
 
@@ -107,12 +97,15 @@ public class AudioManager : MonoBehaviour {
 		while(!(totalChange >= 1))
 		{
 			if (increasing)
-				musicSource.volume += Time.deltaTime / fadeTime;
+				musicSource.volume = 0;
 			else
 				musicSource.volume -= Time.deltaTime / fadeTime;
 			totalChange += Time.deltaTime / fadeTime;
 			yield return new WaitForEndOfFrame();
 		}
+		if (increasing)
+			musicSource.volume = 1;
+		yield break;
 	}
 
 }

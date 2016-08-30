@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -11,7 +12,8 @@ public class BattleManager : MonoBehaviour {
         BattleStart,
         ChooseAction,
         DoAction,
-        BattleEnd
+        BattleEnd,
+		BattleLost
     }
     BattlePhase currentBattlePhase = BattlePhase.BattleStart;
 
@@ -104,25 +106,46 @@ public class BattleManager : MonoBehaviour {
                     StartCoroutine(activeBattler.DoAction(FinishDoingAction));
                 }
                 break;
-            case BattlePhase.BattleEnd:
-                if(!endingBattle)
-                {
-                    endingBattle = true;
+			case BattlePhase.BattleEnd:
+				if(!endingBattle)
+				{
+					endingBattle = true;
 
-                    BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
-                    playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
-                }
+					BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
+					playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
+				}
 
-                if (!blockedByMessage)
-                {
-                    if (!exitingBattle)
-                    {
-                        exitingBattle = true;
-                        StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
-                    }
-                }
+				if (!blockedByMessage)
+				{
+					if (!exitingBattle)
+					{
+						exitingBattle = true;
+						StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
+					}
+				}
 
-                break;
+				break;
+			case BattlePhase.BattleLost:
+				if(!endingBattle)
+				{
+					endingBattle = true;
+
+					BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
+					playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
+				}
+
+				if (!blockedByMessage)
+				{
+					if (!exitingBattle)
+					{
+						exitingBattle = true;
+						StartCoroutine(SceneTransitionManager.Instance.ExitLostBattle());
+					}
+				}
+
+				break;
+
+
             default:
                 break;
         }
@@ -199,13 +222,13 @@ public class BattleManager : MonoBehaviour {
             if (player == null)
             {
                 StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've been wrecked..."));
+				currentBattlePhase = BattlePhase.BattleLost;
             }
             else if (enemies.Length == 0)
             {
                 StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've wonnerino!"));
+				currentBattlePhase = BattlePhase.BattleEnd;
             }
-
-            currentBattlePhase = BattlePhase.BattleEnd;
             return;
         }
 
