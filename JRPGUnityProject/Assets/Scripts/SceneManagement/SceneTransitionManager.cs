@@ -144,13 +144,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 		StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
 		// 2f is added because the win message takes 3 seconds.
 		yield return new WaitForSeconds(fadeTime + 2f);
+		StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, false));
 
 		string temp = "Game Over";
 
 		previousScene = "Battle";
 
 		SceneManager.LoadScene(temp);
-
 
 		for (int i = 0; i < enemySpritesInScene.Count; i++)
 		{
@@ -163,13 +163,14 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     void OnLevelWasLoaded()
     {
-		if (previousScene == "Battle" && SceneManager.GetActiveScene().name != "Game Over")
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-            player.transform.position = previousPosition;
+		if (previousScene == "Battle" && SceneManager.GetActiveScene ().name != "Game Over") {
+			GameObject player = GameObject.FindWithTag ("Player");
+			player.transform.position = previousPosition;
 
-            PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
-            psc.EnableMovement(true);
-        }
+			PlayerSpriteController psc = player.GetComponent<PlayerSpriteController> ();
+			psc.EnableMovement (true);
+		} else if (SceneManager.GetActiveScene ().name == "Game Over") {
+			Debug.Log ("Game Over Scene");
+		}
     }
 }

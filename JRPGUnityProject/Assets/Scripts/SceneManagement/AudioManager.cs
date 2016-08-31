@@ -76,8 +76,10 @@ public class AudioManager : MonoBehaviour {
     IEnumerator OnLevelWasLoaded()
     {
 		// Updates audio.
-		if(scenesString.Contains(SceneManager.GetActiveScene().name))
-			StartAudio(SceneManager.GetActiveScene().name);
+		if (scenesString.Contains (SceneManager.GetActiveScene ().name)) {
+			StartAudio (SceneManager.GetActiveScene ().name);
+			Debug.Log ("OnLevelWasLoaded, Started Audio");
+		}
         yield break;
     }
 		
@@ -96,15 +98,21 @@ public class AudioManager : MonoBehaviour {
 		
 		while(!(totalChange >= 1))
 		{
-			if (increasing)
+			if (increasing) {
 				musicSource.volume = 0;
+				if (musicSource.isPlaying) {
+					musicSource.Pause ();
+				}
+			}
 			else
 				musicSource.volume -= Time.deltaTime / fadeTime;
 			totalChange += Time.deltaTime / fadeTime;
 			yield return new WaitForEndOfFrame();
 		}
-		if (increasing)
+		if (increasing) {
 			musicSource.volume = 1;
+			musicSource.Play ();
+		}
 		yield break;
 	}
 

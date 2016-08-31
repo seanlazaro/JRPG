@@ -26,6 +26,7 @@ public class BattleManager : MonoBehaviour {
     int activeBattlerIndex = 0;
     bool playerTurnChooseAction = false;
 
+	bool lostBattle;
     bool startingBattle = false;
     bool choosingAction = false;
     bool doingAction = false;
@@ -120,32 +121,14 @@ public class BattleManager : MonoBehaviour {
 					if (!exitingBattle)
 					{
 						exitingBattle = true;
+						if(lostBattle)
+						StartCoroutine(SceneTransitionManager.Instance.ExitLostBattle());
+						else
 						StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
 					}
 				}
 
 				break;
-			case BattlePhase.BattleLost:
-				if(!endingBattle)
-				{
-					endingBattle = true;
-
-					BattleState playerBattleState = PlayerStateManager.Instance.PlayerBattleState;
-					playerBattleState.statusEffects.RemoveAll(se => se.limitedDuration);
-				}
-
-				if (!blockedByMessage)
-				{
-					if (!exitingBattle)
-					{
-						exitingBattle = true;
-						StartCoroutine(SceneTransitionManager.Instance.ExitLostBattle());
-					}
-				}
-
-				break;
-
-
             default:
                 break;
         }
@@ -222,13 +205,15 @@ public class BattleManager : MonoBehaviour {
             if (player == null)
             {
                 StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've been wrecked..."));
-				currentBattlePhase = BattlePhase.BattleLost;
+				lostBattle = true;
+				currentBattlePhase = BattlePhase.BattleEnd;
             }
             else if (enemies.Length == 0)
             {
                 StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've wonnerino!"));
+				lostBattle = false;
 				currentBattlePhase = BattlePhase.BattleEnd;
-            }
+			}
             return;
         }
 
