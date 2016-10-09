@@ -12,8 +12,6 @@ public class DialogueController : MonoBehaviour {
 	// Used to disable pausing.
 	GameObject pauseMenu;
 
-	// Stores npc image, it should be a square.
-	public Texture image;
 	public string npcName;
 
 	//Stores text style info for dialogue text, will be edited in the inspector.
@@ -118,16 +116,14 @@ public class DialogueController : MonoBehaviour {
 		ButtonThree.GetComponent<Button> ().onClick.RemoveAllListeners ();
 		ButtonFour.GetComponent<Button> ().onClick.RemoveAllListeners ();
 
-		// The strange lamda usage is allows methods to accept arguments in the future.
-		ButtonOne.GetComponent<Button> ().onClick.AddListener (()=>{ButtonOnePress();});
-		ButtonTwo.GetComponent<Button> ().onClick.AddListener (()=>{ButtonTwoPress();});
-		ButtonThree.GetComponent<Button> ().onClick.AddListener (()=>{ButtonThreePress();});
-		ButtonFour.GetComponent<Button> ().onClick.AddListener (()=>{ButtonFourPress();});
-
+		ButtonOne.SetActive (false);
+		ButtonTwo.SetActive (false);
+		ButtonThree.SetActive (false);
+		ButtonFour.SetActive (false);
 
 		// Sets dimensions of the main dialogue box.
 		width = Screen.width / 20 * 19;
-		height = Screen.height / 5 * 2;
+		height = Screen.height / 3;
 		locationX = (Screen.width - width) / 2;
 		locationY = Screen.height - height - 10;
 		//Dimensions of player choice buttons.
@@ -166,6 +162,7 @@ public class DialogueController : MonoBehaviour {
 				}
 
 				// Displays buttons.
+				Debug.Log(choiceButtonLabels.Length);
 				for (int i = 0; i < choiceButtonLabels.Length; i++) {
 					switch (i) {
 					case 0:
@@ -193,6 +190,10 @@ public class DialogueController : MonoBehaviour {
 						break;
 					}
 				}
+				ButtonOne.GetComponent<Button> ().onClick.AddListener(() => ButtonOnePress());
+				ButtonTwo.GetComponent<Button> ().onClick.AddListener(() => ButtonTwoPress());
+				ButtonThree.GetComponent<Button> ().onClick.AddListener(() => ButtonThreePress());
+				ButtonFour.GetComponent<Button> ().onClick.AddListener(() => ButtonFourPress());
 
 				choosing = true;
 				DialogueChoiceMenu.SetActive (true);
@@ -259,32 +260,25 @@ public class DialogueController : MonoBehaviour {
 			GUI.skin = textStyle;
 
 			// Changing the divisor will change the font size ratio,
-			GUI.skin.label.fontSize = Screen.width / 60;
+			GUI.skin.label.fontSize = Screen.width / 30;
 			int LabelFontSize = GUI.skin.label.fontSize;
 			GUI.BeginGroup(new Rect(locationX, locationY, width, height));
 
 			// The big box that contains the dialogue and the image.
 			GUI.Box (new Rect(0, 0, width, height), "");
 
-			// Displays image ten pixels away from the top, bottom, and left sides, scaling the image to fit.
-			GUI.DrawTexture(new Rect(LabelFontSize, LabelFontSize, height-LabelFontSize * 2, height-LabelFontSize * 2),  image, ScaleMode.StretchToFill, true, 1);
-
-			// Displays text 24 pixels away from the top, bottom, and 50 pixels to the right of the picture.
-			// The width is set to width - height + 30, because it should be as wide as the box, minus the
-			// width of the picture(20), and with a 10 pixel buffer on both sides(20).
-			// (GUI.skin.label.fontSize * 4) is added to prevent words overflowing too far, without clipping
-			GUI.Label(new Rect(height + 40, 24, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 48), currentText);
+			// Displays text 24 pixels away from the top and bottom.
+			GUI.Label(new Rect(LabelFontSize / 2, 24, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 48), currentText);
 			GUI.EndGroup();
 
 			//Display a name tag for the NPC.
             
 			// The text will be a part of the box, to allow customization seperate from the label text.
-			GUI.skin.label.fontSize = Screen.width / 120;
-			GUI.skin.label.alignment = TextAnchor.UpperCenter;
+			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			// Box will be lined up with the box around the picture, in width and location.
-			GUI.BeginGroup (new Rect (locationX, locationY - NpcNameHeight * 1.25f, height, NpcNameHeight * 1.25f));
-			GUI.Box(new Rect(8, 0, height - LabelFontSize, NpcNameHeight * 1.5f), "");
-			GUI.Label (new Rect (8,0, height - LabelFontSize, NpcNameHeight * 1.5f), npcName);
+			GUI.BeginGroup (new Rect (locationX, locationY - NpcNameHeight * 1.2f, height, NpcNameHeight * 1.25f));
+			GUI.Box(new Rect(0, 0, height - LabelFontSize, NpcNameHeight * 1.2f), "");
+			GUI.Label (new Rect (0,0, height - LabelFontSize, NpcNameHeight * 1.2f), npcName);
 			GUI.EndGroup ();
 			GUI.skin.label.alignment = TextAnchor.UpperLeft;
 		}
