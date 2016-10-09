@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof (DialogueController))]
 public abstract class NpcEffectsBase : MonoBehaviour {
 
-    DialogueController dialogueController;
+    protected DialogueController dialogueController;
 
 	// Use this for initialization
 	public void Start () {
@@ -18,7 +18,7 @@ public abstract class NpcEffectsBase : MonoBehaviour {
 		if (dialogueController.effectTriggered) {
             dialogueController.effectTriggered = false;
 
-            int effect = dialogueController.dialogueEffect[dialogueController.CurrentTextIndex];
+            int effect = dialogueController.effectFunc;
 
 			StartCoroutine(activateNpcEffect(effect));
 		}

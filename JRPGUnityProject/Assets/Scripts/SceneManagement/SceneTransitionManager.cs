@@ -179,4 +179,15 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("TitleMenu");
     }
+
+    public IEnumerator GoToGameOver()
+    {
+        StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
+        StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
+        yield return new WaitForSeconds(fadeTime);
+
+        previousScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene("Game Over");
+        yield break;
+    }
 }

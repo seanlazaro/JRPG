@@ -12,7 +12,8 @@ public class DialogueController : MonoBehaviour {
 	// Used to disable pausing.
 	GameObject pauseMenu;
 
-	public string npcName;
+	public string npcName; //for display
+    string npcNameReal; //inherent to the npc
 
 	//Stores text style info for dialogue text, will be edited in the inspector.
 	public GUISkin textStyle;
@@ -39,7 +40,17 @@ public class DialogueController : MonoBehaviour {
 	public string[] choices;
     public int[] nextIndexInDialogue;
 
+    public class DialogueScript{
+        public string[] dialogue;
+        public int[] numberOfChoices;
+        public int[] startIndexInChoices;
+        public int[] dialogueEffect;
+        public string[] choices;
+        public int[] nextIndexInDialogue;
+    }
+
     public bool effectTriggered = false;
+    public int effectFunc = 0;
 
 	// Stores the current line to be displayed.
 	string currentText;
@@ -96,6 +107,9 @@ public class DialogueController : MonoBehaviour {
 
 	float NpcNameHeight;
 
+    // For demo only, states whether or not an accusation has been made at the end of a dialogue.
+    bool accused = false;
+
 	// Use this for initialization
 	void Awake(){
 		// Used to disable movement.
@@ -108,7 +122,9 @@ public class DialogueController : MonoBehaviour {
 		ButtonThree = GameObject.FindWithTag ("DialogueButtonThree");
 		ButtonFour = GameObject.FindWithTag ("DialogueButtonFour");
 
+        npcNameReal = npcName;
 	}
+
 	void Start () {
 
 		ButtonOne.GetComponent<Button> ().onClick.RemoveAllListeners ();
@@ -133,7 +149,20 @@ public class DialogueController : MonoBehaviour {
 		DialogueChoiceMenu.SetActive (false);
 	}
 
-	public IEnumerator StartDialogue(){
+	public IEnumerator StartDialogue(DialogueScript ds = null){
+
+        if (ds == null)
+        {
+            ds = new DialogueScript();
+            
+            ds.dialogue = dialogue;
+            ds.numberOfChoices = numberOfChoices;
+            ds.startIndexInChoices = startIndexInChoices;
+            ds.dialogueEffect = dialogueEffect;
+            ds.choices = choices;
+            ds.nextIndexInDialogue = nextIndexInDialogue;
+        }
+
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (false);
 		pauseMenu.GetComponent<PauseMenuController> ().ToggleTalking ();
 		talking = true;
@@ -142,27 +171,27 @@ public class DialogueController : MonoBehaviour {
 
         while (talking)
         {
-            currentText = dialogue[currentTextIndex];
+            currentText = ds.dialogue[currentTextIndex];
 
-            if (dialogueEffect[currentTextIndex] != 0)
+            if (ds.dialogueEffect[currentTextIndex] != 0)
             {
                 effectTriggered = true;
+                effectFunc = ds.dialogueEffect[currentTextIndex];
             }
 
-			if (numberOfChoices [currentTextIndex] != 0) {               
-				int numChoices = numberOfChoices [currentTextIndex];
-				int startIndex = startIndexInChoices [currentTextIndex];
+			if (ds.numberOfChoices[currentTextIndex] != 0) {               
+				int numChoices = ds.numberOfChoices[currentTextIndex];
+				int startIndex = ds.startIndexInChoices[currentTextIndex];
 
 				string[] choiceButtonLabels = new string[numChoices];
 				int[] nextIndexAfterChoice = new int[numChoices];
 
 				for (int i = 0; i < numChoices; i++) {
-					choiceButtonLabels [i] = choices [startIndex + i];
-					nextIndexAfterChoice [i] = nextIndexInDialogue [startIndex + i];
+					choiceButtonLabels[i] = ds.choices[startIndex + i];
+					nextIndexAfterChoice[i] = ds.nextIndexInDialogue[startIndex + i];
 				}
 
 				// Displays buttons.
-				Debug.Log(choiceButtonLabels.Length);
 				for (int i = 0; i < choiceButtonLabels.Length; i++) {
 					switch (i) {
 					case 0:
@@ -190,6 +219,7 @@ public class DialogueController : MonoBehaviour {
 						break;
 					}
 				}
+
 				ButtonOne.GetComponent<Button> ().onClick.AddListener(() => ButtonOnePress());
 				ButtonTwo.GetComponent<Button> ().onClick.AddListener(() => ButtonTwoPress());
 				ButtonThree.GetComponent<Button> ().onClick.AddListener(() => ButtonThreePress());
@@ -206,8 +236,10 @@ public class DialogueController : MonoBehaviour {
 				yield return new WaitUntil (() => advance);
 				advance = false;
 
-				if (currentTextIndex + 1 < dialogue.Length) {
-					if (dialogue [currentTextIndex + 1] == "") {
+                if (currentTextIndex + 1 < ds.dialogue.Length)
+                {
+                    if (ds.dialogue[currentTextIndex + 1] == "")
+                    {
 						talking = false;
 					} else {
 						currentTextIndex++;
@@ -222,6 +254,26 @@ public class DialogueController : MonoBehaviour {
 		pauseMenu.GetComponent<PauseMenuController> ().ToggleTalking ();
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (true);
 
+
+        //for demo only
+        AccuseDoppelganger ad = this.gameObject.GetComponent<AccuseDoppelganger>();
+
+        if (ad)
+        {
+            if (!accused)
+            {
+                npcName = "Game";
+                StartCoroutine(ad.Accuse(npcName));
+                accused = true;
+            }
+            else
+            {
+                accused = false; //reset
+                npcName = npcNameReal;
+            }
+        }
+
+
 		yield break;
 	}
 
@@ -229,7 +281,7 @@ public class DialogueController : MonoBehaviour {
 
 	public void ButtonOnePress()
 	{
-		currentTextIndex = buttonOneDestination;
+        currentTextIndex = buttonOneDestination;
 		choosing = false;
 	}
 
