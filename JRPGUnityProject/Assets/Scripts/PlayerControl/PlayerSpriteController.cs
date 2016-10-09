@@ -31,11 +31,13 @@ public class PlayerSpriteController : MonoBehaviour {
 
 	// Use this for initialization
     void Start () {
+
         anim = GetComponent<Animator> ();
         playerRigidBody = GetComponent<Rigidbody2D> ();
 		npcs = GameObject.FindGameObjectsWithTag("NPC");
 		interactionBox = GameObject.Find("Interaction Box");
 		rt = new RectTransform ();
+
 	}
     
     // Update is called once per frame

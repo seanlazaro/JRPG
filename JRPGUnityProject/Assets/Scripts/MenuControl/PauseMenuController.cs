@@ -33,12 +33,24 @@ public class PauseMenuController : MonoBehaviour {
 		instructionMenu = GameObject.FindGameObjectsWithTag ("Instruction Menu");
 		instructionReturnButton = GameObject.FindGameObjectWithTag ("Instruction Button");
 
-		TogglePauseMenu ();
+        // The pause menu must start as active, because one cannot find the Game Object
+        // if it is inactive.
+	    TogglePauseMenu ();        
 	}
+
 	void Start() {
-		foreach(GameObject i in instructionMenu)
-			i.SetActive (false);
-		instructionReturnButton.SetActive (false);
+
+        if (SceneTransitionManager.Instance.PreviousScene != "TitleMenu")
+        {
+            foreach(GameObject i in instructionMenu)
+                i.SetActive (false);
+            instructionReturnButton.SetActive (false);
+        }
+        else
+        {
+            Debug.Log("show close button instead of back button");
+        }
+        
 	}
 
 	// Update is called once per frame
@@ -51,29 +63,42 @@ public class PauseMenuController : MonoBehaviour {
 		if (EventSystem.current.currentSelectedGameObject == null && paused)
 			SelectProperButton();
 	}
+
 	// Takes all gameobjects in the pauseobjects array, 
 	// and sets their to the bool passed to the method's.
 	public void TogglePauseMenu () {
 		paused = !paused;
+
 		foreach (GameObject i in pauseObjects) {
 			i.SetActive (paused);
 		}
+
 		if (paused)
 			SelectProperButton();
+
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (!paused);
 	}
+
 	public void ToggleInstructionsMenu () {
 		instructionsDisplayed = !instructionsDisplayed;
-		foreach(GameObject i in instructionMenu)
-			i.SetActive (instructionsDisplayed);
+
+        foreach (GameObject i in instructionMenu)
+        {
+            i.SetActive(instructionsDisplayed);
+        }
+			
 		instructionReturnButton.SetActive (instructionsDisplayed);
-		foreach (GameObject i in pauseObjects) {
-			i.SetActive (!instructionsDisplayed);
-		}
-		if (!instructionsDisplayed)
-			EventSystem.current.SetSelectedGameObject (instructionButton);
-		else
-		SelectProperButton();
+
+        foreach (GameObject i in pauseObjects)
+        {
+            i.SetActive(!instructionsDisplayed);
+        }
+
+        if (!instructionsDisplayed)
+            EventSystem.current.SetSelectedGameObject(instructionButton);
+        else
+
+        SelectProperButton();
 	}
 
 	void SelectProperButton()
@@ -88,6 +113,6 @@ public class PauseMenuController : MonoBehaviour {
 	}
 
 	public void ExitGame(){
-		SceneManager.LoadScene ("TitleMenu");
+        SceneTransitionManager.Instance.ReturnToTitleScreen();
 	}
 }

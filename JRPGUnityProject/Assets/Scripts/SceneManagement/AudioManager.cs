@@ -78,7 +78,6 @@ public class AudioManager : MonoBehaviour {
 		// Updates audio.
 		if (scenesString.Contains (SceneManager.GetActiveScene ().name)) {
 			StartAudio (SceneManager.GetActiveScene ().name);
-			Debug.Log ("OnLevelWasLoaded, Started Audio");
 		}
         yield break;
     }

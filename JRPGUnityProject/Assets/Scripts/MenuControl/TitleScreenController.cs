@@ -5,18 +5,16 @@ using UnityEngine.EventSystems;
 
 public class TitleScreenController : MonoBehaviour {
 
+    void Start()
+    {
+        // Create SceneTransitionManager singleton
+        SceneTransitionManager stm = SceneTransitionManager.Instance;
+    }
+    
     public void OnStartClicked()
     {
-		StartCoroutine (StartGame ());
+		StartCoroutine (SceneTransitionManager.Instance.LoadFromTitleScreen());
     }
-
-	IEnumerator StartGame()
-	{
-		StartCoroutine(AudioManager.Instance.AudioFade(1,true));
-		yield return new WaitForSeconds (1);
-		StartCoroutine(AudioManager.Instance.AudioFade(0.01f,false));
-		SceneManager.LoadScene("Prototype Town");
-	}
 
 	public void OnCreditsClicked()
 	{

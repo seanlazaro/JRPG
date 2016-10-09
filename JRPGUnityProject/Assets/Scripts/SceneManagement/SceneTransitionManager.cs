@@ -20,6 +20,11 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     }
 
     string previousScene;
+    public string PreviousScene
+    {
+        get { return previousScene; }
+    }
+
     Vector3 previousPosition;
 
     GameObject engagedEnemySprite;
@@ -61,6 +66,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         yield return new WaitForSeconds(fadeTime);
 
         psc.EnableMovement(true);
+
     }
 
     public void SpawnEnemySprite(GameObject[] possibleEnemies, Vector3 spawnPosition)
@@ -163,14 +169,31 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     void OnLevelWasLoaded()
     {
-		if (previousScene == "Battle" && SceneManager.GetActiveScene ().name != "Game Over") {
+        if (previousScene == "Battle" && SceneManager.GetActiveScene ().name != "Game Over") {
 			GameObject player = GameObject.FindWithTag ("Player");
 			player.transform.position = previousPosition;
 
 			PlayerSpriteController psc = player.GetComponent<PlayerSpriteController> ();
 			psc.EnableMovement (true);
-		} else if (SceneManager.GetActiveScene ().name == "Game Over") {
-			Debug.Log ("Game Over Scene");
 		}
+    }
+
+    public IEnumerator LoadFromTitleScreen()
+    {
+        previousScene = "TitleMenu";
+
+        StartCoroutine(AudioManager.Instance.AudioFade(1, true));
+        yield return new WaitForSeconds(1);
+        StartCoroutine(AudioManager.Instance.AudioFade(0.01f, false));
+
+        destinationTile = "SpawnFromTitleScreen";
+
+        SceneManager.LoadScene("Prototype Town");
+    }
+
+    public void ReturnToTitleScreen()
+    {
+        previousScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene("TitleMenu");
     }
 }
