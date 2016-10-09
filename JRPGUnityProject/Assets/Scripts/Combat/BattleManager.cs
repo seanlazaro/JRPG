@@ -121,10 +121,7 @@ public class BattleManager : MonoBehaviour {
 					if (!exitingBattle)
 					{
 						exitingBattle = true;
-						if(lostBattle)
-						StartCoroutine(SceneTransitionManager.Instance.ExitLostBattle());
-						else
-						StartCoroutine(SceneTransitionManager.Instance.ExitBattle());
+						StartCoroutine(SceneTransitionManager.Instance.ExitBattle(lostBattle));
 					}
 				}
 

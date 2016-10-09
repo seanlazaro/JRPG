@@ -123,36 +123,19 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         yield return null;
     }
 
-	public IEnumerator ExitBattle()
+	public IEnumerator ExitBattle(bool lostBattle)
 	{
 		StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
 		// 2f is added because the win message takes 3 seconds.
 		yield return new WaitForSeconds(fadeTime + 2f);
 
-		string temp = previousScene;
+        string temp = previousScene;
 
-		previousScene = "Battle";
-
-		SceneManager.LoadScene(temp);
-
-
-		for (int i = 0; i < enemySpritesInScene.Count; i++)
-		{
-			enemySpritesInScene[i].SetActive(true);
-		}
-
-		enemySpritesInScene.Remove(engagedEnemySprite);
-		Destroy(engagedEnemySprite);
-	}
-
-	public IEnumerator ExitLostBattle()
-	{
-		StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
-		// 2f is added because the win message takes 3 seconds.
-		yield return new WaitForSeconds(fadeTime + 2f);
-		StartCoroutine (AudioManager.Instance.AudioFade (fadeTime, false));
-
-		string temp = "Game Over";
+        if (lostBattle)
+        {
+            StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
+            temp = "Game Over";
+        }		
 
 		previousScene = "Battle";
 
