@@ -17,9 +17,6 @@ public class EnterBattle : MonoBehaviour {
     {
         if (collider.gameObject.tag == "Player")
         {
-            // The battleState variable is only used to activate the PlayerStateManager for test purposes
-            BattleState battleState = PlayerStateManager.Instance.PlayerBattleState;
-
             StartCoroutine(SceneTransitionManager.Instance.EnterBattle(this.gameObject));
         }
     }

@@ -13,7 +13,15 @@ public class TitleScreenController : MonoBehaviour {
     
     public void OnStartClicked()
     {
-		StartCoroutine (SceneTransitionManager.Instance.LoadFromTitleScreen());
+        // Create PlayerStateManager and GameStateManager singletons
+        PlayerStateManager psm = PlayerStateManager.Instance;
+        GameStateManager gsm = GameStateManager.Instance;
+
+        GameStateManager.Instance.defeatedBruiser = false;
+        GameStateManager.Instance.defeatedTank = false;
+        GameStateManager.Instance.defeatedBoss = false;
+        
+        StartCoroutine (SceneTransitionManager.Instance.LoadFromTitleScreen());
     }
 
 	public void OnCreditsClicked()
