@@ -13,11 +13,17 @@ public class EnterBattle : MonoBehaviour {
         enemyBattleState.statusEffects = new List<statusEffect>();
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    //commented out because not used in demo
+    //void OnTriggerEnter2D(Collider2D collider)
+    //{
+    //    if (collider.gameObject.tag == "Player")
+    //    {
+    //        StartBattle();
+    //    }
+    //}
+
+    public void StartBattle()
     {
-        if (collider.gameObject.tag == "Player")
-        {
-            StartCoroutine(SceneTransitionManager.Instance.EnterBattle(this.gameObject));
-        }
+        StartCoroutine(SceneTransitionManager.Instance.EnterBattle(this.gameObject));
     }
 }

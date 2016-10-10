@@ -47,14 +47,14 @@ public class AccuseDoppelganger : MonoBehaviour {
     }
 
     public IEnumerator Accuse(string npcName)
-    {
+    {        
         switch (npcName)
         {
             case "Dwight":
-                break;
             case "LaMarcus":
-                break;
             case "Darko":
+                dialogue[1] = "You correctly identified a shapeshifter!";
+                dialogueEffect[1] = 2;
                 break;
             default:
                 break;
