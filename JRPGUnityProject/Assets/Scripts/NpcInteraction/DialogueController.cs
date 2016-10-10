@@ -112,17 +112,21 @@ public class DialogueController : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake(){
+
 		// Used to disable movement.
 		player = GameObject.FindWithTag("Player");
 		// Used to disable pausing
 		pauseMenu = GameObject.FindWithTag("Pause Menu Canvas");
-		DialogueChoiceMenu = GameObject.FindWithTag ("Dialogue Choice Menu");
-		ButtonOne = GameObject.FindWithTag ("DialogueButtonOne");
-		ButtonTwo = GameObject.FindWithTag ("DialogueButtonTwo");
-		ButtonThree = GameObject.FindWithTag ("DialogueButtonThree");
-		ButtonFour = GameObject.FindWithTag ("DialogueButtonFour");
+
+        Transform dcmParentTransform = GameObject.Find("Dialogue Choice Menu").transform;
+        DialogueChoiceMenu = dcmParentTransform.Find("Choices").gameObject;
+        ButtonOne = dcmParentTransform.Find("Choices/DialogueButtonOne").gameObject;
+        ButtonTwo = dcmParentTransform.Find("Choices/DialogueButtonTwo").gameObject;
+        ButtonThree = dcmParentTransform.Find("Choices/DialogueButtonThree").gameObject;
+        ButtonFour = dcmParentTransform.Find("Choices/DialogueButtonFour").gameObject;
 
         npcNameReal = npcName;
+
 	}
 
 	void Start () {
