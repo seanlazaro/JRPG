@@ -12,7 +12,12 @@ public class PauseMenuController : MonoBehaviour {
 	GameObject instructionButton;
 	GameObject[] pauseObjects;
 	GameObject[] instructionMenu;
+
 	GameObject instructionReturnButton;
+	GameObject instructionScrollButton;
+
+	GameObject[] instructionText;
+	int currentInstructionText;
 
 	bool paused = true;
 	bool instructionsDisplayed = false;
@@ -32,30 +37,36 @@ public class PauseMenuController : MonoBehaviour {
 		instructionButton = GameObject.Find("Pause Menu/Instructions");
 		instructionMenu = GameObject.FindGameObjectsWithTag ("Instruction Menu");
 		instructionReturnButton = GameObject.FindGameObjectWithTag ("Instruction Button");
+		instructionScrollButton = GameObject.FindGameObjectWithTag ("Instruction Scroll Button");
 
-        // The pause menu must start as active, because one cannot find the Game Object
-        // if it is inactive.
+		instructionText = new GameObject[3];
+        
+		instructionText[0] = GameObject.Find ("Instructions Text A");
+		instructionText[1] = GameObject.Find ("Instructions Text B");
+		instructionText[2] = GameObject.Find ("Instructions Text C");
+
+		// The pause menu must start as active, 
+		//because you can't find an inactive game object.
 	    TogglePauseMenu ();        
 	}
 
-	void Start() {
-
+	IEnumerator Start() {
+		yield return new WaitForEndOfFrame();
         if (SceneTransitionManager.Instance.PreviousScene != "TitleMenu")
-        {
+		{
             foreach(GameObject i in instructionMenu)
                 i.SetActive (false);
             instructionReturnButton.SetActive (false);
+			instructionScrollButton.SetActive (false);
         }
         else
         {
-            Debug.Log("show close button instead of back button");
-			instructionsDisplayed = true;
-			paused = true;
-			Debug.Log (player);
+			TogglePauseMenu ();
+			ToggleInstructionsMenu ();
 			player.GetComponent<PlayerSpriteController> ().EnableMovement(false);
 			SelectProperButton ();
         }
-        
+		yield break;
 	}
 
 	// Update is called once per frame
@@ -65,7 +76,7 @@ public class PauseMenuController : MonoBehaviour {
 				TogglePauseMenu ();
 			}
 		}
-		if (EventSystem.current.currentSelectedGameObject == null && paused)
+		if (EventSystem.current.currentSelectedGameObject == null && (paused || instructionsDisplayed))
 			SelectProperButton();
 	}
 
@@ -82,34 +93,51 @@ public class PauseMenuController : MonoBehaviour {
 			SelectProperButton();
 
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (!paused);
-		Debug.Log ("player movement changed to" + !paused);
 	}
 
 	public void ToggleInstructionsMenu () {
 		instructionsDisplayed = !instructionsDisplayed;
+		if (instructionsDisplayed) {
+			TogglePauseMenu ();
+		}
 
-        foreach (GameObject i in instructionMenu)
-        {
-            i.SetActive(instructionsDisplayed);
-        }
-			
+		// Undoes toggle pause menu movement change, and allows player to move after closing instructions.
+		player.GetComponent<PlayerSpriteController> ().EnableMovement (!instructionsDisplayed);
+
+		foreach (GameObject i in instructionMenu) {
+			i.SetActive (instructionsDisplayed);
+		}
+
+		foreach (GameObject i in instructionText) {
+			i.SetActive (false);
+		}
+
+		if (instructionsDisplayed) {
+			instructionText [0].SetActive (true);
+		}
 		instructionReturnButton.SetActive (instructionsDisplayed);
+		instructionScrollButton.SetActive (instructionsDisplayed);
 
-        foreach (GameObject i in pauseObjects)
-        {
-            i.SetActive(!instructionsDisplayed);
-        }
+		SelectProperButton();
+	}
 
-        if (!instructionsDisplayed)
-            EventSystem.current.SetSelectedGameObject(instructionButton);
-        else
+	public void ScrollInstructionsMenu() {
+		// hides current instruction text.
+		instructionText [currentInstructionText].SetActive (false);
 
-        SelectProperButton();
+		// Cycles current instruction text, then enables the next one.
+		if (currentInstructionText != instructionText.Length - 1)
+			currentInstructionText++;
+		else
+			currentInstructionText = 0;
+
+		// shows new one.
+		instructionText [currentInstructionText].SetActive (true);
 	}
 
 	void SelectProperButton()
 	{
-		if (paused) {
+		if (paused || instructionScrollButton) {
 			EventSystem.current.SetSelectedGameObject (null);
 			if (instructionsDisplayed) {
 				EventSystem.current.SetSelectedGameObject (instructionReturnButton);

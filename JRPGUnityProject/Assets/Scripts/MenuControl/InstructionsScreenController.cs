@@ -53,7 +53,6 @@ public class InstructionsScreenController : MonoBehaviour {
 
 		// shows new one.
 		instructionText [currentInstructionText].SetActive (true);
-		Debug.Log(instructionText[currentInstructionText].GetComponent<Text>().fontSize);
 	}
 
 	// Update is called once per frame
