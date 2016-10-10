@@ -231,8 +231,6 @@ public class DialogueController : MonoBehaviour {
 
 				choosing = true;
 				DialogueChoiceMenu.SetActive (true);
-				EventSystem.current.SetSelectedGameObject (null);
-				yield return new WaitForEndOfFrame ();
 				EventSystem.current.SetSelectedGameObject (ButtonOne);
 				yield return new WaitUntil (() => !choosing);
 				DialogueChoiceMenu.SetActive (false);
@@ -326,7 +324,7 @@ public class DialogueController : MonoBehaviour {
 			GUI.Box (new Rect(0, 0, width, height), "");
 
 			// Displays text 24 pixels away from the top and bottom.
-			GUI.Label(new Rect(LabelFontSize / 2, LabelFontSize / 2, width - GUI.skin.label.fontSize * 4, height - 48), currentText);
+			GUI.Label(new Rect(LabelFontSize / 2, 24, width - (height - 40 + GUI.skin.label.fontSize * 4), height - 48), currentText);
 			GUI.EndGroup();
 
 			//Display a name tag for the NPC.
