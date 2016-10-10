@@ -112,9 +112,10 @@ public class DialogueController : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake(){
-
-		// Used to disable movement.
+        
+        // Used to disable movement.
 		player = GameObject.FindWithTag("Player");
+
 		// Used to disable pausing
 		pauseMenu = GameObject.FindWithTag("Pause Menu Canvas");
 
@@ -153,7 +154,7 @@ public class DialogueController : MonoBehaviour {
 		DialogueChoiceMenu.SetActive (false);
 	}
 
-	public IEnumerator StartDialogue(DialogueScript ds = null){
+	public IEnumerator StartDialogue(DialogueScript ds = null, int startAtIndex = 0){
 
         if (ds == null)
         {
@@ -274,7 +275,8 @@ public class DialogueController : MonoBehaviour {
             }
             else
             {
-                accused = false; //reset
+                //reset
+                accused = false; 
                 npcName = npcNameReal;
             }
         }
@@ -361,4 +363,25 @@ public class DialogueController : MonoBehaviour {
 			spacePress = true;
 		}
 	}
+
+    public void EndDialogue()
+    {
+        if (talking)
+        {
+            talking = false;
+
+            pauseMenu.GetComponent<PauseMenuController>().ToggleTalking();
+            player.GetComponent<PlayerSpriteController>().EnableMovement(true);
+
+            //reset
+            accused = false;
+            npcName = npcNameReal;
+        }
+    }
+
+    public void Reinitialize()
+    {
+        Awake();
+        Start();
+    }
 }

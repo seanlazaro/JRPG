@@ -30,6 +30,9 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
     GameObject engagedEnemySprite;
     List<GameObject> enemySpritesInScene = new List<GameObject>();
 
+    bool destroyAfterBattle = true;
+    int afterBattleEffect = 0;
+
     public IEnumerator LoadScene(string sceneToLoad, string destinationTile)
     {
         GameObject player = GameObject.FindWithTag("Player");
@@ -81,8 +84,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         enemy.transform.position = spawnPosition;
     }
 
-    public IEnumerator EnterBattle(GameObject engagedEnemySprite)
+    public IEnumerator EnterBattle(GameObject engagedEnemySprite, bool destroyAfterBattle = true, 
+        int afterBattleEffect = 0)
     {
+        this.destroyAfterBattle = destroyAfterBattle;
+        this.afterBattleEffect = afterBattleEffect;
+
+        
         GameObject player = GameObject.FindWithTag("Player");
         PlayerSpriteController psc = player.GetComponent<PlayerSpriteController>();
         psc.EnableMovement(false);
@@ -148,8 +156,24 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 			enemySpritesInScene[i].SetActive(true);
 		}
 
-		enemySpritesInScene.Remove(engagedEnemySprite);
-		Destroy(engagedEnemySprite);
+        if (destroyAfterBattle)
+        {
+            enemySpritesInScene.Remove(engagedEnemySprite);
+            Destroy(engagedEnemySprite);
+        }
+
+        if (afterBattleEffect != 0)
+        {
+            if (engagedEnemySprite)
+            {
+                DialogueController dc = engagedEnemySprite.GetComponent<DialogueController>();
+                if (dc)
+                {
+                    dc.effectFunc = afterBattleEffect;
+                    dc.effectTriggered = true;
+                }
+            }
+        }
 	}
 
     void OnLevelWasLoaded()

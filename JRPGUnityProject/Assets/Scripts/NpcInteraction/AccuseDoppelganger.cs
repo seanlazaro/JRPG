@@ -40,10 +40,10 @@ public class AccuseDoppelganger : MonoBehaviour {
         dialogueEffect = new int[] { 0, 1, 0, 0, 0};
 
         choices = new string[]{
-            "Yes",
-            "No"
+            "No",
+            "Yes"
         };
-        nextIndexInDialogue = new int[] { 1, 3 };
+        nextIndexInDialogue = new int[] { 3, 1 };
     }
 
     public IEnumerator Accuse(string npcName)
@@ -53,7 +53,6 @@ public class AccuseDoppelganger : MonoBehaviour {
             case "Dwight":
             case "LaMarcus":
             case "Darko":
-                dialogue[1] = "You correctly identified a shapeshifter!";
                 dialogueEffect[1] = 2;
                 break;
             default:

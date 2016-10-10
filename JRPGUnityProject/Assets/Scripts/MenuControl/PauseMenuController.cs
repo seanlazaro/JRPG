@@ -51,7 +51,6 @@ public class PauseMenuController : MonoBehaviour {
             Debug.Log("show close button instead of back button");
 			instructionsDisplayed = true;
 			paused = true;
-			Debug.Log (player);
 			player.GetComponent<PlayerSpriteController> ().EnableMovement(false);
 			SelectProperButton ();
         }

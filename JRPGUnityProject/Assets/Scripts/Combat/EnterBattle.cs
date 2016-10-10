@@ -7,6 +7,8 @@ public class EnterBattle : MonoBehaviour {
 
     public GameObject enemyInBattle;
     public BattleState enemyBattleState;
+    public bool destroyAfterBattle = true;
+    public int afterBattleEffect = 0;
 
     void Start()
     {
@@ -24,6 +26,7 @@ public class EnterBattle : MonoBehaviour {
 
     public void StartBattle()
     {
-        StartCoroutine(SceneTransitionManager.Instance.EnterBattle(this.gameObject));
+        StartCoroutine(SceneTransitionManager.Instance.EnterBattle(this.gameObject, 
+            destroyAfterBattle, afterBattleEffect));
     }
 }
