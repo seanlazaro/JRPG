@@ -64,7 +64,7 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, false));
         yield return new WaitForSeconds(fadeTime);
-
+		if (previousScene == "TitleMenu") yield break;
         psc.EnableMovement(true);
 
     }

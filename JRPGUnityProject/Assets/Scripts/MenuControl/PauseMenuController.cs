@@ -49,6 +49,11 @@ public class PauseMenuController : MonoBehaviour {
         else
         {
             Debug.Log("show close button instead of back button");
+			instructionsDisplayed = true;
+			paused = true;
+			Debug.Log (player);
+			player.GetComponent<PlayerSpriteController> ().EnableMovement(false);
+			SelectProperButton ();
         }
         
 	}
@@ -77,6 +82,7 @@ public class PauseMenuController : MonoBehaviour {
 			SelectProperButton();
 
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (!paused);
+		Debug.Log ("player movement changed to" + !paused);
 	}
 
 	public void ToggleInstructionsMenu () {
@@ -105,8 +111,9 @@ public class PauseMenuController : MonoBehaviour {
 	{
 		if (paused) {
 			EventSystem.current.SetSelectedGameObject (null);
-			if (instructionsDisplayed)
+			if (instructionsDisplayed) {
 				EventSystem.current.SetSelectedGameObject (instructionReturnButton);
+			}
 			else
 				EventSystem.current.SetSelectedGameObject (EventSystem.current.firstSelectedGameObject);
 		}

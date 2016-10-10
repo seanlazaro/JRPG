@@ -150,7 +150,7 @@ public class PlayerSpriteController : MonoBehaviour {
     public void EnableMovement(bool enable)
     {
         movementEnabled = enable;
-
+		Debug.Log ("enable" + enable + movementEnabled);
         if(!enable)
         {
             playerMoving = false;
