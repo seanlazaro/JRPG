@@ -40,8 +40,8 @@ public class AccuseDoppelganger : MonoBehaviour {
         dialogueEffect = new int[] { 0, 1, 0, 0, 0};
 
         choices = new string[]{
-            "Yes.",
-            "No."
+            "Yes",
+            "No"
         };
         nextIndexInDialogue = new int[] { 1, 3 };
     }
