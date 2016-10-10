@@ -11,6 +11,9 @@ public class NpcEffectsJurasVillager : NpcEffectsBase
             case 1:
                 StartCoroutine(SceneTransitionManager.Instance.GoToGameOver());
                 break;
+            case 2:
+                this.gameObject.GetComponent<EnterBattle>().StartBattle();
+                break;
             default:
                 break;
         }

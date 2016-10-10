@@ -100,11 +100,13 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
 
         GameObject[] enemySpritesArray = GameObject.FindGameObjectsWithTag("Enemy");
-        for (int i = 0; i < enemySpritesArray.Length; i++)
+        foreach (GameObject go in enemySpritesArray)
         {
-            DontDestroyOnLoad(enemySpritesArray[i]);
-            enemySpritesArray[i].SetActive(false);
-            enemySpritesInScene.Add(enemySpritesArray[i]);
+            GameObject enemy = go.transform.parent.gameObject;
+
+            DontDestroyOnLoad(enemy);
+            enemy.SetActive(false);
+            enemySpritesInScene.Add(enemy);
         }
 
 

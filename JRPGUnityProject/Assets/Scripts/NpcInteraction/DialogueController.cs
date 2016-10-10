@@ -267,7 +267,7 @@ public class DialogueController : MonoBehaviour {
             if (!accused)
             {
                 npcName = "Game";
-                StartCoroutine(ad.Accuse(npcName));
+                StartCoroutine(ad.Accuse(npcNameReal));
                 accused = true;
             }
             else
