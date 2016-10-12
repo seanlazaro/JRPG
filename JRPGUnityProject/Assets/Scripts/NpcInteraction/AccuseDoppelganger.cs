@@ -29,31 +29,49 @@ public class AccuseDoppelganger : MonoBehaviour {
     {
         dialogue = new string[] {
             "Do you want to accuse this person of being a doppelganger and attack them?",
-            "You attacked an innocent townsperson! As a result, you've been kicked out of town and failed your mission.",
-            "",
             "You decided not to attack.",
+            "",
+            "You attacked an innocent townsperson! As a result, you've been kicked out of town and failed your mission.",
             ""
         };
 
         numberOfChoices = new int[] { 2, 0, 0, 0, 0};
         startIndexInChoices = new int[] { 0, 0, 0, 0, 0};
-        dialogueEffect = new int[] { 0, 1, 0, 0, 0};
+        dialogueEffect = new int[] { 0, 0, 0, 3, 0};
 
         choices = new string[]{
             "No",
             "Yes"
         };
-        nextIndexInDialogue = new int[] { 3, 1 };
+        nextIndexInDialogue = new int[] { 1, 3 };
     }
 
     public IEnumerator Accuse(string npcName)
-    {        
+    {
+        DialogueController dc = this.gameObject.GetComponent<DialogueController>();
+
         switch (npcName)
         {
             case "Dwight":
+                dialogue[3] = "You've discovered a doppelganger!";
+                dialogueEffect[1] = 5;
+                dialogueEffect[3] = 0;
+                dc.afterDialogueEffectTriggered = true;
+                dc.afterDialogueEffectFunc = 6;
+                break;
             case "LaMarcus":
+                dialogue[3] = "You've discovered a doppelganger!";
+                dialogueEffect[1] = 5;
+                dialogueEffect[3] = 0;
+                dc.afterDialogueEffectTriggered = true;
+                dc.afterDialogueEffectFunc = 7;
+                break;
             case "Darko":
-                dialogueEffect[1] = 2;
+                dialogue[3] = "You've discovered a doppelganger!";
+                dialogueEffect[1] = 5;
+                dialogueEffect[3] = 0;
+                dc.afterDialogueEffectTriggered = true;
+                dc.afterDialogueEffectFunc = 8;
                 break;
             default:
                 break;

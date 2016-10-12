@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerSpriteController : MonoBehaviour {
 
@@ -27,14 +28,19 @@ public class PlayerSpriteController : MonoBehaviour {
 
 	float width;
 	float height;
-	GameObject[] npcs;
+    List<GameObject> npcs = new List<GameObject>();
 
 	// Use this for initialization
     void Start () {
 
         anim = GetComponent<Animator> ();
         playerRigidBody = GetComponent<Rigidbody2D> ();
-		npcs = GameObject.FindGameObjectsWithTag("NPC");
+
+		GameObject[] npcsArr = GameObject.FindGameObjectsWithTag("NPC");
+        foreach(GameObject npc in npcsArr){
+            npcs.Add(npc);
+        }
+
 		interactionBox = GameObject.Find("Interaction Box");
 		rt = new RectTransform ();
 
@@ -159,5 +165,10 @@ public class PlayerSpriteController : MonoBehaviour {
             anim.SetFloat("MoveY", 0f);
             anim.SetBool("PlayerMoving", playerMoving);
         }
+    }
+
+    public void RemoveFromNpcList(GameObject go)
+    {
+        npcs.Remove(go);
     }
 }

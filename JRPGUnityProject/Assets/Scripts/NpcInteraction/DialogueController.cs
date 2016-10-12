@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 
 public class DialogueController : MonoBehaviour {
 
@@ -13,7 +14,7 @@ public class DialogueController : MonoBehaviour {
 	GameObject pauseMenu;
 
 	public string npcName; //for display
-    string npcNameReal; //inherent to the npc
+    public string npcNameReal; //inherent to the npc
 
 	//Stores text style info for dialogue text, will be edited in the inspector.
 	public GUISkin textStyle;
@@ -51,6 +52,8 @@ public class DialogueController : MonoBehaviour {
 
     public bool effectTriggered = false;
     public int effectFunc = 0;
+    public bool afterDialogueEffectTriggered = false;
+    public int afterDialogueEffectFunc = 0;
 
 	// Stores the current line to be displayed.
 	string currentText;
@@ -171,7 +174,7 @@ public class DialogueController : MonoBehaviour {
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (false);
 		pauseMenu.GetComponent<PauseMenuController> ().ToggleTalking ();
 		talking = true;
-		currentTextIndex = 0;
+		currentTextIndex = startAtIndex;
 
 
         while (talking)
@@ -180,8 +183,8 @@ public class DialogueController : MonoBehaviour {
 
             if (ds.dialogueEffect[currentTextIndex] != 0)
             {
-                effectTriggered = true;
                 effectFunc = ds.dialogueEffect[currentTextIndex];
+                effectTriggered = true;
             }
 
 			if (ds.numberOfChoices[currentTextIndex] != 0) {               
@@ -267,25 +270,15 @@ public class DialogueController : MonoBehaviour {
 		player.GetComponent<PlayerSpriteController> ().EnableMovement (true);
 
 
-        //for demo only
-        AccuseDoppelganger ad = this.gameObject.GetComponent<AccuseDoppelganger>();
-
-        if (ad)
+        if (afterDialogueEffectTriggered)
         {
-            if (!accused)
-            {
-                npcName = "Game";
-                StartCoroutine(ad.Accuse(npcNameReal));
-                accused = true;
-            }
-            else
-            {
-                //reset
-                accused = false; 
-                npcName = npcNameReal;
-            }
-        }
+            effectFunc = afterDialogueEffectFunc;
+            effectTriggered = true;
 
+            //reset
+            afterDialogueEffectTriggered = false;
+            afterDialogueEffectFunc = 0;
+        }
 
 		yield break;
 	}
@@ -348,7 +341,6 @@ public class DialogueController : MonoBehaviour {
 			GUI.skin.label.alignment = TextAnchor.UpperLeft;
 		}
 	}
-		
 
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Space) && talking && spacePress)
@@ -372,8 +364,9 @@ public class DialogueController : MonoBehaviour {
     public void EndDialogue()
     {
         if (talking)
-        {
+        {           
             talking = false;
+            advance = true;
 
             pauseMenu.GetComponent<PauseMenuController>().ToggleTalking();
             player.GetComponent<PlayerSpriteController>().EnableMovement(true);
@@ -388,5 +381,24 @@ public class DialogueController : MonoBehaviour {
     {
         Awake();
         Start();
+    }
+
+    void OnLevelWasLoaded()
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Enemy")
+            {
+                string scene = SceneManager.GetActiveScene().name;
+                if (scene != "Credits" && 
+                    scene != "Game Over" &&
+                    scene != "TitleMenu" &&
+                    scene != "Instructions")
+                {
+                    Reinitialize();
+                }
+                
+            }
+        }
     }
 }

@@ -216,4 +216,9 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         SceneManager.LoadScene("Game Over");
         yield break;
     }
+
+    public void RemoveFromEnemySpriteList(GameObject go)
+    {
+        enemySpritesInScene.Remove(go);
+    }
 }
