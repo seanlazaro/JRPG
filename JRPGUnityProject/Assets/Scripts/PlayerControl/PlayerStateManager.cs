@@ -22,7 +22,7 @@ public class PlayerStateManager : Singleton<PlayerStateManager> {
 
         playerBattleState.level = 50;
 
-        playerBattleState.strength = 100;
+        playerBattleState.strength = 105;
         playerBattleState.endurance = 100;
         playerBattleState.accuracy = 100;
         playerBattleState.speed = 100;
