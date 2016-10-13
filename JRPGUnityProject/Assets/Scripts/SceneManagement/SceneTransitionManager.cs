@@ -202,6 +202,19 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     public void ReturnToTitleScreen()
     {
+        GameObject[] enemySpritesArray = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject go in enemySpritesArray)
+        {
+            GameObject enemy = go.transform.parent.gameObject;
+
+            Destroy(enemy);
+        }
+        enemySpritesInScene.Clear();
+        
+        GameStateManager.Instance.defeatedBruiser = false;
+        GameStateManager.Instance.defeatedTank = false;
+        GameStateManager.Instance.defeatedBoss = false;
+        
         previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("TitleMenu");
     }

@@ -16,7 +16,7 @@ public class CreditScreenController : MonoBehaviour {
     
     void OnBackClicked()
     {
-        SceneManager.LoadScene("TitleMenu");
+        SceneTransitionManager.Instance.ReturnToTitleScreen();
     }
 
 	void Update()

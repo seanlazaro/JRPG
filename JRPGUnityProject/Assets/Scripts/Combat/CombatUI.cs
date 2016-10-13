@@ -4,7 +4,10 @@ using System;
 
 public class CombatUI : Singleton<CombatUI> {
 
-	bool talking;
+	// Prevent use of constructor
+    protected CombatUI() { }
+
+    bool talking;
 	int fontSize;
 	int fontSpacing;
 	int dialogueWidth;
@@ -17,8 +20,6 @@ public class CombatUI : Singleton<CombatUI> {
 
 	void Start()
 	{
-		//To prevent singleton from being destroyed and causing errors.
-		DontDestroyOnLoad(this);
 		//For Displaying Text
 		talking = false;
 		fontSize = (int)Math.Floor((decimal)((Screen.height + Screen.width) / 60));
