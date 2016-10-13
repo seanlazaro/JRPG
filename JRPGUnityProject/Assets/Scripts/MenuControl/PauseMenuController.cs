@@ -51,23 +51,26 @@ public class PauseMenuController : MonoBehaviour {
 	}
 
 	IEnumerator Start() {
-		yield return new WaitForEndOfFrame();
+		
         if (SceneTransitionManager.Instance.PreviousScene != "TitleMenu")
 		{
-            foreach(GameObject i in instructionMenu)
-                i.SetActive (false);
-            instructionReturnButton.SetActive (false);
-			instructionScrollButton.SetActive (false);
+            foreach (GameObject i in instructionMenu)
+                i.SetActive(false);
+            instructionReturnButton.SetActive(false);
+            instructionScrollButton.SetActive(false);
+
+            yield break;
         }
         else
         {
-			TogglePauseMenu ();
-			ToggleInstructionsMenu ();
+            yield return new WaitForEndOfFrame();
+            
+            TogglePauseMenu ();
+            ToggleInstructionsMenu ();
 
-			player.GetComponent<PlayerSpriteController> ().EnableMovement(false);
-			SelectProperButton ();
+            player.GetComponent<PlayerSpriteController> ().EnableMovement(false);
+            SelectProperButton ();
         }
-		yield break;
 	}
 
 	// Update is called once per frame

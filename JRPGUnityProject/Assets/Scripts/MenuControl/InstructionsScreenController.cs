@@ -29,7 +29,6 @@ public class InstructionsScreenController : MonoBehaviour {
 		instructionText[2] = GameObject.Find ("Instructions Text 3");
 
 		foreach (GameObject i in instructionText) {
-			Debug.Log (i);
 			i.SetActive (false);
 		}
 
