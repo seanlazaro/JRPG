@@ -139,41 +139,42 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 		// 2f is added because the win message takes 3 seconds.
 		yield return new WaitForSeconds(fadeTime + 2f);
 
-        string temp = previousScene;
 
         if (lostBattle)
         {
             StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
-            temp = "Game Over";
-        }		
-
-		previousScene = "Battle";
-
-		SceneManager.LoadScene(temp);
-
-		for (int i = 0; i < enemySpritesInScene.Count; i++)
-		{
-			enemySpritesInScene[i].SetActive(true);
-		}
-
-        if (destroyAfterBattle)
-        {
-            enemySpritesInScene.Remove(engagedEnemySprite);
-            Destroy(engagedEnemySprite);
+            previousScene = "Battle";
+            SceneManager.LoadScene("Game Over");
         }
-
-        if (afterBattleEffect != 0)
+        else
         {
-            if (engagedEnemySprite)
+            SceneManager.LoadScene(previousScene);
+            previousScene = "Battle";
+
+            for (int i = 0; i < enemySpritesInScene.Count; i++)
             {
-                DialogueController dc = engagedEnemySprite.GetComponent<DialogueController>();
-                if (dc)
+                enemySpritesInScene[i].SetActive(true);
+            }
+
+            if (destroyAfterBattle)
+            {
+                enemySpritesInScene.Remove(engagedEnemySprite);
+                Destroy(engagedEnemySprite);
+            }
+
+            if (afterBattleEffect != 0)
+            {
+                if (engagedEnemySprite)
                 {
-                    dc.effectFunc = afterBattleEffect;
-                    dc.effectTriggered = true;
+                    DialogueController dc = engagedEnemySprite.GetComponent<DialogueController>();
+                    if (dc)
+                    {
+                        dc.effectFunc = afterBattleEffect;
+                        dc.effectTriggered = true;
+                    }
                 }
             }
-        }
+        }		
 	}
 
     void OnLevelWasLoaded()
@@ -202,13 +203,6 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 
     public void ReturnToTitleScreen()
     {
-        GameObject[] enemySpritesArray = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject go in enemySpritesArray)
-        {
-            GameObject enemy = go.transform.parent.gameObject;
-
-            Destroy(enemy);
-        }
         enemySpritesInScene.Clear();
         
         GameStateManager.Instance.defeatedBruiser = false;

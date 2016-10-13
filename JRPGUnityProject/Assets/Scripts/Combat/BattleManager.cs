@@ -46,6 +46,9 @@ public class BattleManager : MonoBehaviour {
         battlers = battlers.OrderByDescending(go => go.GetComponent<Battler>().battleState.speed).ToArray();
 
         activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
+
+        //used to create the combat ui singleton instance early
+        CombatUI combatUI = CombatUI.Instance;
     }
     
     // Update is called once per frame
@@ -201,13 +204,13 @@ public class BattleManager : MonoBehaviour {
 
             if (player == null)
             {
-                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've been wrecked..."));
+                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've been killed..."));
 				lostBattle = true;
 				currentBattlePhase = BattlePhase.BattleEnd;
             }
             else if (enemies.Length == 0)
             {
-                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've wonnerino!"));
+                StartCoroutine(CombatUI.Instance.DisplayBlockingMessage("You've won the battle!"));
 				lostBattle = false;
 				currentBattlePhase = BattlePhase.BattleEnd;
 			}

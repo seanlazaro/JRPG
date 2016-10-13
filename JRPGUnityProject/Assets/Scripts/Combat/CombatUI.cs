@@ -33,6 +33,7 @@ public class CombatUI : Singleton<CombatUI> {
         if (talking)
         {
 			dialogueHeight = fontSize;
+
 			if (message.Length * fontSpacing < Screen.width / 3) {
 				if (message.Length < 10)
 					dialogueWidth = (int)Math.Floor ((decimal)(message.Length * fontSpacing * 1.5));
@@ -41,18 +42,21 @@ public class CombatUI : Singleton<CombatUI> {
 			}
 			else {
 				dialogueWidth = (int)(Screen.width / 3);
-				dialogueHeight = (int)((dialogueHeight+5) * Math.Floor (message.Length * fontSpacing / (Screen.width / 3)+1.0));
+				dialogueHeight = (int)(dialogueHeight * Math.Floor(message.Length * fontSpacing / (Screen.width / 3) + 1.0));
 			}
-			//Starter rect (screen.width / 2 - dialogue width/2 is the left side of rect
-			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2
-				, Screen.height / 7,
-            dialogueWidth + 10, dialogueHeight + 10));
-            //The background box
-			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
 
-			//Layout end
+			//Starter rect (screen.width / 2 - dialogue width/2 is the left side of rect
+			GUI.BeginGroup(new Rect(Screen.width / 2 - dialogueWidth / 2, 
+                Screen.height / 7,
+                dialogueWidth + 10,
+                dialogueHeight + 10));
+
+            //The background box
+			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight + 3), "");
+
 			GUI.Label(new Rect(0, 0, dialogueWidth, dialogueHeight) ,
 				message, displayStyle);
+
 			//Layout end
 			GUI.EndGroup();
         }
@@ -60,7 +64,7 @@ public class CombatUI : Singleton<CombatUI> {
 
     public IEnumerator DisplayMessage(string messageInput, float displayTime)
     {
-        displayStyle.alignment = TextAnchor.UpperCenter;
+        displayStyle.alignment = TextAnchor.MiddleCenter;
         displayStyle.fontSize = fontSize;
 		displayStyle.wordWrap = true;
 		message = messageInput;
@@ -75,7 +79,7 @@ public class CombatUI : Singleton<CombatUI> {
         BattleManager bm = battleManagerObject.GetComponent<BattleManager>();
         bm.blockedByMessage = true;
 
-        displayStyle.alignment = TextAnchor.UpperCenter;
+        displayStyle.alignment = TextAnchor.MiddleCenter;
         displayStyle.fontSize = fontSize;
         displayStyle.wordWrap = true;
         message = messageInput;

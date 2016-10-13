@@ -61,12 +61,12 @@ public abstract class Battler : MonoBehaviour {
 		// prevent enemy health from being shown as a negative number.
 		if (battleState.currentHealth <= 0) {	
 			StartCoroutine (CombatUI.Instance.UpdateHealthBar (0, 
-				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
+				(double)battleState.maximumHealth, defender == "You"));
             killed = true;
 		} 
 		else {
 			StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, 
-				(double)battleState.maximumHealth, defender == "PlayerDuringBattle"));
+				(double)battleState.maximumHealth, defender == "You"));
 		}
 
         return killed;
@@ -97,10 +97,14 @@ public abstract class Battler : MonoBehaviour {
         if (multiplier < 0) multiplier = 0;
         damage *= multiplier;
 
-        string attacker = this.gameObject.name;
-        string defender = singleAttackTarget.gameObject.name;
+        string attacker = GetDisplayName(this.gameObject.name);
+        string defender = GetDisplayName(singleAttackTarget.gameObject.name);
+        if (defender == "You") defender = "you";
         string message = string.Format("{0} dealt {1} damage to {2}.", attacker, (int)damage, defender);
         StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1f));
+
+        Debug.Log(attacker);
+        Debug.Log(defender);
 
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
 
@@ -147,5 +151,22 @@ public abstract class Battler : MonoBehaviour {
         StartCoroutine(StandardAttackWithMultiplier(1f, Finish));
 
         yield break;
+    }
+
+    string GetDisplayName(string gameObjectName)
+    {
+        switch (gameObjectName)
+        {
+            case "PlayerDuringBattle":
+                return "You";
+            case "ShapeshifterBruiserInBattle(Clone)":
+                return "Doppelganger Bruiser";
+            case "ShapeshifterTankInBattle(Clone)":
+                return "Doppelganger Tank";
+            case "ShapeshifterBossInBattle(Clone)":
+                return "Doppelganger Leader";
+            default:
+                return gameObjectName;
+        }
     }
 }

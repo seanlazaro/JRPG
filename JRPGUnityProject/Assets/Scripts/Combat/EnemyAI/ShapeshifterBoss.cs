@@ -142,7 +142,7 @@ public class ShapeshifterBoss : Battler
     //deals 2.5 times as much damage as a regular attack
     IEnumerator Rampage(Action<bool, bool> Finish)
     {
-        StartCoroutine(CombatUI.Instance.DisplayMessage("[name] is on a rampage!", 1f));
+        StartCoroutine(CombatUI.Instance.DisplayMessage("Doppelganger Leader is on a rampage!", 1f));
 
         StartCoroutine(StandardAttackWithMultiplier(2.5f, Finish));
 
@@ -152,7 +152,7 @@ public class ShapeshifterBoss : Battler
     //deals 3 times as much damage as a regular attack
     IEnumerator Rush(Action<bool, bool> Finish)
     {
-        StartCoroutine(CombatUI.Instance.DisplayMessage("[name]: Man, I'm pumped up!", 1f));
+        StartCoroutine(CombatUI.Instance.DisplayMessage("Doppelganger Leader: Man, I'm pumped up!", 1f));
 
         StartCoroutine(StandardAttackWithMultiplier(3f, Finish));
 
@@ -164,7 +164,7 @@ public class ShapeshifterBoss : Battler
     {
         if (battleState.currentHealth < startRoundHealth)
         {
-            StartCoroutine(CombatUI.Instance.DisplayMessage("[name] launches a brutal counterattack!", 1f));
+            StartCoroutine(CombatUI.Instance.DisplayMessage("Doppelganger Leader launches a brutal counterattack!", 1f));
 
             StartCoroutine(StandardAttackWithMultiplier(4f, Finish));
 
