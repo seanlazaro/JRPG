@@ -129,9 +129,9 @@ public class ShapeshifterBoss : Battler
     {
         string[] taunts = new string[3]
         {
-            "[name]: This isn't even my final form. Attack me and I'll show you my true power.",
-            "[name]: You've got no chance of beating me unless you come at me with everything you've got!",
-            "[name]: Show me your strongest attack! Or else I'll get bored and end this fight quickly."
+            "Doppelganger Leader: This isn't even my final form. Attack me and I'll show you my true power.",
+            "Doppelganger Leader: You've got no chance of beating me unless you come at me with everything you've got!",
+            "Doppelganger Leader: Show me your strongest attack! Or else I'll get bored and end this fight quickly."
         };
         
         System.Random r = new System.Random();
