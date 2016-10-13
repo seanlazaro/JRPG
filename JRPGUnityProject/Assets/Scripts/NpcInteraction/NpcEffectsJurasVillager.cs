@@ -30,7 +30,7 @@ public class NpcEffectsJurasVillager : NpcEffectsBase
                 dialogueController.afterDialogueEffectFunc = 4;
                 break;
             case 4:
-                StartCoroutine(SceneTransitionManager.Instance.GoToGameOver());
+                StartCoroutine(SceneTransitionManager.Instance.EndGame(false));
                 break;
             //player chose not to accuse a doppelganger npc of being a doppelganger, so reset
             case 5:
@@ -109,7 +109,7 @@ public class NpcEffectsJurasVillager : NpcEffectsBase
                 break;
             //player has defeated final boss, completing the game
             case 14:
-                StartCoroutine(SceneTransitionManager.Instance.GoToGameOver());
+                StartCoroutine(SceneTransitionManager.Instance.EndGame(true));
                 break;
             default:
                 break;

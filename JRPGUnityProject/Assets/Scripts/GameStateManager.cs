@@ -7,4 +7,7 @@ public class GameStateManager : Singleton<GameStateManager>
     public bool defeatedBruiser = false;
     public bool defeatedTank = false;
     public bool defeatedBoss = false;
+
+    public bool fightingBoss = false;
+    public bool wonGame = false;
 }

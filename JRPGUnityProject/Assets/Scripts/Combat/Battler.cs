@@ -61,12 +61,12 @@ public abstract class Battler : MonoBehaviour {
 		// prevent enemy health from being shown as a negative number.
 		if (battleState.currentHealth <= 0) {	
 			StartCoroutine (CombatUI.Instance.UpdateHealthBar (0, 
-				(double)battleState.maximumHealth, defender == "You"));
+				(double)battleState.maximumHealth, defender == "You" || defender == "you"));
             killed = true;
 		} 
 		else {
-			StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth, 
-				(double)battleState.maximumHealth, defender == "You"));
+			StartCoroutine(CombatUI.Instance.UpdateHealthBar((double)battleState.currentHealth,
+                (double)battleState.maximumHealth, defender == "You" || defender == "you"));
 		}
 
         return killed;
@@ -102,9 +102,6 @@ public abstract class Battler : MonoBehaviour {
         if (defender == "You") defender = "you";
         string message = string.Format("{0} dealt {1} damage to {2}.", attacker, (int)damage, defender);
         StartCoroutine(CombatUI.Instance.DisplayMessage(message, 1f));
-
-        Debug.Log(attacker);
-        Debug.Log(defender);
 
         bool killed = singleAttackTarget.TakeDamage((int)damage, defender);
 

@@ -8,8 +8,8 @@ public class SpawnDoppelganger : MonoBehaviour {
     public GameObject[] spriteToSpawn; 
     public string spriteToSpawnId;
 
-    void Start()
-    {
+    void Awake()
+    {        
         switch (spriteToSpawnId)
         {
             case "bruiser":

@@ -14,6 +14,7 @@ public class CombatUI : Singleton<CombatUI> {
 	int dialogueHeight;
 	string message;
 	GUIStyle displayStyle = new GUIStyle();
+    GUISkin guiSkin;
     
     // For displaying health bar.
     GameObject healthBar;
@@ -26,13 +27,17 @@ public class CombatUI : Singleton<CombatUI> {
 		fontSpacing = fontSize / 2 + 1;
 		dialogueHeight = fontSize;
 
+        guiSkin = (GUISkin) Resources.Load("combatUiSkin");
 	}
 	
     void OnGUI ()
-    {
+    {        
         if (talking)
         {
-			dialogueHeight = fontSize;
+            // Edit the GUI Skin to change the text's style.
+            GUI.skin = guiSkin;
+            
+            dialogueHeight = fontSize;
 
 			if (message.Length * fontSpacing < Screen.width / 3) {
 				if (message.Length < 10)
@@ -42,7 +47,7 @@ public class CombatUI : Singleton<CombatUI> {
 			}
 			else {
 				dialogueWidth = (int)(Screen.width / 3);
-				dialogueHeight = (int)(dialogueHeight * Math.Floor(message.Length * fontSpacing / (Screen.width / 3) + 1.0));
+				dialogueHeight = (int)(dialogueHeight * Math.Floor(message.Length * fontSpacing / (Screen.width / 3) + 2.0));
 			}
 
 			//Starter rect (screen.width / 2 - dialogue width/2 is the left side of rect
@@ -52,7 +57,7 @@ public class CombatUI : Singleton<CombatUI> {
                 dialogueHeight + 10));
 
             //The background box
-			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight + 3), "");
+			GUI.Box(new Rect(0, 0, dialogueWidth, dialogueHeight), "");
 
 			GUI.Label(new Rect(0, 0, dialogueWidth, dialogueHeight) ,
 				message, displayStyle);

@@ -13,6 +13,8 @@ public class AudioManager : MonoBehaviour {
 	[Header("Same Length, Clip Corresponds To Scene")]
 	public string[] scenesString;
 	public AudioClip[] clips;
+    public AudioClip bossMusic;
+    public AudioClip victoryMusic;
 
 	// Used to prevent the clip from restarting even if the clip didn't change.
     private bool changingMusic = true;
@@ -48,8 +50,8 @@ public class AudioManager : MonoBehaviour {
 
 
 	void StartAudio(string newScene)
-	{
-		// Resets changingMusic bool.
+	{        
+        // Resets changingMusic bool.
 		changingMusic = false;
 
 		// If the current scene contains the clip, find scene and play corresponding clip.
@@ -57,9 +59,23 @@ public class AudioManager : MonoBehaviour {
 			for (int i = 0; i < clips.Length; i++) {
 				if (scenesString [i] == newScene) {
 
-					// Prevents clip from restarting if the music doesn't change.
-					if (musicSource.clip != clips [i]) {
-						musicSource.clip = clips [i];
+                    AudioClip ac;
+                    if (newScene == "Battle" && GameStateManager.Instance.fightingBoss)
+                    {
+                        ac = bossMusic;
+                    }
+                    else if (newScene == "Credits" && GameStateManager.Instance.wonGame)
+                    {
+                        ac = victoryMusic;
+                    }
+                    else
+                    {
+                        ac = clips[i];
+                    }
+                    
+                    // Prevents clip from restarting if the music doesn't change.
+					if (musicSource.clip != ac) {
+						musicSource.clip = ac;
 						changingMusic = true;
 					}
 					break;

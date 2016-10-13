@@ -37,6 +37,16 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        if (GameStateManager.Instance.fightingBoss)
+        {
+            GameObject bg = GameObject.Find("BattleBGNormal");
+            bg.SetActive(false);
+        }
+
+        //used to create the combat ui singleton instance early
+        CombatUI combatUI = CombatUI.Instance;
+
         GameObject player = GameObject.FindGameObjectWithTag("Player").transform.parent.gameObject;
         playerBattler = player.GetComponent<PlayerBattleController>();
         playerBattler.battleState = new BattleState();
@@ -45,10 +55,7 @@ public class BattleManager : MonoBehaviour {
         battlers = GameObject.FindGameObjectsWithTag("Battler");
         battlers = battlers.OrderByDescending(go => go.GetComponent<Battler>().battleState.speed).ToArray();
 
-        activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();
-
-        //used to create the combat ui singleton instance early
-        CombatUI combatUI = CombatUI.Instance;
+        activeBattler = battlers[activeBattlerIndex].GetComponent<Battler>();        
     }
     
     // Update is called once per frame

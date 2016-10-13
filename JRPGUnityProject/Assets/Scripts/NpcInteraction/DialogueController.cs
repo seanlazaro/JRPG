@@ -115,7 +115,7 @@ public class DialogueController : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake(){
-        
+
         // Used to disable movement.
 		player = GameObject.FindWithTag("Player");
 

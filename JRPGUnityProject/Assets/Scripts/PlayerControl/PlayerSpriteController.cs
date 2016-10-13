@@ -116,7 +116,7 @@ public class PlayerSpriteController : MonoBehaviour {
 		if (Input.GetKeyUp (KeyCode.Space)) {
 			if(CheckForNPC(interactionBox, ref interactingNPC))
 			{
-				StartCoroutine(interactingNPC.GetComponent<DialogueController> ().StartDialogue ());
+                StartCoroutine(interactingNPC.GetComponent<DialogueController> ().StartDialogue ());
 			}
 		}
 

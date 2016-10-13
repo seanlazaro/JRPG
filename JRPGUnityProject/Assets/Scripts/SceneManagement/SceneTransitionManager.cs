@@ -117,6 +117,8 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
             enemySpritesInScene.Add(enemy);
         }
 
+        if (engagedEnemySprite.name == "Darko(Clone)") GameStateManager.Instance.fightingBoss = true;
+        else GameStateManager.Instance.fightingBoss = false;
 
         SceneManager.LoadScene("Battle");
     }
@@ -139,10 +141,10 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
 		// 2f is added because the win message takes 3 seconds.
 		yield return new WaitForSeconds(fadeTime + 2f);
 
+        StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
 
         if (lostBattle)
         {
-            StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
             previousScene = "Battle";
             SceneManager.LoadScene("Game Over");
         }
@@ -208,19 +210,31 @@ public class SceneTransitionManager : Singleton<SceneTransitionManager> {
         GameStateManager.Instance.defeatedBruiser = false;
         GameStateManager.Instance.defeatedTank = false;
         GameStateManager.Instance.defeatedBoss = false;
+
+        GameStateManager.Instance.wonGame = false;
         
         previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("TitleMenu");
     }
 
-    public IEnumerator GoToGameOver()
+    public IEnumerator EndGame(bool won)
     {
         StartCoroutine(TransitionEffects.Instance.Fade(fadeTime, true));
         StartCoroutine(AudioManager.Instance.AudioFade(fadeTime, false));
         yield return new WaitForSeconds(fadeTime);
 
         previousScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene("Game Over");
+
+        if (won)
+        {
+            GameStateManager.Instance.wonGame = true;
+            SceneManager.LoadScene("Credits");
+        }
+        else
+        {
+            SceneManager.LoadScene("Game Over");
+        }
+        
         yield break;
     }
 
